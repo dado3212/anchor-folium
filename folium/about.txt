@@ -1,0 +1,5 @@
+Theme name:    Folium
+Description:   Theme primarily focused on content.
+Author name:   Alex Beals
+Author site:   http://alexbeals.com
+License:       WTFPL (http://sam.zoy.org/wtfpl/COPYING)
