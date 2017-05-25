@@ -1,5 +1,6 @@
 <?php theme_include('partial/header'); ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
+<?php if (article_status() == "published"): ?>
 	<main class="container">
 		<article id="article-<?php echo article_id(); ?>">
 			<header>
@@ -39,11 +40,24 @@
 
 			<?php echo comment_form_input_name('placeholder="Your name" class="form-control"'); ?>
 			<?php echo comment_form_input_email('placeholder="Your email (won’t be published)" class="form-control"'); ?>
-			<?php echo comment_form_input_text('placeholder="Your comment" class="form-control"'); ?>
+			<?php echo comment_form_input_text('placeholder="Your comment" class="form-control"'); ?><br>
+			<!-- Captcha (site key must be modified for your uses) -->
+			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
 			<button class="btn btn-default">Post Comment</button>
 		</form>
 		<?php endif; ?>
 	</main>
+<?php else: ?>
+	<main class="container">
+		<article>
+			<header>
+				<h1>Sorry...</h1>
+			</header>
+
+			<p>Unfortunately, there's no page for that slug. Did you spell everything correctly?</p>
+		</article>
+	</main>
+<?php endif; ?>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 
 <?php theme_include('partial/footer'); ?>

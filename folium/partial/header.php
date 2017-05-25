@@ -8,10 +8,13 @@
 			?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1"><?php
 		}
 	?>
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin,latin-ext">
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat:400,700">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700&amp;subset=latin,latin-ext">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,700">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/bootstrap.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
+
+	<!-- Captcha -->
+	<script src='https://www.google.com/recaptcha/api.js'></script>
 
 	<meta property="og:title" content="<?php echo site_name(); ?>">
 	<meta property="og:type" content="website">
