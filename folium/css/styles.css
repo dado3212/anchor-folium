@@ -11,6 +11,10 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
+@font-face {
+  font-family: 'Graphik';
+  src: url('/themes/folium/fonts/Graphik-Regular.otf');
+}
 body {
   font: 15px "Open Sans", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
@@ -29,6 +33,8 @@ a {
   -o-transition: ease-in-out 0.1s;
   color: #14cf4d;
   position: relative;
+
+  text-decoration-skip: ink;
 }
 a:hover {
   color: #14cf4d;
@@ -49,7 +55,7 @@ a:hover {
 code {
   color: #12bd46;
   background-color: #f1fef3;
-  font-size: 95%;
+  font-size: 90%;
 }
 pre {
   color: #12bd46;
@@ -64,6 +70,7 @@ pre code {
   margin-left: 35px;
   position: relative;
   padding: 4px;
+  font-size: 80%;
 }
 
 pre code:before {
@@ -189,6 +196,8 @@ main article {
   margin-bottom: 40px;
   border-bottom: 2px solid #eee;
   word-break: break-word;
+    font-family: "Graphik", "Open Sans", sans-serif;
+
 }
 main article:last-of-type {
   border-bottom: none;

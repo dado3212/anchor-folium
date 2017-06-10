@@ -32,8 +32,14 @@
 
 <script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 <script src="<?php echo theme_url('js/bootstrap.min.js'); ?>"></script>
+
+<!-- Lightbox -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.js"></script>
+
 <script>
 $(document).ready(function(){
+	// Set up searching
 	var searchWindow = $('#search');
 	$('a[data-target=#search]').click(function(event){
 		event.preventDefault();
