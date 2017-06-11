@@ -186,8 +186,8 @@ aside .description {
  *  Article
  */
 .mainWrapper {
-  width: calc(100% - 400px);
-  margin-left: 15px;
+  width: calc(100% - 390px);
+  padding-left: 10px;
 }
 main {
   margin-top: 50px;
