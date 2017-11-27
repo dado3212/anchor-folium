@@ -1,5 +1,5 @@
 <footer>
-	<div class="container-wide">
+	<div class="container-wide padding-container">
 		<div class="row">
 			<div class="col-md-7">
 				<p><?php echo " © " . date("Y") . " " . site_name() . " - All rights reserved."; ?> Theme by <a href="http://alexbeals.com">Alex Beals</a>.</p>

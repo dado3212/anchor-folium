@@ -1,6 +1,6 @@
 <?php theme_include('partial/header'); ?>
 
-	<main class="container">
+	<main class="container padding-container">
 		<?php
 			if (user_authed() && user_authed_role() == 'administrator') {
 				$items = Query::table(Base::table('posts'))

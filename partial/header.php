@@ -5,7 +5,8 @@
 
 	<?php
 		if (preg_match("/(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/i", $_SERVER['HTTP_USER_AGENT'])) {
-			?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1"><?php
+			?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover"><?php
+
 		}
 	?>
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700&amp;subset=latin,latin-ext">
@@ -47,7 +48,7 @@
 </head>
 <body>
 	<header id="top">
-		<nav class="navbar navbar-default">
+		<nav class="navbar navbar-default padding-container">
 			<div class="navbar-header">
 				<?php if(has_menu_items()): ?>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-menu">

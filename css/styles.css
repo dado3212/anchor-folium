@@ -42,6 +42,15 @@ a:hover {
 .container {
   width: 700px;
 }
+.padding-container {
+  /* iOS 11 */
+  padding-left: constant(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
+  
+  /* iOS 11.2+ */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
 .container-wide {
   margin: 0 auto;
   width: 900px;
@@ -188,6 +197,14 @@ aside .description {
 .mainWrapper {
   width: calc(100% - 390px);
   padding-left: 10px;
+
+  /* iOS 11 */
+  padding-left: constant(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
+  
+  /* iOS 11.2+ */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 main {
   margin-top: 50px;
