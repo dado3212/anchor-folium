@@ -39,6 +39,8 @@
 
 <script>
 $(document).ready(function(){
+	// Disable hash module
+	$.fancybox.defaults.hash = false;
 	// Set up searching
 	var searchWindow = $('#search');
 	$('a[data-target=#search]').click(function(event){

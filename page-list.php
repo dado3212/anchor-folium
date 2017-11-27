@@ -2,8 +2,13 @@
 
 	<main class="container">
 		<?php
-			$items = Query::table(Base::table('posts'))
-				->where('status', '=', 'published')->get();
+			if (user_authed() && user_authed_role() == 'administrator') {
+				$items = Query::table(Base::table('posts'))
+					->get();
+			} else {
+				$items = Query::table(Base::table('posts'))
+					->where('status', '=', 'published')->get();
+			}
 			$previousMonth = "";
 			$page = Registry::get('posts_page');
 		?>
@@ -13,13 +18,16 @@
 				$item = $items[$i];
 				$currMonth = date('F Y', strtotime($item->created));
 				if ($currMonth != $previousMonth) {
-
 					if ($previousMonth != "") { echo "</ul>"; }
 					echo "<p class='month'>{$currMonth}</p>";
 					echo "<ul>";
 					$previousMonth = $currMonth;
 				}
-				echo "<li><a href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></li>";
+				$suffix = "";
+				if ($item->status != 'published') {
+					$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
+				}
+				echo "<li><a href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "$suffix</a></li>";
 			}
 		?>
 		</div>

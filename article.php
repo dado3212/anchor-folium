@@ -1,10 +1,15 @@
 <?php theme_include('partial/header'); ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
-<?php if (article_status() == "published"): ?>
+<?php if (article_status() == "published" || (user_authed() && user_authed_role() == 'administrator')):
+	$suffix = "";
+	if (article_status() != 'published') {
+		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
+	}
+?>
 	<main class="container">
 		<article id="article-<?php echo article_id(); ?>">
 			<header>
-				<h1><?php echo article_title(); ?></h1>
+				<h1><?php echo article_title() . $suffix; ?></h1>
 				<div class="meta">
 						<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('M j, Y - g:i a', article_time()); ?></time>
 					</div>

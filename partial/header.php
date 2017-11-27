@@ -16,7 +16,7 @@
 	<!-- Captcha -->
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 
-	<meta property="og:title" content="<?php echo site_name(); ?>">
+	<meta property="og:title" content="<?php echo page_title("Page can't be found."); ?>">
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="<?php echo current_url(); ?>">
 	<meta property="og:image" content="<?php echo theme_url('img/og_image.gif'); ?>">
@@ -79,9 +79,18 @@
 		<p class="description">
 			<?php echo site_description(); ?>
 		</p>
+		<blockquote style="margin:0 0 30px;">
+			"Mr. Beals is known at Dartmouth for being computer savvy and maintaining an online blog"
+			<cite style="float:right;display:block;font-style:italic;margin-top:4px;">-Hanover Police Department</cite>
+		</blockquote>
 		<?php
-			$items = Query::table(Base::table('posts'))
-				->where('status', '=', 'published')->get();
+			if (user_authed() && user_authed_role() == 'administrator') {
+				$items = Query::table(Base::table('posts'))
+					->get();
+			} else {
+				$items = Query::table(Base::table('posts'))
+					->where('status', '=', 'published')->get();
+			}
 			$previousMonth = "";
 			$page = Registry::get('posts_page');
 		?>
@@ -91,13 +100,16 @@
 				$item = $items[$i];
 				$currMonth = date('F Y', strtotime($item->created));
 				if ($currMonth != $previousMonth) {
-
 					if ($previousMonth != "") { echo "</ul>"; }
 					echo "<p class='month'>{$currMonth}</p>";
 					echo "<ul>";
 					$previousMonth = $currMonth;
 				}
-				echo "<li><a href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></li>";
+				$suffix = "";
+				if ($item->status != 'published') {
+					$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
+				}
+				echo "<li><a href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "$suffix</a></li>";
 			}
 		?>
 		</div>
