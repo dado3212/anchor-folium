@@ -19,9 +19,10 @@ There are also some that aren't documented.
 
 Automatically making links open in a new tab  
 `/anchor/libraries/markdown.php`
-```
+```diff
 function _doAnchors_inline_callback($matches) {
    ...
-   $result = "<a target=\"_blank\" href=\"$url\""; // added in target=\"_blank\"
+-   $result = "<a href=\"$url\"";
++   $result = "<a target=\"_blank\" href=\"$url\"";
    ...
 ```
