@@ -42,6 +42,9 @@ a:hover {
 .container {
   width: 700px;
 }
+#previousPosts {
+  padding-left: 25px;
+}
 .padding-container {
   /* iOS 11 */
   padding-left: constant(safe-area-inset-left);
@@ -611,5 +614,23 @@ footer nav > ul.navbar-nav li > a:hover {
   .container-wide .row .col-md-7 nav > ul.navbar-nav > li a {
     padding: 5px;
     text-align: center;
+  }
+}
+
+@media print {
+  aside {
+    display: none;
+  }
+
+  .mainWrapper {
+    width: 100%;
+  }
+
+  form {
+    display: none;
+  }
+
+  a[data-fancybox="gallery"]:after {
+    display: none !important;
   }
 }
