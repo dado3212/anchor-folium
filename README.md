@@ -1,6 +1,6 @@
 # Folium
 
-Folium is a theme for [Anchor](https://anchorcms.com), a lightweight blog system that I use [on my blog](http://blog.alexbeals.com).
+Folium is a theme for [Anchor](https://anchorcms.com) ([Github](https://github.com/anchorcms/anchor-cms)), a lightweight blog system that I use [on my blog](http://blog.alexbeals.com).
 
 This is what it looks like:
 
