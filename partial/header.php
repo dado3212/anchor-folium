@@ -87,10 +87,13 @@
 		<?php
 			if (user_authed() && user_authed_role() == 'administrator') {
 				$items = Query::table(Base::table('posts'))
+					->sort('created')
 					->get();
 			} else {
 				$items = Query::table(Base::table('posts'))
-					->where('status', '=', 'published')->get();
+					->where('status', '=', 'published')
+					->sort('created')
+					->get();
 			}
 			$previousMonth = "";
 			$page = Registry::get('posts_page');
