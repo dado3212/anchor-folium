@@ -30,21 +30,21 @@ function _doAnchors_inline_callback($matches) {
 Copied over time constants from the official repo
 `/anchor/language/en_GB/posts.php`
 ```diff
-+	  'time'         => 'Published on (GMT)',
-+    'time_explain' => 'Pattern: YYYY-MM-DD HH:MM:SS',
-+    'time_invalid' => 'Invalid time pattern',
++  'time'         => 'Published on (GMT)',
++  'time_explain' => 'Pattern: YYYY-MM-DD HH:MM:SS',
++  'time_invalid' => 'Invalid time pattern',
 ```
 
 and in the UI, to be able to adjust publication date.
 `/anchor/views/posts/edit.php`
 ```diff
-				<em><?php echo __('posts.slug_explain'); ?></em>
-			</p>
-+			<p>
-+				<label><?php echo __('posts.time'); ?>:</label>
-+				<?php echo Form::text('created', Input::previous('created', $article->created)); ?>
-+				<em><?php echo __('posts.time_explain'); ?></em>
-+			</p>
+    <em><?php echo __('posts.slug_explain'); ?></em>
+  </p>
++  <p>
++    <label><?php echo __('posts.time'); ?>:</label>
++    <?php echo Form::text('created', Input::previous('created', $article->created)); ?>
++    <em><?php echo __('posts.time_explain'); ?></em>
++  </p>
 ```
 
 
