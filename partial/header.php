@@ -80,10 +80,6 @@
 		<p class="description">
 			<?php echo site_description(); ?>
 		</p>
-		<blockquote style="margin:0 0 30px;">
-			"Mr. Beals is known at Dartmouth for being computer savvy and maintaining an online blog"
-			<cite style="float:right;display:block;font-style:italic;margin-top:4px;">-Hanover Police Department</cite>
-		</blockquote>
 		<?php
 			if (user_authed() && user_authed_role() == 'administrator') {
 				$items = Query::table(Base::table('posts'))
