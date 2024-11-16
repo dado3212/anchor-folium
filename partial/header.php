@@ -9,13 +9,13 @@
 
 		}
 	?>
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700&amp;subset=latin,latin-ext">
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,700">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/bootstrap.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
 
 	<!-- Captcha -->
-	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<link rel="preconnect" href="https://www.google.com">
+	<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+	<script async src='https://www.google.com/recaptcha/api.js'></script>
 
 	<meta property="og:title" content="<?php echo page_title("Page can't be found."); ?>">
 	<meta property="og:type" content="website">
@@ -50,20 +50,19 @@
 	<header id="top">
 		<nav class="navbar navbar-default padding-container">
 			<div class="navbar-header">
-				<?php if(has_menu_items()): ?>
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-menu">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<?php endif; ?>
 				<a href="<?php echo base_url(); ?>" class="navbar-brand">
-					<strong><?php echo site_name(); ?></strong>
+					<img src="/themes/folium/tree.png" alt="lone redwood" />
+					<span><?php echo site_name(); ?></span>
 				</a>
 			</div>
 
 			<?php if(has_menu_items()): ?>
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-menu">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
 			<div class="collapse navbar-collapse" id="navbar-collapse-menu">
 				<ul class="nav navbar-nav navbar-right">
 					<?php while(menu_items()): ?>
@@ -91,19 +90,21 @@
 					->sort('created')
 					->get();
 			}
-			$previousMonth = "";
+			$previousYear = "";
 			$page = Registry::get('posts_page');
 		?>
 		<div id="previousPosts">
 		<?php
 			for ($i = count($items) - 1; $i >= 0; $i--) {
 				$item = $items[$i];
-				$currMonth = date('F Y', strtotime($item->created));
-				if ($currMonth != $previousMonth) {
-					if ($previousMonth != "") { echo "</ul>"; }
-					echo "<p class='month'>{$currMonth}</p>";
+				$currYear = date('Y', strtotime($item->created));
+				if ($currYear !== $previousYear) {
+					if ($previousYear != "") {
+						echo "</ul>";
+					}
+					echo "<p class='year'>{$currYear}</p>";
 					echo "<ul>";
-					$previousMonth = $currMonth;
+					$previousYear = $currYear;
 				}
 				$suffix = "";
 				if ($item->status != 'published') {

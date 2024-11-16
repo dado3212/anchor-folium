@@ -53,20 +53,14 @@ $(document).ready(function(){
 	});
 
 	// Handle clickable headers
-	$("article h1, article h2, article h3, article h4, article h5, article h6").hover(function() {
+	$("article h2, article h3, article h4, article h5, article h6").click(function() {
 		// When hovering over a header
 		var header = $(this);
 		var headerId = header.attr('id');
-		
 		if (headerId) {
-			// Create the '#' link if the header has an ID
-			var link = $('<a href="#' + headerId + '" class="header-link">#</a>');
-			header.append(link);
+			header.get(0).scrollIntoView({ behavior: 'smooth' });
+    		history.pushState(null, null, `#${headerId}`);
 		}
-	},
-	function() {
-		// When the hover ends, remove the '#' link
-		$(this).find('.header-link').remove();
 	});
 
 	// Handle copyable text blocks

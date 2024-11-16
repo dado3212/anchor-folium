@@ -6,6 +6,9 @@ This is what it looks like:
 
 ![Folium screenshot](/Folium.png "Folium screenshot")
 
+## Fonts
+- [X] Vollkolm (too thick)
+
 ## Additions
 
 There are a number of additions I've made to the base code. This is probably not exhaustive, but it's a lot of them.

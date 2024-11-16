@@ -11,7 +11,7 @@
 			<header>
 				<h1><?php echo article_title() . $suffix; ?></h1>
 				<div class="meta">
-						<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('M j, Y - g:i a', article_time()); ?></time>
+						<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
 					</div>
 			</header>
 

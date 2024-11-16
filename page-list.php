@@ -12,25 +12,24 @@
 					->sort('created')
 					->get();
 			}
-			$previousMonth = "";
+			$previousYear = "";
 			$page = Registry::get('posts_page');
 		?>
 		<div id="previousPosts">
 		<?php
 			for ($i = count($items) - 1; $i >= 0; $i--) {
 				$item = $items[$i];
-				$currMonth = date('F Y', strtotime($item->created));
-				if ($currMonth != $previousMonth) {
-					if ($previousMonth != "") { echo "</ul>"; }
-					echo "<p class='month'>{$currMonth}</p>";
-					echo "<ul>";
-					$previousMonth = $currMonth;
+				$currYear = date('Y', strtotime($item->created));
+				$itemDate = date('F j, Y', strtotime($item->created));
+				if ($currYear !== $previousYear) {
+					echo "<h3 id='{$currYear}' class='year'>{$currYear}</h3>";
+					$previousYear = $currYear;
 				}
 				$suffix = "";
 				if ($item->status != 'published') {
 					$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
 				}
-				echo "<li><a href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "$suffix</a></li>";
+				echo "<a class='articleLink' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'><span class='name'>" . $item->title . "$suffix</span><span class='date'>{$itemDate}</span></a>";
 			}
 		?>
 		</div>
