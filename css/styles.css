@@ -21,6 +21,7 @@ body {
   background: #fff;
   color: #444444;
   font-smooth: always;
+  overscroll-behavior-x: none;
 }
 a {
   transform: translate3d(0, 0, 0);
@@ -38,6 +39,18 @@ a {
 }
 a:hover {
   color: #14cf4d;
+}
+/* Header linking */
+a.header-link {
+  color: #777777;
+  position: relative;
+  top: 2px;
+  left: 3px;
+  text-decoration: none;
+}
+article h1, article h2, article h3, article h4, article h5, article h6 {
+  padding-top: 20px;
+  margin-top: 0px;
 }
 .container {
   width: 700px;
@@ -81,25 +94,59 @@ pre code {
   display: block;
   margin-left: 35px;
   position: relative;
-  padding: 4px;
+  padding: 13px 4px 13px 8px;
   font-size: 80%;
+  white-space: pre;
+  overflow-x: scroll;
 }
 
-pre code:before {
+pre:has(> code):before {
   height: 100%;
+  font-size: 80%;
   color: #ABABAB;
   position: absolute;
   background-color: #c8feca;
-  left: -40px;
+  left: 0px;
   top: 0;
-  padding-right: 4px;
-  padding-top: 4px;
+  padding: 13px 4px 0 0;
+  border-bottom: 13px solid #c8feca;
   width: 35px;
   word-break: break-word;
   white-space: pre-wrap;
   direction: rtl;
   overflow: hidden;
   content: "1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250";
+}
+
+.copy-button {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  border-radius: 3px;
+  border: 1px solid #12bd46;
+  background-color: #f1fef3;
+  padding: 0px 6.5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+
+  transition: 0.2s ease;
+}
+
+.copy-button.success {
+  font-size: 1.4em;
+}
+
+.copy-button.failure {
+  font-size: 1em;
+  background-color: #f9f2f4 !important;
+  border-color: #c7254e;
+  color: #c7254e;
+}
+
+.copy-button:hover {
+  background-color: #c8feca;
 }
 
 p.del, p.break {
@@ -111,8 +158,13 @@ p.del + pre, pre.del {
   background-color: #f9f2f4;
 }
 
-p.del + pre code:before, pre.del code:before {
+p.del + pre:has(> code):before, pre:has(> code).del:before {
   background-color: #f9d9db;
+  border-bottom: 13px solid #f9d9db;
+}
+
+kbd {
+  white-space: nowrap;
 }
 /*
  * Header Nav

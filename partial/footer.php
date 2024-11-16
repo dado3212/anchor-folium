@@ -51,6 +51,61 @@ $(document).ready(function(){
 	$('button.close').click(function() {
 		$('#search').css('display', 'none');
 	});
+
+	// Handle clickable headers
+	$("article h1, article h2, article h3, article h4, article h5, article h6").hover(function() {
+		// When hovering over a header
+		var header = $(this);
+		var headerId = header.attr('id');
+		
+		if (headerId) {
+			// Create the '#' link if the header has an ID
+			var link = $('<a href="#' + headerId + '" class="header-link">#</a>');
+			header.append(link);
+		}
+	},
+	function() {
+		// When the hover ends, remove the '#' link
+		$(this).find('.header-link').remove();
+	});
+
+	// Handle copyable text blocks
+	$('code[copyable]').each(function() {
+		var codeBlock = $(this);
+
+		var copyButton = $('<button class="copy-button">⧉</button>');
+		codeBlock.parent().append(copyButton);
+		copyButton.on('click', function() {
+			// Create a temporary textarea element to copy the text
+			var tempTextarea = $('<textarea>')
+				.val(codeBlock.text())
+				.attr('readonly', true) // Make it readonly to prevent keyboard opening
+				.css({
+					position: 'absolute', // Absolute positioning
+					top: '-9999px', // Move it off-screen
+					left: '-9999px',
+				})
+				.appendTo('body')
+				.select();
+			try {
+				document.execCommand('copy');
+
+				// Animate success
+				copyButton.addClass('success');
+				setTimeout(function() {
+					copyButton.removeClass('success');
+				}, 500);
+			} catch (err) {
+				// Animate failure
+				copyButton.addClass('failure');
+				setTimeout(function() {
+					copyButton.removeClass('failure');
+				}, 500);
+			}
+			// Remove the temporary textarea element
+			tempTextarea.remove();
+		});
+	});
 });
 </script>
 <script>
