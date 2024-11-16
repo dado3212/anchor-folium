@@ -50,7 +50,62 @@
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
 			<button class="btn btn-default">Post Comment</button>
 		</form>
-		<?php endif; ?>
+		<?php endif;
+		if (article_status() == 'published') {
+		if (user_authed() && user_authed_role() == 'administrator') {
+			$posts = Query::table(Base::table('posts'))
+				->sort('created', 'desc')
+				->get();
+		} else {
+			$posts = Query::table(Base::table('posts'))
+				->where('status', '=', 'published')
+				->sort('created', 'desc')
+				->get();
+		}
+		$page = Registry::get('posts_page');
+		?>
+		<div id="previousPosts">
+		<?php
+		$previousPost = null;
+		$nextPost = null;
+		$recentPosts = [];
+		$foundCurrentPost = false;
+		$currentArticleId = article_id();
+		
+		foreach ($posts as $post) {
+			if (count($recentPosts) < 5) {
+				$recentPosts[] = $post; // Collect the 5 most recent posts
+			}
+
+			if ($post->id === $currentArticleId) {
+				$foundCurrentPost = true;
+				continue;
+			}
+		
+			if (!$foundCurrentPost) {
+				$nextPost = $post; // The last post before the current one in descending order
+			} elseif ($foundCurrentPost && !$previousPost) {
+				$previousPost = $post; // The first post after the current one in descending order
+			}
+		}
+		if ($nextPost) {
+			echo "<h3 class='year'>Next</h3>";
+			renderArticleLink($page, $nextPost);
+		}
+		if ($previousPost) {
+			echo "<h3 class='year'>Previous</h3>";
+			renderArticleLink($page, $previousPost);
+		}
+		if (count($recentPosts) > 0) {
+			echo "<h3 class='year'>Recent</h3>";
+			foreach ($recentPosts as $recentPost) {
+				renderArticleLink($page, $recentPost);
+			}
+			echo "<a class='articleLink' href='/list' title='View all'><b>View all</b></a>";
+		}
+		?>
+		</div>
+		<?php } ?>
 	</main>
 <?php else: ?>
 	<main class="container">

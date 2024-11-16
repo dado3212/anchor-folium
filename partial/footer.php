@@ -53,7 +53,7 @@ $(document).ready(function(){
 	});
 
 	// Handle clickable headers
-	$("article h2, article h3, article h4, article h5, article h6").click(function() {
+	$("article h2, article h3, article h4, article h5, article h6, section#comments > h2").click(function() {
 		// When hovering over a header
 		var header = $(this);
 		var headerId = header.attr('id');

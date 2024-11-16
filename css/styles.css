@@ -48,31 +48,31 @@ a:hover {
   color: #14cf4d;
 }
 /* Header linking */
-article h2, article h3, article h4, article h5, article h6 {
+article h2,
+article h3,
+article h4,
+article h5,
+article h6,
+section#comments > h2 {
   padding-top: 20px;
   margin-top: 0px;
   cursor: pointer;
   position: relative;
 }
-article h2:hover:before, article h3:hover:before, article h4:hover:before, article h5:hover:before, article h6:hover:before {
+article h2:hover:before,
+article h3:hover:before,
+article h4:hover:before,
+article h5:hover:before,
+article h6:hover:before,
+section#comments > h2:hover:before {
   content: '#';
   color: #777777;
   position: absolute;
   padding-right: 7px;
-  left: -18px;
+  left: -20px;
 }
 .container {
   width: 700px;
-}
-#previousPosts {
-  padding-left: 25px;
-}
-#previousPosts .year {
-    text-align: center;
-    font-size: 22px;
-}
-#previousPosts li {
-  display: block;
 }
 .padding-container {
   /* iOS 11 */
@@ -283,6 +283,16 @@ aside .description {
 /**
  *  List of Posts
  */
+#previousPosts {
+  padding: 0 25px 50px 25px;
+}
+#previousPosts .year {
+  padding-left: 10px;
+  font-size: 22px;
+}
+#previousPosts li {
+  display: block;
+}
 .articleLink {
   display: flex;
   justify-content: space-between;
@@ -298,15 +308,18 @@ aside .description {
   opacity: 0;
   transition: 0.3s ease;
 }
-.articleLink:hover {
-  background-color: #f1fef3;
-  text-decoration: none;
-}
-.articleLink:hover .name {
-  font-weight: 600;
-}
-.articleLink:hover .date {
-  opacity: 1;
+/* Only do hover animations for non-mobile */ 
+@media (hover: hover) and (pointer: fine) {
+  .articleLink:hover {
+    background-color: #f1fef3;
+    text-decoration: none;
+  }
+  .articleLink:hover .name {
+    font-weight: 600;
+  }
+  .articleLink:hover .date {
+    opacity: 1;
+  }
 }
 /*
  *  Article
@@ -484,7 +497,7 @@ section#comments .notification .success {
   background: #2ecc71;
 }
 form#comment {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 form#comment input,
 form#comment button {
@@ -572,6 +585,9 @@ footer nav > ul.navbar-nav li > a:hover {
   }
 }
 @media only screen and (max-width: 760px) {
+  .articleLink .date {
+    display: none;
+  }
   header#top .navbar-toggle:hover,
   header#top .navbar-toggle:focus {
     background: #f8f8f8;

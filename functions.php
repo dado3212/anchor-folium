@@ -58,6 +58,15 @@ function relative_time($date) {
 	}
 }
 
+function renderArticleLink($page, $item) {
+	$itemDate = date('F j, Y', strtotime($item->created));
+	$suffix = "";
+	if ($item->status != 'published') {
+		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
+	}
+	echo "<a class='articleLink' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'><span class='name'>" . $item->title . "$suffix</span><span class='date'>{$itemDate}</span></a>";
+}
+
 function total_articles() {
 	return Post::where(Base::table('posts.status'), '=', 'published')->count();
 }
