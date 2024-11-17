@@ -48,22 +48,22 @@ a:hover {
   color: #14cf4d;
 }
 /* Header linking */
-article h2,
-article h3,
-article h4,
-article h5,
-article h6,
+article > h2,
+article > h3,
+article > h4,
+article > h5,
+article > h6,
 section#comments > h2 {
   padding-top: 20px;
   margin-top: 0px;
   cursor: pointer;
   position: relative;
 }
-article h2:hover:before,
-article h3:hover:before,
-article h4:hover:before,
-article h5:hover:before,
-article h6:hover:before,
+article > h2:hover:before,
+article > h3:hover:before,
+article > h4:hover:before,
+article > h5:hover:before,
+article > h6:hover:before,
 section#comments > h2:hover:before {
   content: '#';
   color: #777777;
