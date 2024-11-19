@@ -64,7 +64,7 @@
 		}
 		$page = Registry::get('posts_page');
 		?>
-		<div id="previousPosts">
+		<div id="previousPosts" class="page">
 		<?php
 		$previousPost = null;
 		$nextPost = null;

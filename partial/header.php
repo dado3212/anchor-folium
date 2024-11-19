@@ -10,6 +10,7 @@
 		}
 	?>
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/bootstrap.min.css'); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
 
 	<!-- Captcha -->
@@ -51,7 +52,7 @@
 		<nav class="navbar navbar-default padding-container">
 			<div class="navbar-header">
 				<a href="<?php echo base_url(); ?>" class="navbar-brand">
-					<img src="/themes/folium/tree.png" alt="lone redwood" />
+					<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" />
 					<span><?php echo site_name(); ?></span>
 				</a>
 			</div>

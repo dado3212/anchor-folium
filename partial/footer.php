@@ -32,6 +32,7 @@
 
 <script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 <script src="<?php echo theme_url('js/bootstrap.min.js'); ?>"></script>
+<script src="<?php echo theme_url('js/prism.js'); ?>"></script>
 
 <!-- Lightbox -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css" />
@@ -68,7 +69,6 @@ $(document).ready(function(){
 		var codeBlock = $(this);
 
 		var copyButton = $('<button class="copy-button">⧉</button>');
-		codeBlock.parent().append(copyButton);
 		copyButton.on('click', function() {
 			// Create a temporary textarea element to copy the text
 			var tempTextarea = $('<textarea>')
@@ -99,6 +99,23 @@ $(document).ready(function(){
 			// Remove the temporary textarea element
 			tempTextarea.remove();
 		});
+
+		codeBlock.parent().wrap('<div style="position: relative;"></div>')
+
+		codeBlock.parent().parent().append(copyButton);
+	});
+
+	// Handle lazy load smaller images
+	$('img[data-high-res]').each(function () {
+		const image = $(this);
+		const highResSrc = image.attr('data-high-res');
+		if (highResSrc) {
+			const highResImage = new Image();
+			highResImage.src = highResSrc;
+			highResImage.onload = () => {
+				image.attr('src', highResSrc);
+			};
+		}
 	});
 });
 </script>
