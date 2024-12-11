@@ -728,6 +728,7 @@ footer nav > ul.navbar-nav li > a:hover {
     float: left;
     clear: both;
     width: 95%;
+    max-width: 100%;
     margin: 1em;
     text-align: left;
   }

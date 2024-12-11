@@ -24,11 +24,14 @@ function get_description($html) {
 
 	if ($paragraphs->length > 0) {
 		$first_paragraph = $paragraphs->item(0);
+		$spans = $first_paragraph->getElementsByTagName('span');
 
-		// Don't render footnotes on the main page
-		foreach ($first_paragraph->getElementsByTagName('span') as $sidenote) {
-			if ($sidenote->hasAttribute('class') && strpos($sidenote->getAttribute('class'), 'sidenote-wrapper') !== false) {
-				$sidenote->parentNode->removeChild($sidenote);
+		// Don't render footnotes on the main page 
+		// (reverse order because otherwise the list changes)
+		for ($i = $spans->length - 1; $i >= 0; $i--) {
+			$span = $spans->item($i);
+			if ($span->hasAttribute('class') && strpos($span->getAttribute('class'), 'sidenote-wrapper') !== false) {
+				$span->parentNode->removeChild($span);
 			}
 		}
 		return $dom->saveHTML($first_paragraph);

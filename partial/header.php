@@ -18,7 +18,16 @@
 	<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 	<script async src='https://www.google.com/recaptcha/api.js'></script>
 
-	<meta property="og:title" content="<?php echo page_title("Page can't be found."); ?>">
+	<?php
+		$page_title = page_title("Page can't be found.");
+		if ($page_title === 'Main Posts') {
+			$page_title = site_name();
+		} else {
+			$page_title = $page_title . ' - ' . site_name();
+		}
+	?>
+
+	<meta property="og:title" content="<?php echo $page_title; ?>">
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="<?php echo current_url(); ?>">
 	<meta property="og:image" content="<?php echo theme_url('img/og_image.gif'); ?>">
@@ -45,15 +54,7 @@
 	<meta name="msapplication-config" content="<?php echo theme_url('img/favicon/browserconfig.xml'); ?>">
 	<meta name="theme-color" content="#006841">
 
-	<title>
-	<?php
-		$page_title = page_title("Page can't be found.");
-		if ($page_title === 'Main Posts') {
-			echo site_name();
-		} else {
-			echo $page_title . ' - ' . site_name();
-		}
-	?></title>
+	<title><?php echo $page_title; ?></title>
 </head>
 <body>
 	<header id="top">
