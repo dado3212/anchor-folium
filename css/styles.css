@@ -118,9 +118,10 @@ section#comments > h2:hover:before {
   float: right;
   clear: right;
   width: calc(50vw - 390px);
+  max-width: 320px;
   font-size: 0.9em;
   line-height: 1.3;
-  margin-right: calc(-50vw + 360px);
+  margin-right: max(-350px, calc(-50vw + 360px));
   color: #616161;
   white-space: nowrap;
 }
@@ -131,7 +132,7 @@ section#comments > h2:hover:before {
   float: left;
   clear: left;
   margin-right: 0;
-  margin-left: calc(-50vw + 360px);
+  margin-left: max(-350px, calc(-50vw + 360px));;
   text-align: right;
 }
 .sidenote::before {
