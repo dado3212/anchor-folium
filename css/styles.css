@@ -33,6 +33,8 @@ body {
   color: var(--text);
   font-smooth: always;
   overscroll-behavior-x: none;
+
+  counter-reset: sidenote-counter;
 }
 a {
   transform: translate3d(0, 0, 0);
@@ -105,6 +107,36 @@ section#comments > h2:hover:before {
 .container-wide {
   margin: 0 auto;
   width: 900px;
+}
+/** Sidenotes */
+.sidenote-indicator {
+  margin-left: -3px;
+}
+.sidenote {
+  counter-increment: sidenote-counter;
+
+  float: right;
+  clear: right;
+  width: calc(50vw - 390px);
+  font-size: 0.9em;
+  line-height: 1.3;
+  margin-right: calc(-50vw + 360px);
+  color: #616161;
+  overflow-wrap: break-word;
+}
+.even-sidenote {
+  float: left;
+  clear: left;
+  margin-right: 0;
+  margin-left: calc(-50vw + 360px);
+  text-align: right;
+}
+.sidenote::before {
+  content: counter(sidenote-counter) " ";
+  left: -0.2em;
+  top: -0.3em;
+  font-size: 0.9em;
+  position: relative;
 }
 .img-splash {
   height: 250px;
