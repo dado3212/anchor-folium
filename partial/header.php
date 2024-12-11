@@ -45,7 +45,15 @@
 	<meta name="msapplication-config" content="<?php echo theme_url('img/favicon/browserconfig.xml'); ?>">
 	<meta name="theme-color" content="#006841">
 
-	<title><?php echo page_title("Page can't be found."); ?> - <?php echo site_name(); ?></title>
+	<title>
+	<?php
+		$page_title = page_title("Page can't be found.");
+		if ($page_title === 'Main Posts') {
+			echo site_name();
+		} else {
+			echo $page_title . ' - ' . site_name();
+		}
+	?></title>
 </head>
 <body>
 	<header id="top">
@@ -54,6 +62,11 @@
 				<a href="<?php echo base_url(); ?>" class="navbar-brand">
 					<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" />
 					<span><?php echo site_name(); ?></span>
+					<?php
+					if (admin()) {
+						echo '<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" style="margin-left: 7px;" />';
+					}
+					?>
 				</a>
 			</div>
 
@@ -81,7 +94,7 @@
 			<?php echo site_description(); ?>
 		</p>
 		<?php
-			if (user_authed() && user_authed_role() == 'administrator') {
+			if (admin()) {
 				$items = Query::table(Base::table('posts'))
 					->sort('created')
 					->get();

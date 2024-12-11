@@ -1,3 +1,7 @@
+:root {
+  --text: #19291f;
+  --meta-text: #636a66;
+}
 ::selection {
   background: #14cf4d;
   color: #fff;
@@ -26,7 +30,7 @@ body {
   font: 19px "Crimson Pro", serif;
   font-weight: 340;
   background: #fff;
-  color: #444444;
+  color: var(--text);
   font-smooth: always;
   overscroll-behavior-x: none;
 }
@@ -46,6 +50,12 @@ a {
 }
 a:hover {
   color: #14cf4d;
+}
+/* Get strikethrough to render in the right place */
+s {
+  text-decoration: underline var(--text) .1em;
+  text-underline-offset: -.25em;
+  text-decoration-skip-ink: none;
 }
 /** Table **/
 table {
@@ -81,6 +91,7 @@ section#comments > h2:hover:before {
 }
 .container {
   width: 700px;
+  min-height: calc(100vh - 228px);
 }
 .padding-container {
   /* iOS 11 */
@@ -206,7 +217,7 @@ header#top nav .navbar-brand {
   letter-spacing: 0;
   font-weight: 500;
   text-transform: initial;
-  color: #444444;
+  color: var(--text);
 }
 header#top nav .navbar-brand img {
   width: 37px;
@@ -225,7 +236,7 @@ header#top nav ul li a {
   padding: 30px 15px;
 }
 header#top nav ul li a:hover {
-  color: #555555;
+  color: var(--text);
 }
 header#top nav a {
   transform: translate3d(0, 0, 0);
@@ -339,7 +350,7 @@ main article {
   font-size: 19px;
   line-height: 27px;
   padding-bottom: 25px;
-  color: #777777;
+  color: var(--text);
 }
 main article:last-of-type {
   border-bottom: none;
@@ -350,22 +361,22 @@ main article header {
 main article header h1 {
   font-size: 42px;
   line-height: 48px;
-  color: #444444;
+  color: var(--text);
 }
 main article header h1 a {
-  color: #444444;
+  color: var(--text);
 }
 main article header h1 a:hover {
-  color: #444444;
+  color: var(--text);
 }
 main article header .meta {
   font-size: 18px;
   font-style: italic;
-  color: #aaaaaa;
+  color: var(--meta-text);
   margin-top: -5px;
 }
 main article header .meta a {
-  color: #444444;
+  color: var(--text);
 }
 main img {
   max-width: 100%;
@@ -403,7 +414,7 @@ main .pager a {
   color: #848484;
 }
 main .pager a:hover {
-  color: #444444;
+  color: var(--text);
 }
 main .list-unstyled li {
   padding-bottom: 20px;
@@ -480,7 +491,7 @@ section#comments .commentlist li p {
 }
 section#comments .notification .success {
   padding: 5px;
-  color: #444;
+  color: var(--text);
   background: #2ecc71;
 }
 form#comment {
@@ -524,7 +535,7 @@ footer nav > ul.navbar-nav li > a {
 }
 footer nav > ul.navbar-nav li > a:hover {
   background: none;
-  color: #444444;
+  color: var(--text);
 }
 /*
  *  Search
@@ -571,40 +582,7 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 100%;
   }
 }
-@media only screen and (max-width: 760px) {
-  .articleLink .date {
-    display: none;
-  }
-  footer {
-    padding: 25px;
-  }
-  pre[class*="language-"] {
-    padding: 10px;
-    margin: 15px -10px;
-    border-radius: 12px;
-  }
-  header#top .navbar-toggle:hover,
-  header#top .navbar-toggle:focus {
-    background: #f8f8f8;
-  }
-  header#top nav .navbar-collapse {
-    padding: 0;
-    position: initial;
-  }
-  header#top nav {
-    display: block;
-  }
-  header#top .navbar-default .navbar-toggle {
-    position: absolute;
-    right: 0px;
-    top: 4px;
-  }
-  header#top .navbar-brand {
-    padding-top: 5px;
-  }
-  header#top .navbar-brand strong {
-    display: block;
-  }
+@media only screen and (max-width: 950px) {
   .row {
     width: 100%;
     margin: 0;
@@ -639,10 +617,6 @@ footer nav > ul.navbar-nav li > a:hover {
   .row .col-md-7 nav > ul.navbar-nav > li a {
     padding: 5px;
     text-align: center;
-  }
-  .container,
-  .container-wide {
-    width: 100%;
   }
   .container .row,
   .container-wide .row {
@@ -693,6 +667,47 @@ footer nav > ul.navbar-nav li > a:hover {
   .container-wide .row .col-md-7 nav > ul.navbar-nav > li a {
     padding: 5px;
     text-align: center;
+  }
+  .container-wide {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 760px) {
+  .articleLink .date {
+    display: none;
+  }
+  footer {
+    padding: 25px;
+  }
+  pre[class*="language-"] {
+    padding: 16px;
+    margin: 15px -10px;
+    border-radius: 12px;
+  }
+  header#top .navbar-toggle:hover,
+  header#top .navbar-toggle:focus {
+    background: #f8f8f8;
+  }
+  header#top nav .navbar-collapse {
+    padding: 0;
+    position: initial;
+  }
+  header#top nav {
+    display: block;
+  }
+  header#top .navbar-default .navbar-toggle {
+    position: absolute;
+    right: 0px;
+    top: 4px;
+  }
+  header#top .navbar-brand {
+    padding-top: 5px;
+  }
+  header#top .navbar-brand strong {
+    display: block;
+  }
+  .container {
+    width: 100%;
   }
 }
 

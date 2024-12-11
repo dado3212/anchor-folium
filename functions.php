@@ -13,10 +13,14 @@ function count_words($str) {
 	return count(preg_split('/\s+/', strip_tags($str), null, PREG_SPLIT_NO_EMPTY));
 }
 
+function admin() {
+	return user_authed() && user_authed_role() == 'administrator';
+}
+
 function split_content($content){
-	$paragraphs = explode("\n\n", $content);
+	$paragraphs = explode("\n", $content);
 	$paragraphs = array_slice($paragraphs, 0, 1);
-	return join("\n\n", $paragraphs);
+	return join("\n", $paragraphs);
 }
 
 function pluralise($amount, $str, $alt = '') {
