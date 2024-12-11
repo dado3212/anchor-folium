@@ -17,6 +17,31 @@ function admin() {
 	return user_authed() && user_authed_role() == 'administrator';
 }
 
+function get_description($html) {
+	$dom = new DOMDocument();
+	@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . $html);
+	$paragraphs = $dom->getElementsByTagName('p');
+
+	if ($paragraphs->length > 0) {
+		$first_paragraph = $paragraphs->item(0);
+
+		// Don't render footnotes on the main page
+		foreach ($first_paragraph->getElementsByTagName('sup') as $marker) {
+			$marker->parentNode->removeChild($marker);
+		}
+		foreach ($first_paragraph->getElementsByTagName('span') as $sidenote) {
+			if ($sidenote->hasAttribute('class') && strpos($sidenote->getAttribute('class'), 'sidenote') !== false) {
+				$sidenote->parentNode->removeChild($sidenote);
+			}
+		}
+		return $dom->saveHTML($first_paragraph);
+	}
+	// Get the first paragraph
+	$paragraphs = explode("\n", $html);
+	$paragraphs = array_slice($paragraphs, 0, 1);
+	return join("\n", $paragraphs);
+}
+
 function split_content($content){
 	$paragraphs = explode("\n", $content);
 	$paragraphs = array_slice($paragraphs, 0, 1);

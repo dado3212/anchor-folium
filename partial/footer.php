@@ -117,6 +117,19 @@ $(document).ready(function(){
 			};
 		}
 	});
+
+	// Handle footnotes in place
+	$('.sidenote-indicator').each(function () {
+		var sidenoteIndicator = $(this);
+		sidenoteIndicator.on('click', function() {
+			// If the screen is too big just ignore it
+			if (window.innerWidth > 790) {
+				return;
+			}
+			// Toggle visibility
+			sidenoteIndicator.parent().find('.sidenote').toggleClass('visible');
+		});
+	});
 });
 </script>
 <script>

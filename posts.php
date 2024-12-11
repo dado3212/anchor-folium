@@ -12,7 +12,7 @@
 					</div>
 				</header>
 
-				<?php echo split_content(article_markdown()); ?>
+				<?php echo get_description(article_markdown()); ?>
 				<p><a href="<?php echo article_url(); ?>" rel="article">Read More</a></p>
 			</article>
 			<?php endwhile; ?>

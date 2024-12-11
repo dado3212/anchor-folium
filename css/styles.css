@@ -111,10 +111,10 @@ section#comments > h2:hover:before {
 /** Sidenotes */
 .sidenote-indicator {
   margin-left: -3px;
+
+  counter-increment: sidenote-counter;
 }
 .sidenote {
-  counter-increment: sidenote-counter;
-
   float: right;
   clear: right;
   width: calc(50vw - 390px);
@@ -614,6 +614,19 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 100%;
   }
 }
+@media only screen and (max-width: 1200px) {
+  .container {
+    width: 58.3%;
+  }
+  .sidenote {
+    width: 33%;
+    margin-right: -37%;
+  }
+  .even-sidenote {
+    margin-left: -37%;
+    margin-right: 0;
+  }
+}
 @media only screen and (max-width: 950px) {
   .row {
     width: 100%;
@@ -704,7 +717,26 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 100%;
   }
 }
-@media only screen and (max-width: 760px) {
+@media only screen and (max-width: 790px) {
+  .sidenote {
+    display: none;
+
+    float: left;
+    clear: both;
+    width: 95%;
+    margin: 1em;
+    text-align: left;
+  }
+  .sidenote.visible {
+    display: block;
+  }
+  .sidenote-indicator {
+    color: #14cf4d;
+    cursor: pointer;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #14cf4d;
+    margin-left: -1px;
+  }
   .articleLink .date {
     display: none;
   }
