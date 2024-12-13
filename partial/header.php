@@ -54,6 +54,8 @@
 	<meta name="msapplication-config" content="<?php echo theme_url('img/favicon/browserconfig.xml'); ?>">
 	<meta name="theme-color" content="#006841">
 
+	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
+
 	<title><?php echo $page_title; ?></title>
 </head>
 <body>

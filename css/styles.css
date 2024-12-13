@@ -108,6 +108,90 @@ section#comments > h2:hover:before {
   margin: 0 auto;
   width: 900px;
 }
+/** Header Selection */
+.trigger {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  position: fixed;
+  border-radius: 5px;
+  padding: 12px 5px;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%) scale(.99);
+  background: none;
+  border: none;
+  line-height: 1em;
+  font-size: 0.8em;
+  outline: none;
+  font-family: bold;
+  cursor: pointer;
+  opacity: 0.8;
+
+  transition: 0.3s ease;
+}
+.trigger:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  background-color: #f0f0f0;
+}
+.trigger span {
+  height: 1.5px;
+  background-color: #868787;
+  width: 12px;
+}
+.trigger span.active {
+  background-color: #363737;
+}
+.table-of-contents {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  border-radius: 5px;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%) scale(.99);
+  background: none;
+  border: 1px solid #e6e6e6;
+  line-height: 1.2em;
+  width: 240px;
+  overflow-x: clip;
+  cursor: default;
+  outline: none;
+  font-family: bold;
+  transition: 0.3s ease;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, .1), 0px 4px 6px -2px rgba(0, 0, 0, .05);
+  padding: 8px;
+  background: #f0f0f0;
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+.table-of-contents span.contents {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .2px;
+  padding: 4px;
+  font-weight: 500;
+}
+.table-of-contents .link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #868787;
+  font-weight: 400;
+  font-size: 15px;
+  padding: 4px;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+
+  text-decoration: none !important;
+}
+.table-of-contents .link.active, .table-of-contents .link:hover {
+  color: #363737;
+}
 /** Sidenotes */
 .sidenote-indicator {
   margin-left: -3px;
@@ -132,8 +216,11 @@ section#comments > h2:hover:before {
   float: left;
   clear: left;
   margin-right: 0;
-  margin-left: max(-350px, calc(-50vw + 360px));;
+  margin-left: max(-350px, calc(-50vw + 360px));
   text-align: right;
+
+  width: calc(50vw - 390px);
+  max-width: 320px;
 }
 .sidenote::before {
   content: counter(sidenote-counter) " ";
@@ -724,8 +811,7 @@ footer nav > ul.navbar-nav li > a:hover {
 @media only screen and (max-width: 790px) {
   .sidenote {
     display: none;
-
-    float: left;
+    float: none;
     clear: both;
     width: 95%;
     max-width: 100%;

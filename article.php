@@ -1,6 +1,6 @@
 <?php theme_include('partial/header'); ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
-<?php if (article_status() == "published" || (user_authed() && user_authed_role() == 'administrator')):
+<?php if (article_status() == "published" || admin()):
 	$suffix = "";
 	if (article_status() != 'published') {
 		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
@@ -16,10 +16,86 @@
 			</header>
 
 			<?php echo article_markdown(); ?>
-			<?php if (user_authed() && user_authed_role() == 'administrator') { 
+			<?php if (admin()) { 
 				echo "<a href='/admin/posts/edit/" . article_id() . "' target='_blank'>Edit Article</a>"; 
 			} ?>
 		</article>
+		<?php
+			if (admin()) {
+				$a = article_markdown();
+				$dom = new DOMDocument();
+				@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . $a);
+				$xpath = new DOMXpath($dom);
+				$headers = $xpath->query('//h1 | //h2 | //h3 | //h4 | //h5 | //h6');
+				
+				$button = '<button class="trigger" onclick="(function(){$(\'.table-of-contents\').toggle();})();">';
+				$contents = '<div class="table-of-contents" style="display: none;"><span class="contents">CONTENTS</span>';
+				
+				for ($i = 0; $i < $headers->length; $i++) {
+					$header = $headers->item($i);
+					$level = substr($header->nodeName, 1); // Extract the number from "h1", "h2", etc.
+					$innerHTML = '';
+					foreach ($header->childNodes as $child) {
+						$innerHTML .= $header->ownerDocument->saveHTML($child);
+					}
+
+					$id = $header->getAttribute('id');
+
+					if ($i == 0) {
+						$button .= '<span class="active" attr="' . $id . '"></span>';
+					} else {
+						$button .= '<span attr="' . $id . '"></span>';
+					}
+					
+					$contents .= '<div class="link header' . $level . '" data-id="' . $id . '">' . $innerHTML . '</div>';
+				}
+
+				echo $button . '</button>' . $contents . '</div>';
+				?>
+				<script>
+					$(document).ready(function() {
+						// Click to link
+						$('.table-of-contents .link').click(function() {
+							$('#' + $(this).data('id')).get(0).scrollIntoView({ behavior: 'smooth' });
+						});
+						// Automatically close it if the window is open
+						document.body.addEventListener('click', function (event) {
+							const tableOfContents = document.querySelector('.table-of-contents');
+							if (
+								window.getComputedStyle(tableOfContents).display !== 'none' &&
+								!tableOfContents.contains(event.target) &&
+								!document.querySelector('button.trigger').contains(event.target)
+							) {
+								tableOfContents.style.display = 'none';
+							}
+						});
+						// Handle header updating
+						const observer = new IntersectionObserver(
+							(entries) => {
+								entries.forEach((entry) => {
+									if (entry.isIntersecting) {
+										// Mark it
+										$('.trigger span').removeClass('active');
+										$('.trigger span[attr=' + entry.target.id + ']').addClass('active');
+										
+										$('.table-of-contents .link').removeClass('active');
+										$('.table-of-contents .link[data-id=' + entry.target.id + ']').addClass('active');
+									}
+								});
+							},
+							{ threshold: 0 } // Trigger when the entire video is offscreen
+						);
+						document.querySelectorAll('article h2, article h3, article h4, article h5, article h6').forEach((i) => {
+							if (i) {
+								observer.observe(i);
+							}
+						});
+					});
+				</script>
+				<?php
+			}
+
+		?>
 
 		<?php if(has_comments()): ?>
 		<section id="comments">
@@ -52,7 +128,7 @@
 		</form>
 		<?php endif;
 		if (article_status() == 'published') {
-		if (user_authed() && user_authed_role() == 'administrator') {
+		if (admin()) {
 			$posts = Query::table(Base::table('posts'))
 				->sort('created', 'desc')
 				->get();

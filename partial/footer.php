@@ -30,7 +30,6 @@
 	<button class="btn btn-default close">&times;</button>
 </section>
 
-<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 <script src="<?php echo theme_url('js/bootstrap.min.js'); ?>"></script>
 <script src="<?php echo theme_url('js/prism.js'); ?>"></script>
 
@@ -60,7 +59,6 @@ $(document).ready(function(){
 		var headerId = header.attr('id');
 		if (headerId) {
 			header.get(0).scrollIntoView({ behavior: 'smooth' });
-    		history.pushState(null, null, `#${headerId}`);
 		}
 	});
 
