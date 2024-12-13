@@ -218,9 +218,7 @@ section#comments > h2:hover:before {
   margin-right: 0;
   margin-left: max(-350px, calc(-50vw + 360px));
   text-align: right;
-
-  width: calc(50vw - 390px);
-  max-width: 320px;
+  padding-left: 15px;
 }
 .sidenote::before {
   content: counter(sidenote-counter) " ";
@@ -809,6 +807,12 @@ footer nav > ul.navbar-nav li > a:hover {
   }
 }
 @media only screen and (max-width: 790px) {
+  .table-of-contents {
+    display: none;
+  }
+  .trigger {
+    display: none;
+  }
   .sidenote {
     display: none;
     float: none;
@@ -817,6 +821,9 @@ footer nav > ul.navbar-nav li > a:hover {
     max-width: 100%;
     margin: 1em;
     text-align: left;
+  }
+  .even-sidenote {
+    padding-left: 0px;
   }
   .sidenote.visible {
     display: block;
