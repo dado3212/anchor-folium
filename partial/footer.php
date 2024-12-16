@@ -59,6 +59,7 @@ $(document).ready(function(){
 		var headerId = header.attr('id');
 		if (headerId) {
 			header.get(0).scrollIntoView({ behavior: 'smooth' });
+			history.replaceState(null, '', `#${headerId}`);
 		}
 	});
 
@@ -102,6 +103,30 @@ $(document).ready(function(){
 
 		codeBlock.parent().parent().append(copyButton);
 	});
+
+	function debounce(func, wait) {
+		let timeout;
+		return function (...args) {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => func.apply(this, args), wait);
+		};
+	}
+	function adjustStuff() {
+		$('pre[data-line]').each(function () {
+			const preElement = $(this);
+			const lineHighlights = preElement.find('.line-highlight');
+			lineHighlights.each(function () {
+				$(this).css('width', '');
+			});
+			const preScrollWidth = preElement[0].scrollWidth;
+			lineHighlights.each(function () {
+				$(this).css('width', preScrollWidth + 'px');
+			});
+		});
+	}
+	// Attach resize event listener with debounce
+	const debouncedResize = debounce(adjustStuff, 200); // Adjust debounce time as needed
+	window.addEventListener('resize', debouncedResize);
 
 	// Handle lazy load smaller images
 	$('img[data-high-res]').each(function () {

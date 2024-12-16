@@ -50,4 +50,16 @@ and in the UI, to be able to adjust publication date.
 +  </p>
 ```
 
-
+## Inspiration
+* https://m65digest.substack.com/p/disassembling-crossroads-part-1
+* https://ludic.mataroa.blog/blog/you-must-read-at-least-one-book-to-ride/
+* https://www.nullpt.rs/breaking-the-4chan-captcha#getting-the-data
+* https://raw.sh/posts/easy_reward_model_inference#user-content-fnref-1
+* https://www.joshtumath.uk/posts/2024-11-08-how-a-bbc-navigation-bar-component-broke-depending-on-which-external-monitor-it-was-on/
+* https://ntietz.com/blog/evolving-ergo-setup/#engineers_ref
+* https://fleetwood.dev/posts/you-could-have-designed-SOTA-positional-encoding
+* https://blog.adamcameron.me/2014/07/code-for-annotation-highlighter.html
+* https://overreacted.io/what-is-javascript-made-of/
+* https://worksinprogress.co/issue/the-world-of-tomorrow/
+* https://blog.langworth.com/imposter-attack#more-target-work
+* https://blog.stevenchun.me/2024/06/Capacity-Conduction-Convection/

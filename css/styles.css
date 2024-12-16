@@ -1,13 +1,17 @@
 :root {
   --text: #19291f;
   --meta-text: #636a66;
+  --highlight: #0D8732;
+  --link: #0D8732;
+  --code-text: #0D8732;
+  --code-background: #e5fbeb;
 }
 ::selection {
-  background: #14cf4d;
+  background: var(--highlight);
   color: #fff;
 }
 ::-moz-selection {
-  background: #14cf4d;
+  background: var(--highlight);
   color: #fff;
 }
 * {
@@ -27,7 +31,7 @@
   src: url('/themes/folium/fonts/Graphik-Regular.otf');
 }
 body {
-  font: 19px "Crimson Pro", serif;
+  font: 20px "Crimson Pro", serif;
   font-weight: 340;
   background: #fff;
   color: var(--text);
@@ -45,13 +49,18 @@ a {
   -webkit-transition: ease-in-out 0.1s;
   -moz-transition: ease-in-out 0.1s;
   -o-transition: ease-in-out 0.1s;
-  color: #14cf4d;
+  color: var(--link);
   position: relative;
 
   text-decoration-skip: ink;
 }
+a.inline {
+  text-decoration: underline;
+  text-decoration-color: var(--link);
+  text-underline-offset: 0.1em;
+}
 a:hover {
-  color: #14cf4d;
+  color: var(--link);
 }
 /* Get strikethrough to render in the right place */
 s {
@@ -136,7 +145,7 @@ section#comments > h2:hover:before {
   background-color: #f0f0f0;
 }
 .trigger span {
-  height: 1.5px;
+  height: 1px;
   background-color: #868787;
   width: 12px;
 }
@@ -218,7 +227,7 @@ section#comments > h2:hover:before {
   margin-right: 0;
   margin-left: max(-350px, calc(-50vw + 360px));
   text-align: right;
-  padding-left: 15px;
+  padding-left: 22px;
 }
 .sidenote::before {
   content: counter(sidenote-counter) " ";
@@ -233,6 +242,7 @@ section#comments > h2:hover:before {
   background: no-repeat center #f0f0f0;
   background-size: cover;
 }
+/** Code */
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
   font-size: 75%;
@@ -245,14 +255,19 @@ pre[class*="language-"] {
 :not(pre) > code {
   padding:2px 4px;
   font-size:90%;
-  color:#c7254e;
-  background-color:#f9f2f4;
   border-radius:4px;
-  color: #12bd46;
-  background-color: #f1fef3;
+  color: var(--code-text);
+  background-color: var(--code-background);
   font-size: 80%;
 }
-
+/** Disable line highlight indicators */
+.line-highlight:before, .line-highlight[data-end]:after {
+  content: "";
+}
+.line-highlight {
+  background: linear-gradient(to right,#0D873226 70%,#0D873200);
+  border-left: 0.3em solid var(--link);
+}
 .copy-button {
   position: absolute;
   right: -10px;
@@ -443,6 +458,16 @@ aside .description {
     opacity: 1;
   }
 }
+/**
+ * File Objects
+ */
+f {
+  border: 1px solid black;
+  border-bottom: 1px solid #bababa;
+  background-color: #f9f9f9;
+  padding: 1px 5px;
+  text-wrap: nowrap;
+}
 /*
  *  Article
  */
@@ -468,8 +493,8 @@ main article {
   word-break: break-word;
   font-family: "Crimson Pro", serif;
 
-  font-size: 19px;
-  line-height: 27px;
+  font-size: 20px;
+  line-height: 28px;
   padding-bottom: 25px;
   color: var(--text);
 }
@@ -695,12 +720,26 @@ footer nav > ul.navbar-nav li > a:hover {
   background: none;
   font-size: 30px;
 }
+/** Retina screens */
+@media (min-resolution: 192dpi) {
+  a.inline {
+    text-decoration-thickness: 0.07em;
+  }
+  .trigger span {
+    height: 1.5px;
+  }
+}
 @media only screen and (max-width: 845px) {
   aside {
     display: none;
   }
   .mainWrapper {
     width: 100%;
+  }
+}
+@media only screen and (min-width: 1430px) {
+  .even-sidenote {
+    padding-left: 0px;
   }
 }
 @media only screen and (max-width: 1200px) {
@@ -807,6 +846,24 @@ footer nav > ul.navbar-nav li > a:hover {
   }
 }
 @media only screen and (max-width: 790px) {
+  article > h2:hover:before,
+  article > h3:hover:before,
+  article > h4:hover:before,
+  article > h5:hover:before,
+  article > h6:hover:before,
+  section#comments > h2:hover:before {
+    content: '';
+  }
+  article > h2:hover:after,
+  article > h3:hover:after,
+  article > h4:hover:after,
+  article > h5:hover:after,
+  article > h6:hover:after,
+  section#comments > h2:hover:after {
+    content: '#';
+    color: #777777;
+    padding-left: 5px;
+  }
   .table-of-contents {
     display: none;
   }
@@ -829,10 +886,10 @@ footer nav > ul.navbar-nav li > a:hover {
     display: block;
   }
   .sidenote-indicator {
-    color: #14cf4d;
+    color: var(--link);
     cursor: pointer;
     padding-bottom: 4px;
-    border-bottom: 1px solid #14cf4d;
+    border-bottom: 1px solid var(--link);
     margin-left: -1px;
   }
   .articleLink .date {
