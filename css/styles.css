@@ -374,6 +374,9 @@ header#top nav ul li a {
 header#top nav ul li a:hover {
   color: var(--text);
 }
+header#top nav ul li a[href='/subscribe'] {
+  color: #666;
+}
 header#top nav a {
   transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);

@@ -33,6 +33,14 @@
 	<meta property="og:image" content="<?php echo theme_url('img/og_image.gif'); ?>">
 	<meta property="og:site_name" content="<?php echo site_name(); ?>">
 	<meta property="og:description" content="<?php echo site_description(); ?>">
+	<script type="application/ld+json">
+		{
+		"@context" : "https://schema.org",
+		"@type" : "WebSite",
+		"name" : "Vox Silva",
+		"url" : "https://blog.alexbeals.com/"
+		}
+	</script>
 
 	<link rel="apple-touch-icon" sizes="57x57" href="<?php echo theme_url('img/favicon/apple-touch-icon-57x57.png'); ?>">
 	<link rel="apple-touch-icon" sizes="60x60" href="<?php echo theme_url('img/favicon/apple-touch-icon-60x60.png'); ?>">
@@ -55,6 +63,7 @@
 	<meta name="theme-color" content="#006841">
 
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
+	<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 	<title><?php echo $page_title; ?></title>
 </head>
