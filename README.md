@@ -63,3 +63,5 @@ and in the UI, to be able to adjust publication date.
 * https://worksinprogress.co/issue/the-world-of-tomorrow/
 * https://blog.langworth.com/imposter-attack#more-target-work
 * https://blog.stevenchun.me/2024/06/Capacity-Conduction-Convection/
+
+* https://cefboud.github.io/posts/compression/ -> use this for top right jump around on Mobile
