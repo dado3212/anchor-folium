@@ -21,8 +21,10 @@
 			} ?>
 		</article>
 		<?php
+			libxml_use_internal_errors(true); 
 			$dom = new DOMDocument();
-			@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . article_markdown());
+			@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . article_markdown(), LIBXML_NOERROR | LIBXML_NOWARNING);
+			libxml_clear_errors();
 			$xpath = new DOMXpath($dom);
 			$headers = $xpath->query('//h1 | //h2 | //h3 | //h4 | //h5 | //h6');
 

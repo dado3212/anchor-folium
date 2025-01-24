@@ -63,3 +63,4 @@ and in the UI, to be able to adjust publication date.
 * https://worksinprogress.co/issue/the-world-of-tomorrow/
 * https://blog.langworth.com/imposter-attack#more-target-work
 * https://blog.stevenchun.me/2024/06/Capacity-Conduction-Convection/
+* https://tracydurnell.com/2024/12/17/in-praise-of-the-hundred-page-idea/

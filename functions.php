@@ -18,8 +18,10 @@ function admin() {
 }
 
 function get_description($html) {
+	libxml_use_internal_errors(true); 
 	$dom = new DOMDocument();
-	@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . $html);
+	@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . $html, LIBXML_NOERROR | LIBXML_NOWARNING);
+	libxml_clear_errors();
 	$paragraphs = $dom->getElementsByTagName('p');
 
 	if ($paragraphs->length > 0) {

@@ -248,9 +248,9 @@ pre[class*="language-"] {
   font-size: 75%;
 }
 pre[class*="language-"] {
-  padding: 16px;
-  margin: 20px -16px;
-  border-radius: 12px;
+  padding: 13.5px 18px;
+  margin: 20px -10px;
+  border-radius: 7px;
 }
 :not(pre) > code {
   padding:2px 4px;
@@ -902,9 +902,7 @@ footer nav > ul.navbar-nav li > a:hover {
     padding: 25px;
   }
   pre[class*="language-"] {
-    padding: 16px;
-    margin: 15px -10px;
-    border-radius: 12px;
+    margin: 15px -5px;
   }
   header#top .navbar-toggle:hover,
   header#top .navbar-toggle:focus {

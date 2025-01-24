@@ -2,6 +2,26 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<?php
+		$page_title = page_title("Page can't be found.");
+		if ($page_title === 'Main Posts') {
+			$page_title = site_name();
+		} else {
+			$page_title = $page_title . ' - ' . site_name();
+		}
+	?>
+	<title><?php echo $page_title; ?></title>
+	<meta name="author" content="Vox Silva">
+	<meta property="og:title" content="<?php echo $page_title; ?>">
+	<script type="application/ld+json">
+		{
+		"@context" : "https://schema.org",
+		"@type" : "WebSite",
+		"name" : "Vox Silva",
+		"url" : "https://blog.alexbeals.com/",
+		"alternateName": ["VoxSilva", "Vox Silva Blog", "Silva Vox", "SilvaVox", "Silva Vox Blog", "blog.alexbeals.com"]
+		}
+	</script>
 
 	<?php
 		if (preg_match("/(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/i", $_SERVER['HTTP_USER_AGENT'])) {
@@ -18,29 +38,21 @@
 	<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 	<script async src='https://www.google.com/recaptcha/api.js'></script>
 
-	<?php
-		$page_title = page_title("Page can't be found.");
-		if ($page_title === 'Main Posts') {
-			$page_title = site_name();
-		} else {
-			$page_title = $page_title . ' - ' . site_name();
-		}
-	?>
-
-	<meta property="og:title" content="<?php echo $page_title; ?>">
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="<?php echo current_url(); ?>">
-	<meta property="og:image" content="<?php echo theme_url('img/og_image.gif'); ?>">
 	<meta property="og:site_name" content="<?php echo site_name(); ?>">
-	<meta property="og:description" content="<?php echo site_description(); ?>">
-	<script type="application/ld+json">
-		{
-		"@context" : "https://schema.org",
-		"@type" : "WebSite",
-		"name" : "Vox Silva",
-		"url" : "https://blog.alexbeals.com/"
+	<?php
+		$og_image = article_custom_field('og_image') ?? "";
+		if ($og_image === "") {
+			$og_image = theme_url('tree.png');
 		}
-	</script>
+		$og_snippet = article_custom_field('og_snippet') ?? "";
+		if ($og_snippet === "") {
+			$og_snippet = site_description();
+		}
+	?>
+	<meta property="og:image" content="<?php echo $og_image; ?>">
+	<meta property="og:description" content="<?php echo $og_snippet; ?>">
 
 	<link rel="apple-touch-icon" sizes="57x57" href="<?php echo theme_url('img/favicon/apple-touch-icon-57x57.png'); ?>">
 	<link rel="apple-touch-icon" sizes="60x60" href="<?php echo theme_url('img/favicon/apple-touch-icon-60x60.png'); ?>">
@@ -64,8 +76,6 @@
 
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 	<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-	<title><?php echo $page_title; ?></title>
 </head>
 <body>
 	<header id="top">
