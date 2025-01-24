@@ -65,3 +65,5 @@ and in the UI, to be able to adjust publication date.
 * https://blog.stevenchun.me/2024/06/Capacity-Conduction-Convection/
 
 * https://cefboud.github.io/posts/compression/ -> use this for top right jump around on Mobile
+* Include post tags from https://entropicthoughts.com/the-most-mario-colour-revisited
+* https://samcurry.net/hacking-subaru for dark styling, code
