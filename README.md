@@ -68,3 +68,9 @@ and in the UI, to be able to adjust publication date.
 * https://cefboud.github.io/posts/compression/ -> use this for top right jump around on Mobile
 * Include post tags from https://entropicthoughts.com/the-most-mario-colour-revisited
 * https://samcurry.net/hacking-subaru for dark styling, code
+
+TODO
+- Display category of post (or tags?)
+- Handle dark mode
+- Better copy button
+- Show the name of the language (and not shittily)

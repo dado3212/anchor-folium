@@ -93,7 +93,7 @@
 								mobileToc.classList.toggle('mobile-show', !entry.isIntersecting);
 							},
 							{ threshold: 0 }
-						)).observe(document.querySelector('article header'));
+						)).observe(document.querySelector('body header'));
 					});
 				</script>
 				<?php
