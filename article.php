@@ -14,13 +14,7 @@
 						<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
 					</div>
 			</header>
-
-			<?php echo article_markdown(); ?>
-			<?php if (admin()) { 
-				echo "<a href='/admin/posts/edit/" . article_id() . "' target='_blank'>Edit Article</a>"; 
-			} ?>
-		</article>
-		<?php
+			<?php
 			libxml_use_internal_errors(true); 
 			$dom = new DOMDocument();
 			@$dom->loadHTML('<!DOCTYPE html><meta charset="UTF-8">' . article_markdown(), LIBXML_NOERROR | LIBXML_NOWARNING);
@@ -86,18 +80,30 @@
 									}
 								});
 							},
-							{ threshold: 0 } // Trigger when the entire video is offscreen
+							{ threshold: 0 } // Trigger when the entire thing changes on/off screen
 						);
 						document.querySelectorAll('article h2, article h3, article h4, article h5, article h6').forEach((i) => {
 							if (i) {
 								observer.observe(i);
 							}
 						});
+						const mobileToc = document.querySelector('button.trigger');
+						(new IntersectionObserver(
+							([entry]) => {
+								mobileToc.classList.toggle('mobile-show', !entry.isIntersecting);
+							},
+							{ threshold: 0 }
+						)).observe(document.querySelector('article header'));
 					});
 				</script>
 				<?php
 			}
 		?>
+			<?php echo article_markdown(); ?>
+			<?php if (admin()) { 
+				echo "<a href='/admin/posts/edit/" . article_id() . "' target='_blank'>Edit Article</a>"; 
+			} ?>
+		</article>
 
 		<?php if(has_comments()): ?>
 		<section id="comments">
