@@ -63,47 +63,6 @@ $(document).ready(function(){
 		}
 	});
 
-	// Handle copyable text blocks
-	$('code[copyable]').each(function() {
-		var codeBlock = $(this);
-
-		var copyButton = $('<button class="copy-button">⧉</button>');
-		copyButton.on('click', function() {
-			// Create a temporary textarea element to copy the text
-			var tempTextarea = $('<textarea>')
-				.val(codeBlock.text())
-				.attr('readonly', true) // Make it readonly to prevent keyboard opening
-				.css({
-					position: 'absolute', // Absolute positioning
-					top: '-9999px', // Move it off-screen
-					left: '-9999px',
-				})
-				.appendTo('body')
-				.select();
-			try {
-				document.execCommand('copy');
-
-				// Animate success
-				copyButton.addClass('success');
-				setTimeout(function() {
-					copyButton.removeClass('success');
-				}, 500);
-			} catch (err) {
-				// Animate failure
-				copyButton.addClass('failure');
-				setTimeout(function() {
-					copyButton.removeClass('failure');
-				}, 500);
-			}
-			// Remove the temporary textarea element
-			tempTextarea.remove();
-		});
-
-		codeBlock.parent().wrap('<div style="position: relative;"></div>')
-
-		codeBlock.parent().parent().append(copyButton);
-	});
-
 	function debounce(func, wait) {
 		let timeout;
 		return function (...args) {

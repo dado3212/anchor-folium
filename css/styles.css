@@ -5,7 +5,7 @@
   --link: #0D8732;
   --code-text: #0D8732;
   --code-background: #e5fbeb;
-  --border: #d5d4d4;
+  --border: #ddd;
 }
 ::selection {
   background: var(--highlight);
@@ -250,7 +250,7 @@ pre[class*="language-"] {
   font-size: 75%;
 }
 pre[class*="language-"] {
-  padding: 13.5px 18px;
+  padding: 38.5px 18px 13.5px 18px;
   margin: 20px -10px;
   border-radius: 7px;
 }
@@ -269,37 +269,62 @@ pre[class*="language-"] {
 .line-highlight {
   background: linear-gradient(to right,#0D873226 70%,#0D873200);
   border-left: 0.3em solid var(--link);
+  margin-top: 39px;
 }
-.copy-button {
-  position: absolute;
-  right: -10px;
-  top: 5px;
-  border-radius: 4px;
-  color: #a6e22e;
-  border: 1px solid #a6e22e;
-  background-color: #272822;
-  padding: 1px 6px;
-  font-size: 1.2em;
-  font-weight: bold;
-  cursor: pointer;
+/**
+  Code toolbar
+*/
+@font-face {
+  font-family: 'Font Awesome';
+  src: url('/themes/folium/fonts/fa-solid-900.woff2');
+}
+div.code-toolbar>.toolbar {
+  opacity: 1;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.toolbar .toolbar-item {
+  margin-top: -2px;
+}
+.toolbar .toolbar-item:first-of-type {
+  margin-left: 10px;
+  color: #8292a2 !important;
+}
+.toolbar .toolbar-item:first-of-type:before {
+  content: "\f121";
+  font-family: 'Font Awesome';
+  color: #8292a2;
+  font-size: 13px;
+}
+div.code-toolbar>.toolbar>.toolbar-item>a, div.code-toolbar>.toolbar>.toolbar-item>button, div.code-toolbar>.toolbar>.toolbar-item>span {
+  background: none;
   user-select: none;
-
-  transition: 0.2s ease;
+  box-shadow: none;
+  color: #8292a2;
 }
-
-.copy-button.success {
-  font-size: 1.4em;
+div.code-toolbar>.toolbar>.toolbar-item>a:focus, div.code-toolbar>.toolbar>.toolbar-item>a:hover, div.code-toolbar>.toolbar>.toolbar-item>button:focus, div.code-toolbar>.toolbar>.toolbar-item>button:hover, div.code-toolbar>.toolbar>.toolbar-item>span:focus, div.code-toolbar>.toolbar>.toolbar-item>span:hover {
+  color: #8292a2;
 }
-
-.copy-button.failure {
-  font-size: 1em;
-  background-color: #f9f2f4 !important;
-  border-color: #c7254e;
-  color: #c7254e;
+div.code-toolbar>.toolbar>.toolbar-item>button {
+  padding: 3px 5px;
 }
-
-.copy-button:hover {
-  background-color: #3d3e35;
+.toolbar .toolbar-item:nth-of-type(2) button:hover {
+  background-color: #8292a2;
+  color: #272822 !important;
+}
+.toolbar .toolbar-item:nth-of-type(2):hover div.code-toolbar>.toolbar>.toolbar-item>button {
+  color: #272822;
+}
+.toolbar .toolbar-item:nth-of-type(2) button:hover:before {
+  color: #272822;
+}
+.toolbar .toolbar-item:nth-of-type(2) button:before {
+  content: "\f328";
+  font-family: 'Font Awesome';
+  color: #8292a2;
+  font-size: 13px;
+  margin-right: 5px;
 }
 
 p.del, p.break {
@@ -891,7 +916,7 @@ footer nav > ul.navbar-nav li > a:hover {
     left: auto;
     opacity: 1;
     transform: initial;
-    background-color: #f0f0f0;
+    background-color: #f8f8f8;
     border: 1px solid var(--border);
 
     width: 36px;
@@ -901,15 +926,15 @@ footer nav > ul.navbar-nav li > a:hover {
     float: right;
   }
   .trigger.mobile-show {
-    display: initial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .trigger:before {
     content: "\e056";
     font-family: 'Glyphicons Halflings';
     font-style: normal;
     font-weight: 400;
-    position: relative;
-    top: -3px;
   }
   .trigger:hover {
     transform: initial;
