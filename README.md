@@ -72,5 +72,3 @@ and in the UI, to be able to adjust publication date.
 TODO
 - Display category of post (or tags?)
 - Handle dark mode
-- Better copy button
-- Show the name of the language (and not shittily)

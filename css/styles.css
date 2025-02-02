@@ -60,7 +60,7 @@ a.inline {
   text-decoration-color: var(--link);
   text-underline-offset: 0.1em;
 }
-a:hover {
+a:hover, a:focus {
   color: var(--link);
 }
 /* Get strikethrough to render in the right place */
@@ -155,7 +155,7 @@ section#comments > h2:hover:before {
 }
 .table-of-contents {
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -200,10 +200,22 @@ section#comments > h2:hover:before {
 
   text-decoration: none !important;
 }
+.table-of-contents .link.header3 {
+  margin-left: 10px;
+}
 .table-of-contents .link.active, .table-of-contents .link:hover {
   color: #363737;
 }
 /** Sidenotes */
+blockquote .sidenote-wrapper {
+  font-size: 20px;
+}
+blockquote .sidenote {
+  margin-right: max(-330px, calc(-50vw + 340px));
+}
+blockquote .even-sidenote {
+  margin-left: max(-378px, calc(-50vw + 332px));
+}
 .sidenote-indicator {
   margin-left: -3px;
 
@@ -269,7 +281,7 @@ pre[class*="language-"] {
 .line-highlight {
   background: linear-gradient(to right,#0D873226 70%,#0D873200);
   border-left: 0.3em solid var(--link);
-  margin-top: 39px;
+  margin-top: 38px;
 }
 /**
   Code toolbar
@@ -283,6 +295,7 @@ div.code-toolbar>.toolbar {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  z-index: 1;
 }
 .toolbar .toolbar-item {
   margin-top: -2px;
@@ -780,9 +793,15 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 33%;
     margin-right: -37%;
   }
+  blockquote .sidenote {
+    margin-right: calc(-37% - 20px);
+  }
   .even-sidenote {
     margin-left: -37%;
     margin-right: 0;
+  }
+  blockquote .even-sidenote {
+    margin-left: calc(-37% - 28px);
   }
 }
 @media only screen and (max-width: 950px) {
@@ -910,7 +929,7 @@ footer nav > ul.navbar-nav li > a:hover {
   .trigger {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 1em;
     right: 1em;
     left: auto;
@@ -954,6 +973,9 @@ footer nav > ul.navbar-nav li > a:hover {
   }
   .even-sidenote {
     padding-left: 0px;
+  }
+  blockquote .sidenote, blockquote .even-sidenote {
+    margin: 1em;
   }
   .sidenote.visible {
     display: block;

@@ -48,7 +48,12 @@
 		}
 		$og_snippet = article_custom_field('og_snippet') ?? "";
 		if ($og_snippet === "") {
-			$og_snippet = site_description();
+			$article_markdown = article_markdown();
+			if ($article_markdown === "") {
+				$og_snippet = site_description();
+			} else {
+				$og_snippet = strip_tags(get_description($article_markdown));
+			}
 		}
 	?>
 	<meta property="og:image" content="<?php echo $og_image; ?>">
