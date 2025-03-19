@@ -150,6 +150,10 @@ section#comments > h2:hover:before {
   background-color: #868787;
   width: 12px;
 }
+.trigger span.header3 {
+  width: 10px;
+  margin-left: 1px;
+}
 .trigger span.active {
   background-color: #363737;
 }

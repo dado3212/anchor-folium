@@ -37,9 +37,9 @@
 					$id = $header->getAttribute('id');
 
 					if ($i == 0) {
-						$button .= '<span class="active" attr="' . $id . '"></span>';
+						$button .= '<span class="active header' . $level . '" attr="' . $id . '"></span>';
 					} else {
-						$button .= '<span attr="' . $id . '"></span>';
+						$button .= '<span class="header' . $level . '" attr="' . $id . '"></span>';
 					}
 					
 					$contents .= '<div class="link header' . $level . '" data-id="' . $id . '">' . $innerHTML . '</div>';
