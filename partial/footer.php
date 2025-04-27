@@ -112,6 +112,22 @@ $(document).ready(function(){
 			sidenoteIndicator.parent().find('.sidenote').toggleClass('visible');
 		});
 	});
+
+	// Double click on <code> will select the whole thing
+	document.querySelectorAll('code').forEach(code => {
+		console.log(code.className, code.parentElement.tagName);
+		// Inline
+		if (code.className === '' && code.parentElement.tagName !== 'PRE') {
+			code.addEventListener('dblclick', e => {
+				e.preventDefault();
+				const range = document.createRange();
+				range.selectNodeContents(code);
+				const selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			});
+		}
+	});
 });
 </script>
 <script>

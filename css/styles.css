@@ -34,7 +34,7 @@
 body {
   font: 20px "Crimson Pro", serif;
   font-weight: 340;
-  background: #fff;
+  background: #fcfcfc;
   color: var(--text);
   font-smooth: always;
   overscroll-behavior-x: none;
