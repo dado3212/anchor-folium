@@ -134,6 +134,25 @@
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
 			<button class="btn btn-default">Post Comment</button>
 		</form>
+		<!-- Captcha -->
+		<script>
+		let recaptchaLoaded = false;
+
+		function loadRecaptcha() {
+			if (recaptchaLoaded) return;
+			recaptchaLoaded = true;
+
+			const script = document.createElement('script');
+			script.src = 'https://www.google.com/recaptcha/api.js';
+			script.async = true;
+			script.defer = true;
+			document.head.appendChild(script);
+		}
+
+		document.querySelectorAll('#comment input').forEach(input => {
+			input.addEventListener('focus', loadRecaptcha, { once: true });
+		});
+		</script>
 		<?php endif;
 		if (article_status() == 'published') {
 		if (admin()) {

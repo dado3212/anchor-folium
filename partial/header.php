@@ -33,11 +33,6 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
 
-	<!-- Captcha -->
-	<link rel="preconnect" href="https://www.google.com">
-	<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-	<script async src='https://www.google.com/recaptcha/api.js'></script>
-
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="<?php echo current_url(); ?>">
 	<meta property="og:site_name" content="<?php echo site_name(); ?>">
@@ -80,7 +75,6 @@
 	<meta name="theme-color" content="#006841">
 
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
-	<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 	<header id="top">
