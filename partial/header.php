@@ -33,8 +33,16 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
 
+	<?php
+		$current_url = current_url();
+		if (preg_match('#^posts/\d+$#', $current_url)) {
+			$current_url = 'posts';
+		}
+	?>
+
+	<link rel="canonical" href="<?php echo URI::full($current_url, true); ?>">
 	<meta property="og:type" content="website">
-	<meta property="og:url" content="<?php echo current_url(); ?>">
+	<meta property="og:url" content="<?php echo URI::full(current_url(), true); ?>">
 	<meta property="og:site_name" content="<?php echo site_name(); ?>">
 	<?php
 		$og_image = article_custom_field('og_image') ?? "";
@@ -51,8 +59,9 @@
 			}
 		}
 	?>
-	<meta property="og:image" content="<?php echo $og_image; ?>">
+	<meta property="og:image" content="<?php echo URI::full($og_image, true); ?>">
 	<meta property="og:description" content="<?php echo $og_snippet; ?>">
+	<meta name="description" content="<?php echo $og_snippet; ?>">
 
 	<link rel="apple-touch-icon" sizes="57x57" href="<?php echo theme_url('img/favicon/apple-touch-icon-57x57.png'); ?>">
 	<link rel="apple-touch-icon" sizes="60x60" href="<?php echo theme_url('img/favicon/apple-touch-icon-60x60.png'); ?>">

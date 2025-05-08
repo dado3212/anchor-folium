@@ -31,8 +31,6 @@
 </section>
 
 <script src="<?php echo theme_url('js/bootstrap.min.js'); ?>"></script>
-<script src="<?php echo theme_url('js/prism.js'); ?>"></script>
-<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <!-- Lightbox -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css" />
