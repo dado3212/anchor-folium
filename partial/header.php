@@ -82,7 +82,7 @@
 	<meta name="msapplication-TileColor" content="#000000">
 	<meta name="msapplication-TileImage" content="<?php echo theme_url('img/favicon/mstile-144x144.png'); ?>">
 	<meta name="msapplication-config" content="<?php echo theme_url('img/favicon/browserconfig.xml'); ?>">
-	<meta name="theme-color" content="#006841">
+	<meta name="theme-color" content="#f8fbf3">
 
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 </head>

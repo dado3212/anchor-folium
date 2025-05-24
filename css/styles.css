@@ -569,6 +569,9 @@ main article:last-of-type {
 main article header {
   margin-bottom: 20px;
 }
+main article[id] header {
+  margin-top: -15px;
+}
 main article header h1 {
   font-size: 42px;
   line-height: 48px;
@@ -589,7 +592,6 @@ main article header .meta {
   font-size: 18px;
   font-style: italic;
   color: var(--meta-text);
-  margin-top: -5px;
 }
 main article header .meta a {
   color: var(--text);
