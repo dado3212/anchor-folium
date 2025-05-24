@@ -4,7 +4,7 @@ Folium is a theme for [Anchor](https://anchorcms.com) ([Github](https://github.c
 
 This is what it looks like:
 
-![Folium screenshot](/Folium.png "Folium screenshot")
+<img width="1624" alt="Screenshot 2025-05-23 at 11 35 24 PM" src="https://github.com/user-attachments/assets/93f17c17-b325-4f46-9218-2ae7467814b5" />
 
 ## Fonts
 - [X] Vollkolm (too thick)
