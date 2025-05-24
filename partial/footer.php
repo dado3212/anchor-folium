@@ -114,7 +114,6 @@ $(document).ready(function(){
 
 	// Double click on <code> will select the whole thing
 	document.querySelectorAll('code').forEach(code => {
-		console.log(code.className, code.parentElement.tagName);
 		// Inline
 		if (code.className === '' && code.parentElement.tagName !== 'PRE') {
 			code.addEventListener('dblclick', e => {

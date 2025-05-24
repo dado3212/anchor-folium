@@ -32,11 +32,12 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/bootstrap.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
-
 	<?php
 		$current_url = current_url();
 		if (preg_match('#^posts/\d+$#', $current_url)) {
-			$current_url = 'posts';
+			$current_url = '/';
+		} else if ($current_url === 'posts') {
+			$current_url = '/';
 		}
 	?>
 
@@ -86,17 +87,12 @@
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 </head>
 <body>
-	<header id="top">
+	<header id="top" <?php if (preg_match('/^posts\/.+/', $current_url)) { echo 'class="article-header"'; } ?>>
 		<nav class="navbar navbar-default padding-container">
 			<div class="navbar-header">
 				<a href="<?php echo base_url(); ?>" class="navbar-brand">
-					<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" />
+					<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" <?php if (admin()) { echo ' class="admin" '; } ?> />
 					<span><?php echo site_name(); ?></span>
-					<?php
-					if (admin()) {
-						echo '<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" style="margin-left: 7px;" />';
-					}
-					?>
 				</a>
 			</div>
 

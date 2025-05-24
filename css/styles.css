@@ -1,11 +1,14 @@
 :root {
-  --text: #19291f;
+  --text: black;
   --meta-text: #636a66;
-  --highlight: #0D8732;
-  --link: #0D8732;
-  --code-text: #0D8732;
-  --code-background: #e5fbeb;
+  --highlight: rgb(68, 121, 68);
+  --link: rgb(68, 121, 68);
+  --code-text: rgb(46, 82, 46);
+  --code-background: rgb(224, 245, 230);
   --border: #ddd;
+  --bg: rgb(248, 251, 243);
+  --secondary-text: rgb(64, 64, 64);
+  --header: var(--text);
 }
 ::selection {
   background: var(--highlight);
@@ -31,10 +34,14 @@
   font-family: 'Graphik';
   src: url('/themes/folium/fonts/Graphik-Regular.otf');
 }
+@font-face {
+  font-family: 'Drop Cap';
+  src: url('/themes/folium/fonts/dropcap.ttf');
+}
 body {
   font: 20px "Crimson Pro", serif;
   font-weight: 340;
-  background: #fcfcfc;
+  background: var(--bg);
   color: var(--text);
   font-smooth: always;
   overscroll-behavior-x: none;
@@ -143,7 +150,7 @@ section#comments > h2:hover:before {
 .trigger:hover {
   opacity: 1;
   transform: translateY(-50%) scale(1);
-  background-color: #f0f0f0;
+  background-color: color-mix(in srgb, var(--bg) 95%, black);
 }
 .trigger span {
   height: 1px;
@@ -178,7 +185,7 @@ section#comments > h2:hover:before {
   transition: 0.3s ease;
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, .1), 0px 4px 6px -2px rgba(0, 0, 0, .05);
   padding: 8px;
-  background: #f0f0f0;
+  background: color-mix(in srgb, var(--bg) 98%, white);
 
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
@@ -235,7 +242,7 @@ blockquote .even-sidenote {
   font-size: 0.9em;
   line-height: 1.3;
   margin-right: max(-350px, calc(-50vw + 360px));
-  color: #616161;
+  color: var(--secondary-text);
   white-space: nowrap;
 }
 .sidenote .text {
@@ -370,17 +377,12 @@ kbd {
   float: none;
 }
 header#top {
-  background: -webkit-linear-gradient(90deg, #006841, #00b59e);
-  background: -moz-linear-gradient(90deg, #006841, #00b59e);
-  background: -ms-linear-gradient(90deg, #006841, #00b59e);
-  background: -o-linear-gradient(90deg, #006841, #00b59e);
-  background: linear-gradient(90deg, #006841, #00b59e);
-  padding-top: 6px;
+  border-bottom: 6px solid var(--link);
   margin-bottom: 0;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
 }
 header#top nav {
-  background: #fff;
+  background: color-mix(in srgb, var(--bg) 90%, white);
   border-radius: 0;
   border-width: 0 0 1px 0;
   border-bottom-color: #eee;
@@ -404,6 +406,9 @@ header#top nav .navbar-brand {
 header#top nav .navbar-brand img {
   width: 37px;
   margin-right: 5px;
+}
+header#top img.admin {
+  transform: rotate(180deg);
 }
 .navbar-default .navbar-collapse {
   position: absolute;
@@ -437,7 +442,7 @@ header#top nav a {
   text-transform: uppercase;
 }
 header#top nav li.active > a {
-  background: #f9f9f9;
+  background: color-mix(in srgb, var(--bg) 98%, black);
   color: #999999;
 }
 header#top nav li.active > a:hover {
@@ -497,7 +502,7 @@ aside .description {
 /* Only do hover animations for non-mobile */ 
 @media (hover: hover) and (pointer: fine) {
   .articleLink:hover {
-    background-color: #f1fef3;
+    background-color: var(--code-background);
     text-decoration: none;
   }
   .articleLink:hover .name {
@@ -511,11 +516,13 @@ aside .description {
  * File Objects
  */
 f {
-  border: 1px solid black;
-  border-bottom: 1px solid #bababa;
+  border: 1px solid var(--code-text);
   background-color: #f9f9f9;
   padding: 1px 5px;
   text-wrap: nowrap;
+  font-size: 0.93em;
+  border-radius: 5px;
+  background: transparent;
 }
 /*
  *  Article
@@ -547,6 +554,15 @@ main article {
   padding-bottom: 25px;
   color: var(--text);
 }
+main article[id] > p:nth-of-type(1)::first-letter {
+  font-family: "Drop Cap", serif;
+  font-size: 4em;
+  float: left;
+  line-height: 1em;
+  margin-right: 0.05em;
+  margin-top: 0.05em;
+  color: var(--link);
+}
 main article:last-of-type {
   border-bottom: none;
 }
@@ -556,13 +572,18 @@ main article header {
 main article header h1 {
   font-size: 42px;
   line-height: 48px;
-  color: var(--text);
+  color: var(--header);
+}
+main article[id] header h1 {
+  color: var(--link);
+  font-size: 60px;
+  line-height: 52px;
 }
 main article header h1 a {
-  color: var(--text);
+  color: var(--header);
 }
 main article header h1 a:hover {
-  color: var(--text);
+  color: var(--header);
 }
 main article header .meta {
   font-size: 18px;
@@ -578,6 +599,9 @@ main img {
   max-height: 500px;
   margin: 0 auto;
   display: block;
+}
+main img.post-preview {
+  width: 50px;
 }
 
 main img.pixelated {
@@ -657,7 +681,7 @@ section#comments .commentlist li {
   margin-bottom: 10px;
 }
 section#comments .commentlist li:hover {
-  background: #f7f7f7;
+  background: rgba(0, 0, 0, 0.03);
 }
 section#comments .commentlist li header {
   margin-bottom: 10px;
@@ -700,9 +724,9 @@ form#comment button {
  *  Footer
  */
 footer {
-  background: #f6f6f6;
-  border-top: 1px solid #dddddd;
-  color: #919191;
+  background: color-mix(in srgb, var(--bg) 98%, black);
+  border-top: 4px solid var(--link);
+  color: var(--meta-text);
   padding: 50px 0;
   font-size: 16px;
   position: relative;
@@ -741,7 +765,7 @@ footer nav > ul.navbar-nav li > a:hover {
   position: fixed;
   top: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--bg) 93%, transparent);
   display: none;
 }
 #search .cell {
@@ -941,7 +965,7 @@ footer nav > ul.navbar-nav li > a:hover {
     left: auto;
     opacity: 1;
     transform: initial;
-    background-color: #f8f8f8;
+    background-color: color-mix(in srgb, var(--bg) 95%, white);
     border: 1px solid var(--border);
 
     width: 36px;
@@ -963,7 +987,7 @@ footer nav > ul.navbar-nav li > a:hover {
   }
   .trigger:hover {
     transform: initial;
-    background-color: #e7e7e7;
+    background-color: color-mix(in srgb, var(--bg) 96%, black);
   }
   .trigger span {
     display: none;
