@@ -31,12 +31,8 @@
   src: url('/themes/folium/fonts/Crimson_Pro/CrimsonPro-VariableFont_wght.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'Graphik';
-  src: url('/themes/folium/fonts/Graphik-Regular.otf');
-}
-@font-face {
   font-family: 'Drop Cap';
-  src: url('/themes/folium/fonts/dropcap.ttf');
+  src: url('/themes/folium/fonts/dropcap.woff2') format('woff2'), url('/themes/folium/fonts/dropcap.ttf') format('truetype');
 }
 body {
   font: 20px "Crimson Pro", serif;
@@ -159,7 +155,11 @@ section#comments > h2:hover:before {
 }
 .trigger span.header3 {
   width: 10px;
-  margin-left: 1px;
+  margin-left: 2px;
+}
+.trigger span.header4 {
+  width: 8px;
+  margin-left: 4px;
 }
 .trigger span.active {
   background-color: #363737;
@@ -214,6 +214,9 @@ section#comments > h2:hover:before {
 .table-of-contents .link.header3 {
   margin-left: 10px;
 }
+.table-of-contents .link.header4 {
+  margin-left: 20px;
+}
 .table-of-contents .link.active, .table-of-contents .link:hover {
   color: #363737;
 }
@@ -244,6 +247,7 @@ blockquote .even-sidenote {
   margin-right: max(-350px, calc(-50vw + 360px));
   color: var(--secondary-text);
   white-space: nowrap;
+  margin-bottom: 15px;
 }
 .sidenote .text {
   white-space: normal;
@@ -268,6 +272,31 @@ blockquote .even-sidenote {
   width: 100%;
   background: no-repeat center #f0f0f0;
   background-size: cover;
+}
+.img-row {
+  width: 100%;
+}
+.img-row > span {
+  float: left;
+  width: calc((100% - (var(--count) - 1) * 0.7vw) / var(--count));
+  margin-right: 0.7vw;
+  box-sizing: border-box;
+}
+.img-row > span:last-of-type {
+  margin-right: 0px;
+}
+.img-row-subtitle {
+  display: block;
+  text-align: center;
+}
+.img-row img {
+  max-height: 500px;
+}
+.img-row .sidenote {
+  text-align: left;
+}
+.img-row .even-sidenote {
+  text-align: right;
 }
 /** Code */
 :not(pre) > code[class*="language-"],
@@ -616,6 +645,11 @@ main img.pixelated {
   -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
+blockquote {
+  border-left: 5px solid var(--link);
+  font-size: 0.96em;
+}
+
 main video {
   width: 100%;
   max-width: 400px;
@@ -624,8 +658,19 @@ main video {
 }
 main article h1,
 main article h2,
-main article h3 {
+main article h3,
+main article h4 {
   font-weight: 400;
+}
+main article h2 {
+  padding-top: 15px;
+}
+main article h3 {
+  padding-top: 10px;
+}
+main article h4 {
+  font-size: 22px;
+  padding-top: 5px;
 }
 main .pager {
   margin-bottom: 50px;
@@ -662,6 +707,7 @@ main a[href*='/admin/posts'] {
   font-size: 13px;
   color: #848484;
   float: right;
+  margin-bottom: 10px;
 }
 main a[href*='/admin/posts']:hover, 
 main a[href*='/admin/posts']:focus {
@@ -825,12 +871,19 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 33%;
     margin-right: -37%;
   }
+  .img-row .sidenote {
+    width: 19vw;
+    margin-right: -21vw;
+  }
   blockquote .sidenote {
     margin-right: calc(-37% - 20px);
   }
   .even-sidenote {
     margin-left: -37%;
     margin-right: 0;
+  }
+  .img-row .even-sidenote {
+    margin-left: -21vw;
   }
   blockquote .even-sidenote {
     margin-left: calc(-37% - 28px);
@@ -1005,6 +1058,10 @@ footer nav > ul.navbar-nav li > a:hover {
   }
   .even-sidenote {
     padding-left: 0px;
+  }
+  .img-row .sidenote, .img-row .even-sidenote {
+    margin: 1em;
+    width: 95%;
   }
   blockquote .sidenote, blockquote .even-sidenote {
     margin: 1em;
