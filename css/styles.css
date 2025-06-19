@@ -273,30 +273,22 @@ blockquote .even-sidenote {
   background: no-repeat center #f0f0f0;
   background-size: cover;
 }
-.img-row {
-  width: 100%;
-}
-.img-row > span {
-  float: left;
-  width: calc((100% - (var(--count) - 1) * 0.7vw) / var(--count));
-  margin-right: 0.7vw;
+.img-row > div {
+  vertical-align: top;
+  display: inline-block;
   box-sizing: border-box;
+  width: calc((100% - (var(--count) - 1) * 0.7vw) / var(--count));
+  margin-right: 0.3vw; /* TODO: Why can't this be 0.7vw */
 }
-.img-row > span:last-of-type {
-  margin-right: 0px;
+.img-row > div:last-child {
+  margin-right: 0;
 }
-.img-row-subtitle {
-  display: block;
-  text-align: center;
-}
+
 .img-row img {
   max-height: 500px;
 }
 .img-row .sidenote {
   text-align: left;
-}
-.img-row .even-sidenote {
-  text-align: right;
 }
 /** Code */
 :not(pre) > code[class*="language-"],
