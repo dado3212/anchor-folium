@@ -41,8 +41,6 @@ body {
   color: var(--text);
   font-smooth: always;
   overscroll-behavior-x: none;
-
-  counter-reset: sidenote-counter;
 }
 a {
   transform: translate3d(0, 0, 0);
@@ -234,8 +232,6 @@ blockquote .even-sidenote {
 }
 .sidenote-indicator {
   margin-left: -3px;
-
-  counter-increment: sidenote-counter;
 }
 .sidenote {
   float: right;
@@ -261,7 +257,7 @@ blockquote .even-sidenote {
   padding-left: 22px;
 }
 .sidenote::before {
-  content: counter(sidenote-counter) " ";
+  content: attr(data-footnote-index) " ";
   left: -0.2em;
   top: -0.3em;
   font-size: 0.9em;
@@ -273,22 +269,20 @@ blockquote .even-sidenote {
   background: no-repeat center #f0f0f0;
   background-size: cover;
 }
-.img-row > div {
+.img-row-element {
   vertical-align: top;
   display: inline-block;
   box-sizing: border-box;
   width: calc((100% - (var(--count) - 1) * 0.7vw) / var(--count));
-  margin-right: 0.3vw; /* TODO: Why can't this be 0.7vw */
+  margin-right: -4px;
+  margin-left: 0.7vw;
 }
-.img-row > div:last-child {
-  margin-right: 0;
+.img-row-element:first-child {
+  margin-left: 0;
 }
 
 .img-row img {
   max-height: 500px;
-}
-.img-row .sidenote {
-  text-align: left;
 }
 /** Code */
 :not(pre) > code[class*="language-"],
@@ -863,19 +857,12 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 33%;
     margin-right: -37%;
   }
-  .img-row .sidenote {
-    width: 19vw;
-    margin-right: -21vw;
-  }
   blockquote .sidenote {
     margin-right: calc(-37% - 20px);
   }
   .even-sidenote {
     margin-left: -37%;
     margin-right: 0;
-  }
-  .img-row .even-sidenote {
-    margin-left: -21vw;
   }
   blockquote .even-sidenote {
     margin-left: calc(-37% - 28px);
@@ -1050,10 +1037,6 @@ footer nav > ul.navbar-nav li > a:hover {
   }
   .even-sidenote {
     padding-left: 0px;
-  }
-  .img-row .sidenote, .img-row .even-sidenote {
-    margin: 1em;
-    width: 95%;
   }
   blockquote .sidenote, blockquote .even-sidenote {
     margin: 1em;

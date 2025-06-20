@@ -108,7 +108,14 @@ $(document).ready(function(){
 				return;
 			}
 			// Toggle visibility
-			sidenoteIndicator.parent().find('.sidenote').toggleClass('visible');
+			let sidenote = sidenoteIndicator.parent().find('.sidenote');
+			if (sidenote.length) {
+				sidenote.toggleClass('visible');
+			} else {
+				// Fallback to data-footnote-index
+				console.log(`.sidenote[data-footnote-index=${sidenoteIndicator.text()}]`);
+				$(`.sidenote[data-footnote-index=${sidenoteIndicator.text()}]`).toggleClass('visible');
+			}
 		});
 	});
 
