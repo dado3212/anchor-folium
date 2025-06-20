@@ -225,5 +225,8 @@
 
 <script type="text/javascript" id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="<?php echo theme_url('js/prism.js'); ?>"></script>
+<script>
+	Prism.languages.cherri = Prism.languages.javascript;
+</script>
 
 <?php theme_include('partial/footer'); ?>

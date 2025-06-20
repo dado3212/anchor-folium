@@ -263,6 +263,12 @@ blockquote .even-sidenote {
   font-size: 0.9em;
   position: relative;
 }
+.footnotes img {
+  max-height: 200px;
+  max-width: 200px;
+  display: inline;
+  vertical-align: bottom;
+}
 .img-splash {
   height: 250px;
   width: 100%;
