@@ -269,16 +269,16 @@ blockquote .even-sidenote {
   background: no-repeat center #f0f0f0;
   background-size: cover;
 }
-.img-row-element {
-  vertical-align: top;
-  display: inline-block;
-  box-sizing: border-box;
-  width: calc((100% - (var(--count) - 1) * 0.7vw) / var(--count));
-  margin-right: -4px;
-  margin-left: 0.7vw;
+.img-row {
+  margin-bottom: 10px;
 }
-.img-row-element:first-child {
-  margin-left: 0;
+.img-row-element {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 0.7vw;
+}
+.img-row-element span {
+  flex: 1;
 }
 
 .img-row img {
@@ -1025,6 +1025,14 @@ footer nav > ul.navbar-nav li > a:hover {
   }
   .trigger span {
     display: none;
+  }
+  /* Swap the order when sidenotes autocollapse so that they appear below. */
+  .img-row {
+    display: flex;
+    flex-direction: column;
+  }
+  .img-row-footnotes {
+    order: 2;
   }
   .sidenote {
     display: none;
