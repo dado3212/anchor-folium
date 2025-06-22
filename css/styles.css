@@ -10,10 +10,10 @@
   --secondary-text: rgb(64, 64, 64);
   --header: var(--text);
 
-  --container-width: 700px;
+  --container-width: 735px;
   --container-padding: 15px; /* done in bootstrap */
   --sidenote-max-width: 320px;
-  --content-padding: 30px;
+  --content-padding: 25px;
   --outside-padding: 25px; /* this is added to by padding-left for the even-sidenotes to give more buffer from ToC */
 }
 ::selection {
