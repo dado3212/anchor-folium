@@ -9,6 +9,12 @@
   --bg: rgb(248, 251, 243);
   --secondary-text: rgb(64, 64, 64);
   --header: var(--text);
+
+  --container-width: 700px;
+  --container-padding: 15px; /* done in bootstrap */
+  --sidenote-max-width: 320px;
+  --content-padding: 30px;
+  --outside-padding: 25px; /* this is added to by padding-left for the even-sidenotes to give more buffer from ToC */
 }
 ::selection {
   background: var(--highlight);
@@ -103,7 +109,7 @@ section#comments > h2:hover:before {
   left: -20px;
 }
 .container {
-  width: 700px;
+  width: var(--container-width);
   min-height: calc(100vh - 228px);
 }
 .padding-container {
@@ -219,28 +225,22 @@ section#comments > h2:hover:before {
   color: #363737;
 }
 /** Sidenotes */
-blockquote .sidenote-wrapper {
-  font-size: 20px;
-  /* In case it's inside an italicized quote */
-  font-style: normal;
-}
-blockquote .sidenote {
-  margin-right: max(-330px, calc(-50vw + 340px));
-}
-blockquote .even-sidenote {
-  margin-left: max(-378px, calc(-50vw + 332px));
-}
 .sidenote-indicator {
   margin-left: -3px;
 }
 .sidenote {
   float: right;
   clear: right;
-  width: calc(50vw - 390px);
-  max-width: 320px;
+  --gutter-width: calc((100vw - var(--container-width) + var(--container-padding) * 2) / 2);
+  --sidenote-width: calc(var(--gutter-width) - var(--content-padding) - var(--outside-padding));
+  width: min(var(--sidenote-max-width), var(--sidenote-width));
   font-size: 0.9em;
   line-height: 1.3;
-  margin-right: max(-350px, calc(-50vw + 360px));
+  --margin: max(
+    calc(-1 * (var(--sidenote-max-width) + var(--content-padding))),
+    calc(-1 * (var(--sidenote-width) + var(--content-padding)))
+  );
+  margin-right: var(--margin);
   color: var(--secondary-text);
   white-space: nowrap;
   margin-bottom: 15px;
@@ -252,9 +252,9 @@ blockquote .even-sidenote {
   float: left;
   clear: left;
   margin-right: 0;
-  margin-left: max(-350px, calc(-50vw + 360px));
+  margin-left: var(--margin);
   text-align: right;
-  padding-left: 22px;
+  padding-left: 15px;
 }
 .sidenote::before {
   content: attr(data-footnote-index) " ";
@@ -263,6 +263,18 @@ blockquote .even-sidenote {
   font-size: 0.9em;
   position: relative;
 }
+blockquote .sidenote-wrapper {
+  font-size: 20px;
+  /* In case it's inside an italicized quote */
+  font-style: normal;
+}
+blockquote .sidenote {
+  margin-right: calc(var(--margin) - 20px);
+}
+blockquote .even-sidenote {
+  margin-left: calc(var(--margin) - 20px - 5px); /* has to account for 5px green line on blockquote */
+}
+/* Footnotes corresponding with sidenotes */
 .footnotes img {
   max-height: 200px;
   max-width: 200px;
@@ -472,22 +484,6 @@ header#top nav li.active > a:hover {
 header#top .navbar-default .navbar-toggle {
   margin-top: 18px;
   margin-bottom: 18px;
-}
-/*
- *  Sidebar
- */
-aside {
-  background-color: #f9f9f9;
-  width: 370px;
-  padding: 15px 25px;
-  float: right;
-  margin-left: 30px;
-  -webkit-box-shadow: -1px 0 10px -2px rgba(0,0,0,.3);
-  box-shadow: -1px 0 10px -2px rgba(0,0,0,.3);
-}
-aside .description {
-  font-weight: bold;
-  margin: 15px 0;
 }
 /**
  *  List of Posts

@@ -23,7 +23,7 @@
 			$headers = $xpath->query('//h1 | //h2 | //h3 | //h4 | //h5 | //h6');
 
 			if ($headers->length > 1) {
-				$button = '<button class="trigger" onclick="(function(){$(\'.table-of-contents\').toggle();})();">';
+				$button = '<button class="trigger" aria-label="Table of Contents" onclick="(function(){$(\'.table-of-contents\').toggle();})();">';
 				$contents = '<div class="table-of-contents" style="display: none;"><span class="contents">CONTENTS</span>';
 				
 				for ($i = 0; $i < $headers->length; $i++) {
