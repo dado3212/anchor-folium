@@ -290,12 +290,15 @@ blockquote .even-sidenote {
 .img-row {
   margin-bottom: 10px;
 }
-.img-row-element {
+.img-row-text, .img-row-images {
   display: flex;
   justify-content: space-evenly;
   gap: 0.7vw;
 }
-.img-row-element span {
+.img-row-text span {
+  flex: 1;
+}
+.img-row-images span {
   flex: 1;
 }
 
@@ -334,7 +337,7 @@ pre[class*="language-"] {
 */
 @font-face {
   font-family: 'Font Awesome';
-  src: url('/themes/folium/fonts/fa-solid-900.woff2');
+  src: url('/themes/folium/fonts/fa-solid-900-subset.woff2');
 }
 div.code-toolbar>.toolbar {
   opacity: 1;
@@ -1040,8 +1043,7 @@ footer nav > ul.navbar-nav li > a:hover {
     display: none;
     float: none;
     clear: both;
-    width: 95%;
-    max-width: 100%;
+    width: calc(100vw - 2 * var(--container-padding) - 2em);
     margin: 1em;
     text-align: left;
   }
