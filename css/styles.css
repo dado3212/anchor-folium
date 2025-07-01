@@ -34,7 +34,7 @@
   font-stretch: normal; /* Note that font-stretch is a % of normal width */
   font-style: normal; /* See note below */
   font-weight: 340 700;
-  src: url('/themes/folium/fonts/Crimson_Pro/CrimsonPro-VariableFont_wght.ttf') format('truetype');
+  src: url('/themes/folium/fonts/Crimson_Pro/CrimsonPro-VariableFont_wght.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Drop Cap';
