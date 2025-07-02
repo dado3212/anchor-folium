@@ -849,7 +849,8 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 100%;
   }
 }
-@media only screen and (min-width: 1430px) {
+/* Calculated as --sidenote-max-width * 2 + --content-padding * 2 + --container-width + 35 for ToC */
+@media only screen and (min-width: 1460px) {
   .even-sidenote {
     padding-left: 0px;
   }

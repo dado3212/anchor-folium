@@ -26,7 +26,6 @@
 	<?php
 		if (preg_match("/(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/i", $_SERVER['HTTP_USER_AGENT'])) {
 			?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover"><?php
-
 		}
 	?>
 	<link rel="preload" href="/themes/folium/fonts/Crimson_Pro/CrimsonPro-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin="anonymous">
