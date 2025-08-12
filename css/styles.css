@@ -231,6 +231,7 @@ section#comments > h2:hover:before {
 .sidenote {
   float: right;
   clear: right;
+  text-align: left;
   --gutter-width: calc((100vw - var(--container-width) + var(--container-padding) * 2) / 2);
   --sidenote-width: calc(var(--gutter-width) - var(--content-padding) - var(--outside-padding));
   width: min(var(--sidenote-max-width), var(--sidenote-width));
@@ -254,7 +255,7 @@ section#comments > h2:hover:before {
   margin-right: 0;
   margin-left: var(--margin);
   text-align: right;
-  padding-left: 15px;
+  padding-left: 20px;
 }
 .sidenote::before {
   content: attr(data-footnote-index) " ";
@@ -300,6 +301,9 @@ blockquote .even-sidenote {
 }
 .img-row-images span {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .img-row img {
@@ -514,6 +518,7 @@ header#top .navbar-default .navbar-toggle {
 .articleLink .name {
   font-weight: 400;
   transition: 0.2s ease;
+  padding-right: 10px;
 }
 .articleLink .date {
   opacity: 0;
@@ -527,6 +532,7 @@ header#top .navbar-default .navbar-toggle {
   }
   .articleLink:hover .name {
     font-weight: 600;
+    padding-right: 0px;
   }
   .articleLink:hover .date {
     opacity: 1;
@@ -849,8 +855,8 @@ footer nav > ul.navbar-nav li > a:hover {
     width: 100%;
   }
 }
-/* Calculated as --sidenote-max-width * 2 + --content-padding * 2 + --container-width + 35 for ToC */
-@media only screen and (min-width: 1460px) {
+/* Calculated as --sidenote-max-width * 2 + --content-padding * 2 + --container-width + 55 for ToC */
+@media only screen and (min-width: 1480px) {
   .even-sidenote {
     padding-left: 0px;
   }
