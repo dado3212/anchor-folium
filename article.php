@@ -6,6 +6,36 @@
 		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
 	}
 ?>
+<?php if (admin()) { ?>
+	<script>
+		// Inline this code higher up to enable scroll listening
+		// before the full document has loaded for smoother execution
+
+		// Listen for scrolling to do the secondary sticky progress bar
+		// (do this immediately so it's responsive)
+		const progressBar = document.getElementById('progress-bar');
+		new IntersectionObserver(([entry]) => {
+			progressBar.classList.toggle('fixed', !entry.isIntersecting);
+		}).observe(document.querySelector('nav'));
+
+		function setProgress(p) {
+			p = Math.max(0, Math.min(1, p));
+			document.documentElement.style.setProperty('--progress', p * 100 + '%');
+		}
+
+		function onScroll() {
+			const el = document.querySelector('article');
+			const footnotes = document.querySelector('.footnotes');
+			const max = el.scrollHeight - window.innerHeight - footnotes.scrollHeight + 80;
+			console.log(el.scrollHeight, window.innerHeight, footnotes.scrollHeight, max, window.scrollY);
+			const y = Math.max(0, Math.min(max, window.scrollY));
+			setProgress(max ? y / max : 0);
+		}
+
+		window.addEventListener('scroll', onScroll, { passive:true });
+		onScroll();
+	</script>
+<?php } ?>
 	<main class="container">
 		<article id="article-<?php echo article_id(); ?>">
 			<header>
@@ -226,6 +256,7 @@
 <script type="text/javascript" id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="<?php echo theme_url('js/prism.js'); ?>"></script>
 <script>
+	// Used for https://blog.alexbeals.com/posts/debugging-fitness-sf-qr for Cherri code 
 	Prism.languages.cherri = Prism.languages.javascript;
 </script>
 

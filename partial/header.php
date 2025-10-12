@@ -116,6 +116,9 @@
 			</div>
 			<?php endif; ?>
 		</nav>
+		<div id="progress-bar">
+			<div class="vine"></div>
+		</div>
 	</header>
 	<?php if (site_meta('sidebar',1) && page_title("") != "List") { ?>
 	<aside>

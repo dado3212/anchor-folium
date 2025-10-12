@@ -45,6 +45,7 @@ $(document).ready(function(){
 	$('a[data-target=#search]').click(function(event){
 		event.preventDefault();
 		searchWindow.css('display', 'table');
+		$('#search input').focus();
 	});
 
 	$('button.close').click(function() {
