@@ -26,8 +26,12 @@
 		function onScroll() {
 			const el = document.querySelector('article');
 			const footnotes = document.querySelector('.footnotes');
+			if (!el) {
+				return;
+			}
+			// Add in a little more padding (80px) because of top height in the window.
+			// We're ignoring the footnotes
 			const max = el.scrollHeight - window.innerHeight - footnotes.scrollHeight + 80;
-			console.log(el.scrollHeight, window.innerHeight, footnotes.scrollHeight, max, window.scrollY);
 			const y = Math.max(0, Math.min(max, window.scrollY));
 			setProgress(max ? y / max : 0);
 		}
@@ -259,6 +263,28 @@
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 
 <script type="text/javascript" id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+	/** Fallback inline styles for prism.js */
+	pre:not([class]) > code[class^="language-"] {
+		display: block;
+		background: #272822;
+		color: #f8f8f2;
+		text-shadow: 0 1px rgba(0, 0, 0, .3);
+		font-family: Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;
+		font-size: 0.75em;
+		line-height: 1.5;
+		white-space: pre;
+		overflow-x: auto;
+
+		padding: 38.5px 18px 13.5px 18px;
+    margin: 20px -10px;
+    border-radius: 7px;
+	}
+
+	pre:not([class])[data-line] {
+		padding: 0;
+	}
+</style>
 <script src="<?php echo theme_url('js/prism.js'); ?>"></script>
 <script>
 	// Used for https://blog.alexbeals.com/posts/debugging-fitness-sf-qr for Cherri code 

@@ -10,7 +10,7 @@
   --secondary-text: rgb(64, 64, 64);
   --header: var(--text);
   
-  --progress: 0%;
+  --progress: 100%;
 
   --container-width: 735px;
   --container-padding: 15px; /* done in bootstrap */
@@ -215,6 +215,10 @@ section#comments > h2:hover:before {
   letter-spacing: .2px;
   padding: 2px 8px;
   font-weight: 500;
+
+  &:hover {
+    font-weight: 600;
+  }
 }
 .table-of-contents .link {
   overflow: hidden;
@@ -443,19 +447,22 @@ header#top #progress-bar {
   margin-top: -6px;
   position: absolute;
   z-index: 2;
+  background-color: var(--bg);
 }
+#progress-bar .vine {
+  height: 100%;
+  width: 100%;
+  transition: width 0.1s ease;
+  background-color: var(--link);
+}
+/* When you scroll down, we swap some things (only on articles) */
 header#top #progress-bar.fixed {
   position: fixed;
   top: 0px;
   margin-top: 0px;
-
-  background-color: var(--bg);
 }
 #progress-bar.fixed .vine {
-  height: 100%;
   width: var(--progress);
-  transition: width 0.1s ease;
-  background-color: var(--link);
 }
 header#top nav {
   background: color-mix(in srgb, var(--bg) 90%, white);
