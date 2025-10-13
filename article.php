@@ -54,7 +54,7 @@
 
 			if ($headers->length > 1) {
 				$button = '<button class="trigger" aria-label="Table of Contents" onclick="(function(){$(\'.table-of-contents\').toggle();})();">';
-				$contents = '<div class="table-of-contents" style="display: none;"><span class="contents">CONTENTS</span>';
+				$contents = '<div class="table-of-contents" style="display: none;"><div><span class="contents">CONTENTS</span><button id="top-jump" aria-label="Jump to top of article">&#10548;&#xFE0E;</button></div>';
 				
 				for ($i = 0; $i < $headers->length; $i++) {
 					$header = $headers->item($i);
@@ -84,6 +84,11 @@
 							const id = '#' + $(this).data('id');
 							$(id).get(0).scrollIntoView({ behavior: 'smooth' });
 							history.replaceState(null, '', id);
+						});
+						// Click to go to top of article
+						$('.table-of-contents #top-jump').click(function() {
+							$('header').get(0).scrollIntoView({ behavior: 'smooth' });
+							history.replaceState(null, '', '');
 						});
 						// Automatically close it if the window is open
 						document.body.addEventListener('click', function (event) {

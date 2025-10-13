@@ -202,6 +202,20 @@ section#comments > h2:hover:before {
   padding: 4px;
   font-weight: 500;
 }
+.table-of-contents button#top-jump {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  border: none;
+  background: none;
+  
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: .2px;
+  padding: 2px 8px;
+  font-weight: 500;
+}
 .table-of-contents .link {
   overflow: hidden;
   text-overflow: ellipsis;
