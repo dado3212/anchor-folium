@@ -269,6 +269,10 @@ section#comments > h2:hover:before {
 .sidenote .text {
   white-space: normal;
 }
+.sidenote img, .sidenote video {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 .even-sidenote {
   float: left;
   clear: left;
@@ -301,6 +305,11 @@ blockquote .even-sidenote {
   max-width: 200px;
   display: block;
   margin: 0;
+}
+.footnotes li > p {
+  /* Makes sure the line marker works with photos and videos */
+  display: inline-block;
+  vertical-align: top;
 }
 .img-splash {
   height: 250px;
@@ -449,7 +458,7 @@ header#top #progress-bar {
   z-index: 2;
   background-color: var(--bg);
 }
-#progress-bar .vine {
+#progress-bar .progress-vine {
   height: 100%;
   width: 100%;
   transition: width 0.1s ease;
@@ -461,7 +470,7 @@ header#top #progress-bar.fixed {
   top: 0px;
   margin-top: 0px;
 }
-#progress-bar.fixed .vine {
+#progress-bar.fixed .progress-vine {
   width: var(--progress);
 }
 header#top nav {
@@ -636,7 +645,7 @@ main article:last-of-type {
   border-bottom: none;
 }
 main article header {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 main article[id] header {
   margin-top: -15px;
@@ -661,9 +670,44 @@ main article header .meta {
   font-size: 18px;
   font-style: italic;
   color: var(--meta-text);
+  margin-top: 15px;
 }
-main article header .meta a {
-  color: var(--text);
+/** Tags (TODO: CLEAN THIS UP) */
+main article header .tag {
+  background-color: var(--link);
+  /* border: 3px solid var(--link); */
+  /* color: var(--meta-text); */
+  /* color: var(--link); */
+  color: white;
+  font-weight: 500;
+  font-style: normal;
+  padding: 2px 7px;
+  border-radius: 10px 0px 10px 0px;
+  position: relative;
+  margin: 0px 9px;
+  display: inline-block;
+
+  clip-path: shape(
+    from 0% 50%,
+    curve to 50% 0% with -1% 0%,
+    curve to 100% 50% with 101% 0%,
+    curve to 50% 100% with 101% 100%,
+    curve to 0% 50% with -1% 100%,
+    close
+  );
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    background-color: var(--link);
+    left: -3px;
+    bottom: -2px;
+    width: 3px;
+    height: 8px;
+    transform-origin: bottom;
+    transform: rotate(-135deg);
+  }
 }
 main img {
   max-width: 100%;

@@ -23,7 +23,7 @@
 				<?php 
 					$article_description = article_description();
 					if ($article_description) {
-						echo $article_description;
+						echo parse($article_description);
 					} else {
 						echo get_description(article_markdown());
 					}

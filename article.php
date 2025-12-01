@@ -31,7 +31,7 @@
 			}
 			// Add in a little more padding (80px) because of top height in the window.
 			// We're ignoring the footnotes
-			const max = el.scrollHeight - window.innerHeight - footnotes.scrollHeight + 80;
+			const max = el.scrollHeight - window.innerHeight - (footnotes?.scrollHeight ?? 0) + 80;
 			const y = Math.max(0, Math.min(max, window.scrollY));
 			setProgress(max ? y / max : 0);
 		}
@@ -46,6 +46,10 @@
 				<h1><?php echo article_title() . $suffix; ?></h1>
 				<div class="meta">
 					<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
+					<?php if (admin()) {
+						$category = article_category();
+						echo '<a class="tag" href="'. article_category_url() . '">' . $category . '</a>';
+					} ?>
 				</div>
 			</header>
 			<?php
@@ -262,7 +266,7 @@
 <?php endif; ?>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 
-<script type="text/javascript" id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript" id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 <style>
 	/** Fallback inline styles for prism.js */
 	pre:not([class]) > code[class^="language-"] {
