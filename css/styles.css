@@ -3,6 +3,7 @@
   --meta-text: #636a66;
   --highlight: rgb(68, 121, 68);
   --link: rgb(68, 121, 68);
+  --visited-link: rgb(37, 65, 37);
   --code-text: rgb(46, 82, 46);
   --code-background: rgb(224, 245, 230);
   --border: #ddd;
@@ -68,6 +69,16 @@ a.inline {
   text-decoration: underline;
   text-decoration-color: var(--link);
   text-underline-offset: 0.1em;
+}
+article[id] a.inline:visited {
+  color: var(--text);
+  text-decoration-color: var(--text);
+}
+a.inline:hover {
+  color: var(--link);
+  text-decoration-color: var(--link);
+  text-decoration-thickness: 0.14em;
+  text-decoration-skip-ink: none;
 }
 a:hover, a:focus {
   color: var(--link);
