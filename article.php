@@ -198,16 +198,20 @@
 		</script>
 		<?php endif;
 		if (article_status() == 'published') {
-		if (admin()) {
-			$posts = Query::table(Base::table('posts'))
-				->sort('created', 'desc')
-				->get();
+		$posts = Query::table(Base::table('posts'));
+		if (article_custom_field('is_snippet')) {
+			$posts = $posts->left_join(Base::table('post_meta'), Base::table('post_meta.post'), '=', Base::table('posts.id'))
+				->where(Base::table('post_meta.extend'), '=', '4') // this is "is_snippet"
+				->where(Base::table('post_meta.data'), '=', '{"boolean":true}');
 		} else {
-			$posts = Query::table(Base::table('posts'))
-				->where('status', '=', 'published')
-				->sort('created', 'desc')
-				->get();
+			$posts = $posts->left_join(Base::table('post_meta'), 'anchor_post_meta.extend` = "4" and `anchor_post_meta.post', '=', Base::table('posts.id'))
+				->where('anchor_post_meta.data` IS NULL OR `anchor_post_meta.data', '=', '{"boolean":false}');
 		}
+		if (!admin()) {
+			$posts = $posts->where('status', '=', 'published');
+		}
+		$posts = $posts->sort(Base::table('posts.created'), 'desc')
+			->get(array(Base::table('posts.*')));
 		$page = Registry::get('posts_page');
 		?>
 		<div id="previousPosts" class="page">

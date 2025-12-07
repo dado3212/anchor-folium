@@ -83,6 +83,9 @@ a.inline:hover {
 a:hover, a:focus {
   color: var(--link);
 }
+hr {
+  border-top: 1px solid color-mix(in srgb, var(--bg) 85%, black);
+}
 /* Get strikethrough to render in the right place */
 s {
   text-decoration: underline var(--text) .1em;

@@ -2,16 +2,13 @@
 
 	<main class="container padding-container">
 		<?php
-			if (user_authed() && user_authed_role() == 'administrator') {
-				$items = Query::table(Base::table('posts'))
-					->sort('created')
-					->get();
-			} else {
-				$items = Query::table(Base::table('posts'))
-					->where('status', '=', 'published')
-					->sort('created')
-					->get();
+			$items = Query::table(Base::table('posts'))
+				->left_join(Base::table('post_meta'), 'anchor_post_meta.extend` = "4" and `anchor_post_meta.post', '=', Base::table('posts.id'))
+				->where('anchor_post_meta.data` IS NULL OR `anchor_post_meta.data', '=', '{"boolean":false}');
+			if (!user_authed() || user_authed_role() != 'administrator') {
+				$items = $items->where('status', '=', 'published');
 			}
+			$items = $items->sort('created')->get();
 			$previousYear = "";
 			$page = Registry::get('posts_page');
 		?>
