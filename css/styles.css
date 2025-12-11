@@ -69,12 +69,13 @@ a.inline {
   text-decoration: underline;
   text-decoration-color: var(--link);
   text-underline-offset: 0.1em;
+  transition: none;
 }
 article[id] a.inline:visited {
   color: var(--text);
   text-decoration-color: var(--text);
 }
-a.inline:hover {
+article[id] a.inline:hover {
   color: var(--link);
   text-decoration-color: var(--link);
   text-decoration-thickness: 0.14em;

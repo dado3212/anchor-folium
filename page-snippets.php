@@ -9,7 +9,7 @@
     </div>
 
 		<?php
-			if (user_authed() && user_authed_role() == 'administrator') {
+			if (admin()) {
         $items = Query::table(Base::table('posts'))
           ->left_join(Base::table('post_meta'), Base::table('post_meta.post'), '=', Base::table('posts.id'))
           ->where(Base::table('post_meta.extend'), '=', '4') // this is "is_snippet"

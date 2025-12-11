@@ -5,7 +5,7 @@
 			$items = Query::table(Base::table('posts'))
 				->left_join(Base::table('post_meta'), 'anchor_post_meta.extend` = "4" and `anchor_post_meta.post', '=', Base::table('posts.id'))
 				->where('anchor_post_meta.data` IS NULL OR `anchor_post_meta.data', '=', '{"boolean":false}');
-			if (!user_authed() || user_authed_role() != 'administrator') {
+			if (!admin()) {
 				$items = $items->where('status', '=', 'published');
 			}
 			$items = $items->sort('created')->get();
