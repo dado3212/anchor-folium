@@ -1163,6 +1163,10 @@ footer nav > ul.navbar-nav li > a:hover {
   blockquote .sidenote, blockquote .even-sidenote {
     margin: 1em;
   }
+  li .sidenote, li .even-sidenote {
+    /* offset the 40px ul indent + 1em margin */
+    margin-left: calc(-40px + 1em);
+  }
   .sidenote.visible {
     display: block;
   }
