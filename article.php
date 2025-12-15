@@ -198,8 +198,9 @@
 		</script>
 		<?php endif;
 		if (article_status() == 'published') {
+		$is_snippet = article_custom_field('is_snippet');
 		$posts = Query::table(Base::table('posts'));
-		if (article_custom_field('is_snippet')) {
+		if ($is_snippet) {
 			$posts = $posts->left_join(Base::table('post_meta'), Base::table('post_meta.post'), '=', Base::table('posts.id'))
 				->where(Base::table('post_meta.extend'), '=', '4') // this is "is_snippet"
 				->where(Base::table('post_meta.data'), '=', '{"boolean":true}');
@@ -239,19 +240,23 @@
 			}
 		}
 		if ($nextPost) {
-			echo "<h3 class='year'>Next</h3>";
+			echo $is_snippet ? "<h3 class='year'>Next snippet</h3>" : "<h3 class='year'>Next</h3>";
 			renderArticleLink($page, $nextPost);
 		}
 		if ($previousPost) {
-			echo "<h3 class='year'>Previous</h3>";
+			echo $is_snippet ? "<h3 class='year'>Previous snippet</h3>" : "<h3 class='year'>Previous</h3>";
 			renderArticleLink($page, $previousPost);
 		}
 		if (count($recentPosts) > 0) {
-			echo "<h3 class='year'>Recent</h3>";
+			echo $is_snippet ? "<h3 class='year'>Recent snippets</h3>" : "<h3 class='year'>Recent</h3>";
 			foreach ($recentPosts as $recentPost) {
 				renderArticleLink($page, $recentPost);
 			}
-			echo "<a class='articleLink' href='/list' title='View all'><b>View all</b></a>";
+			if ($is_snippet) {
+				echo "<a class='articleLink' href='/snippets' title='View all snippets'><b>View all snippets</b></a><a class='articleLink' href='/list' title='View all posts'><b>View all posts</b></a>";
+			} else {
+				echo "<a class='articleLink' href='/list' title='View all'><b>View all</b></a>";
+			}
 		}
 		?>
 		</div>
