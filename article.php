@@ -1,6 +1,7 @@
 <?php theme_include('partial/header'); ?>
+<?php theme_include('partial/allowlisted') ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
-<?php if (article_status() == "published" || admin()):
+<?php if (article_status() == "published" || admin() || isArticlePublicWithCode()):
 	$suffix = "";
 	if (article_status() != 'published') {
 		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
