@@ -70,6 +70,7 @@ and in the UI, to be able to adjust publication date.
 * https://samcurry.net/hacking-subaru for dark styling, code
 
 * * https://www.benkuhn.net/abyss/#fnref:1 - breaks, and content
+* https://www.fromjason.xyz/p/notebook/openai-s-operator-is-facebook-s-like-button/ - everything
 
 TODO
 - Display category of post (or tags?)
