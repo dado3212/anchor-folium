@@ -69,6 +69,8 @@ and in the UI, to be able to adjust publication date.
 * Include post tags from https://entropicthoughts.com/the-most-mario-colour-revisited
 * https://samcurry.net/hacking-subaru for dark styling, code
 
+* * https://www.benkuhn.net/abyss/#fnref:1 - breaks, and content
+
 TODO
 - Display category of post (or tags?)
 - Handle dark mode
