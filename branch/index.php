@@ -67,11 +67,13 @@
       let w = 0;
       let h = 0;
       let trunkPoints = [];
+      let branches = [];
       let twigs = [];
       let leaves = [];
 
       const TAU = Math.PI * 2;
       const MAX_LEAF_ATTACH_DIST = 5;
+      const MIN_BRANCH_TWIG_DIST = 10;
       // Tweak these for branch thickness/taper without touching drawing code.
       const TRUNK_BASE_WIDTH_RATIO = 0.012; // halved again
       const TRUNK_BASE_WIDTH_MIN = 2.5;
@@ -110,6 +112,7 @@
 
       function rebuild() {
         trunkPoints = [];
+        branches = [];
         twigs = [];
         leaves = [];
 
@@ -123,11 +126,15 @@
         for (let i = 0; i <= segments; i++) {
           const t = i / segments;
           const y = bottom - t * height;
-          bend += (Math.sin(i * 0.4) + Math.cos(i * 0.23)) * 0.02;
-          const wind = Math.sin(t * 6.2 + 0.4) * (w * 0.035);
-          const x = cx + wind + bend * w * 0.012;
+          bend += (Math.sin(i * 0.4) + Math.cos(i * 0.23)) * 0.006;
+          const wind = Math.sin(t * 6.2 + 0.4) * (w * 0.008);
+          const x = cx + wind + bend * w * 0.004;
           trunkPoints.push({ x, y, t });
         }
+
+        // Two very thin, curvier side branches.
+        branches.push(createBranch(0.36, "left", 1.38));
+        branches.push(createBranch(0.62, "right", 1.46));
 
         const leafCount = Math.round(clamp(h / 5, 110, 260));
         for (let i = 0; i < leafCount; i++) {
@@ -149,7 +156,7 @@
             gradEnd = clamp(gradStart + (rand(seed + 71.2) > 0.5 ? 0.22 : -0.22), 0, 1);
           }
           const gradAngle = rand(seed + 73.4) * TAU;
-          const attachTwig = rand(seed + 79.8) > 0.33;
+          const attachTwig = rand(seed + 79.8) > 0.28;
           let anchorX;
           let anchorY;
           let baseX;
@@ -172,7 +179,8 @@
               y1: sy,
               x2: tx,
               y2: ty,
-              width: Math.max(0.35, width * 0.055)
+              width: Math.max(0.35, width * 0.055),
+              onBranch: false
             });
 
             anchorX = tx;
@@ -225,6 +233,224 @@
             gradAngle
           });
         }
+
+        // Extra leaves specifically for side branches (without removing trunk leaves).
+        const branchLeafCount = Math.round(clamp(h / 14, 5, 13));
+        const perBranchCount = Math.ceil(branchLeafCount / Math.max(1, branches.length));
+        for (let i = 0; i < branchLeafCount; i++) {
+          const seed = 20000 + i * 17.31;
+          const branchIdx = i % Math.max(1, branches.length);
+          const branch = branches[branchIdx];
+          const slot = Math.floor(i / Math.max(1, branches.length));
+          const bt = clamp((slot + 1) / (perBranchCount + 1), 0.06, 0.94);
+          const p = pointOnBranch(branch, bt);
+          const p2 = pointOnBranch(branch, Math.min(1, bt + 0.03));
+          const width = lerp(branch.width, branch.width * 0.55, bt);
+          const side = branch.side;
+          const tangentAngle = Math.atan2(p2.y - p.y, p2.x - p.x);
+          const normalSign = rand(seed + 22.4) > 0.5 ? 1 : -1;
+          const normalAngle = tangentAngle + normalSign * Math.PI / 2;
+
+          const size = 3 + rand(seed + 4.1) * 11;
+          const widthScale = 0.3 + rand(seed + 5.2) * 0.35;
+          const tipScale = 0.78 + rand(seed + 6.3) * 0.72;
+          const bulge = 0.8 + rand(seed + 7.4) * 0.9;
+          const foldScale = 0.68 + rand(seed + 8.5) * 0.5;
+          const curl = side * (rand(seed + 9.6) - 0.5) * 0.22;
+          const gradStart = rand(seed + 10.7);
+          let gradEnd = rand(seed + 11.8);
+          if (Math.abs(gradEnd - gradStart) < 0.18) {
+            gradEnd = clamp(gradStart + (rand(seed + 12.9) > 0.5 ? 0.22 : -0.22), 0, 1);
+          }
+          const gradAngle = rand(seed + 13.1) * TAU;
+
+          const attachTwig = rand(seed + 14.2) > 0.2;
+          let anchorX;
+          let anchorY;
+          let baseX;
+          let baseY;
+          let stemWidth;
+
+          if (attachTwig) {
+            const twigLen = Math.max(MIN_BRANCH_TWIG_DIST, width * (3.3 + rand(seed + 15.3) * 3.4));
+            // Make branch twigs follow branch tangent with a -10deg offset.
+            const twigAngle = tangentAngle - (10 * Math.PI / 180);
+            let tx = p.x + Math.cos(twigAngle) * twigLen;
+            let ty = p.y + Math.sin(twigAngle) * twigLen;
+            // Keep twigs extending outward from branch side.
+            if ((tx - p.x) * side < 0) {
+              const flip = twigAngle + Math.PI;
+              tx = p.x + Math.cos(flip) * twigLen;
+              ty = p.y + Math.sin(flip) * twigLen;
+            }
+            twigs.push({
+              x1: p.x,
+              y1: p.y,
+              x2: tx,
+              y2: ty,
+              width: Math.max(0.22, width * 0.85),
+              onBranch: true
+            });
+            anchorX = tx;
+            anchorY = ty;
+            const outward = twigLen * (0.28 + rand(seed + 17.5) * 0.2);
+            let ox = anchorX - p.x;
+            let oy = anchorY - p.y;
+            const od = Math.hypot(ox, oy);
+            if (od > 0.001) {
+              ox /= od;
+              oy /= od;
+            } else {
+              ox = Math.cos(normalAngle);
+              oy = Math.sin(normalAngle);
+            }
+            baseX = anchorX + ox * outward;
+            baseY = anchorY + oy * outward;
+            stemWidth = Math.max(0.18, width * 0.5);
+          } else {
+            const petiole = Math.min(MAX_LEAF_ATTACH_DIST, width * (1.9 + rand(seed + 19.7) * 1.9));
+            anchorX = p.x;
+            anchorY = p.y;
+            baseX = anchorX + Math.cos(normalAngle) * petiole;
+            baseY = anchorY + Math.sin(normalAngle) * petiole;
+            stemWidth = Math.max(0.16, width * 0.45);
+          }
+
+          const stemDx = baseX - anchorX;
+          const stemDy = baseY - anchorY;
+          const stemAngle = Math.atan2(stemDy, stemDx);
+          // Point leaves away from the branch along the stem direction.
+          // If a twig is above the branch, this naturally points the leaf upward.
+          const angle = stemAngle + (rand(seed + 21.9) - 0.5) * 0.18;
+
+          leaves.push({
+            seed,
+            anchorX,
+            anchorY,
+            baseX,
+            baseY,
+            stemWidth,
+            size,
+            angle,
+            widthScale,
+            tipScale,
+            bulge,
+            foldScale,
+            curl,
+            gradStart,
+            gradEnd,
+            gradAngle
+          });
+        }
+      }
+
+      function createBranch(percent, direction, lengthFactor) {
+        const t = clamp(percent, 0.05, 0.95);
+        const p = pointAt(t);
+        const side = direction === "right" ? 1 : -1;
+        const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
+        const len = clamp(h * (0.055 + rand(900 + t * 100) * 0.03) * lenMul, 24, 108);
+        const x1 = p.x + side * len;
+        const y1 = p.y - len * (0.25 + rand(1000 + t * 200) * 0.2);
+        const dx = x1 - p.x;
+        const dy = y1 - p.y;
+        const nx = -dy;
+        const ny = dx;
+        const nLen = Math.hypot(nx, ny) || 1;
+        const unx = nx / nLen;
+        const uny = ny / nLen;
+        const waveCount = 2 + Math.floor(rand(1100 + t * 300) * 2);
+        const waveAmp = len * (0.035 + rand(1200 + t * 250) * 0.05);
+        const phase = rand(1300 + t * 350) * Math.PI * 2;
+        const points = [];
+        const steps = 6;
+
+        for (let i = 0; i <= steps; i++) {
+          const u = i / steps;
+          const lx = lerp(p.x, x1, u);
+          const ly = lerp(p.y, y1, u);
+          const fade = Math.sin(Math.PI * u);
+          const wave = Math.sin(u * waveCount * Math.PI * 2 + phase);
+          const offset = wave * waveAmp * fade;
+          points.push({
+            x: lx + unx * offset,
+            y: ly + uny * offset
+          });
+        }
+
+        const curveSamples = buildBranchCurveSamples(points);
+
+        return {
+          side,
+          x0: p.x,
+          y0: p.y,
+          x1,
+          y1,
+          points,
+          curveSamples,
+          width: Math.max(0.28, trunkWidthAt(t) * 0.22)
+        };
+      }
+
+      function buildBranchCurveSamples(points) {
+        const out = [];
+        if (!points || points.length === 0) return out;
+        out.push({ x: points[0].x, y: points[0].y });
+        if (points.length === 1) return out;
+
+        if (points.length === 2) {
+          for (let i = 1; i <= 20; i++) {
+            const t = i / 20;
+            out.push({
+              x: lerp(points[0].x, points[1].x, t),
+              y: lerp(points[0].y, points[1].y, t)
+            });
+          }
+          return out;
+        }
+
+        let start = points[0];
+        for (let j = 1; j < points.length - 1; j++) {
+          const c = points[j];
+          const n = points[j + 1];
+          const end = { x: (c.x + n.x) * 0.5, y: (c.y + n.y) * 0.5 };
+          for (let i = 1; i <= 8; i++) {
+            const t = i / 8;
+            const mt = 1 - t;
+            out.push({
+              x: mt * mt * start.x + 2 * mt * t * c.x + t * t * end.x,
+              y: mt * mt * start.y + 2 * mt * t * c.y + t * t * end.y
+            });
+          }
+          start = end;
+        }
+
+        const last = points[points.length - 1];
+        for (let i = 1; i <= 8; i++) {
+          const t = i / 8;
+          out.push({
+            x: lerp(start.x, last.x, t),
+            y: lerp(start.y, last.y, t)
+          });
+        }
+
+        return out;
+      }
+
+      function pointOnBranch(branch, t) {
+        const u = clamp(t, 0, 1);
+        const points = (branch.curveSamples && branch.curveSamples.length > 1)
+          ? branch.curveSamples
+          : (branch.points || [{ x: branch.x0, y: branch.y0 }, { x: branch.x1, y: branch.y1 }]);
+        const scaled = u * (points.length - 1);
+        const i = Math.floor(scaled);
+        const f = scaled - i;
+        const a = points[i];
+        const b = points[Math.min(points.length - 1, i + 1)];
+        return {
+          x: lerp(a.x, b.x, f),
+          y: lerp(a.y, b.y, f)
+        };
       }
 
       function pointAt(t) {
@@ -245,7 +471,7 @@
           ctx.beginPath();
           ctx.moveTo(twig.x1, twig.y1);
           ctx.lineTo(twig.x2, twig.y2);
-          ctx.strokeStyle = "rgb(84, 58, 35)";
+          ctx.strokeStyle = "rgb(104, 76, 49)";
           ctx.lineWidth = twig.width;
           ctx.lineCap = "round";
           ctx.stroke();
@@ -260,6 +486,13 @@
           ctx.lineWidth = twig.width * 0.42;
           ctx.lineCap = "round";
           ctx.stroke();
+
+          if (twig.onBranch) {
+            ctx.beginPath();
+            ctx.arc(twig.x1, twig.y1, Math.max(0.4, twig.width * 0.5), 0, TAU);
+            ctx.fillStyle = "rgb(84, 58, 35)";
+            ctx.fill();
+          }
         }
       }
 
@@ -455,6 +688,31 @@
         }
       }
 
+      function drawBranches() {
+        for (let i = 0; i < branches.length; i++) {
+          const b = branches[i];
+          const points = b.points || [{ x: b.x0, y: b.y0 }, { x: b.x1, y: b.y1 }];
+          if (points.length < 2) continue;
+
+          ctx.beginPath();
+          ctx.moveTo(points[0].x, points[0].y);
+          for (let j = 1; j < points.length - 1; j++) {
+            const c = points[j];
+            const n = points[j + 1];
+            const mx = (c.x + n.x) * 0.5;
+            const my = (c.y + n.y) * 0.5;
+            ctx.quadraticCurveTo(c.x, c.y, mx, my);
+          }
+          const last = points[points.length - 1];
+          ctx.lineTo(last.x, last.y);
+          ctx.strokeStyle = "rgb(84, 58, 35)";
+          ctx.lineWidth = b.width;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.stroke();
+        }
+      }
+
       function drawVines() {
         const turns = 9.5;
         const samples = 230;
@@ -542,6 +800,7 @@
         ctx.clearRect(0, 0, w, h);
         drawVines();
         drawTrunk();
+        drawBranches();
         drawTwigs();
         drawLeaves();
       }
