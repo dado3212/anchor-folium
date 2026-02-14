@@ -13,6 +13,32 @@
 	</div>
 	<script src="/themes/folium/branch/index.js"></script>
 	<style>
+		:root {
+			/* My gut, unadjusted */
+			--text: black;
+			--meta-text: #636a66;
+			--highlight: rgb(68, 121, 68);
+			--link: rgb(105 118 68);
+			--visited-link: rgb(37, 65, 37);
+			--code-text: rgb(46, 82, 46);
+			--code-background: rgb(224, 245, 230);
+			--border: #ddd;
+			--bg: rgb(253 253 250);
+			--secondary-text: rgb(64, 64, 64);
+			--header: var(--text);
+
+			/* ROBOT COLORS */
+			/* --text: #2f2f1f;
+    --meta-text: #6f7357;
+    --highlight: #878753;
+    --link: #7f8450;
+    --visited-link: #5f6338;
+    --code-text: #4a4f2f;
+    --code-background: #ece6c2;
+    --bg: #f4f2e6;
+    --secondary-text: #54563f;
+    --header: var(--text); */
+		}
 		#branchWrapper {
 			overflow: hidden;
 			width: 100%;
@@ -27,6 +53,9 @@
 			position: fixed;
 			margin-top: -117px;
 		}
+		#branchWrapper canvas {
+			margin-left: -35px;
+		}
 	</style>
 	<script>
 		// Inline this code higher up to enable scroll listening
@@ -34,10 +63,22 @@
 
 		const branchWrapper = document.getElementById("branchWrapper");
 		const branch = window.BranchSceneLibrary.mount(document.getElementById("progressBranch"), {
-			sceneWidth: window.innerWidth - 50,
+			sceneWidth: document.documentElement.clientWidth,
 			sceneHeight: 300,
 			rotationDeg: 90,
 			trunkWaviness: 0,
+			scale: 2,
+			// leafColorStart: "#254125",
+			// leafColorEnd: "#447944",
+
+			// leafColorStart: "#7a8b41",
+    	// leafColorEnd: "#c2dc8d",
+
+			leafColorStart: "#d73333",
+			leafColorEnd: "#c4af38",
+			
+			// leafColorStart: "#6c6d3b",
+      //   leafColorEnd: "#ece6c2",
 			branches: [],
 		});
 
@@ -74,6 +115,18 @@
 		}
 
 		window.addEventListener('scroll', onScroll, { passive:true });
+		let resizeRaf = null;
+		function onResize() {
+			if (resizeRaf != null) {
+				return;
+			}
+			resizeRaf = requestAnimationFrame(() => {
+				resizeRaf = null;
+				branch.setSceneSize(document.documentElement.clientWidth, 300);
+				onScroll();
+			});
+		}
+		window.addEventListener('resize', onResize, { passive:true });
 		onScroll();
 	</script>
 <?php } ?>

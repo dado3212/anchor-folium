@@ -50,6 +50,9 @@
         sceneWidth: 600,
         sceneHeight: 300,
         rotationDeg: 90,
+        scale: 1,
+        leafColorStart: "#254125",
+        leafColorEnd: "#447944",
         trunkWaviness: 0,
         branchWaviness: 1,
         branches: [
@@ -61,6 +64,9 @@
         sceneWidth: 300,
         sceneHeight: 600,
         rotationDeg: 0,
+        scale: 2,
+        leafColorStart: "#6c6d3b",
+        leafColorEnd: "#ece6c2",
         trunkWaviness: 0.8,
         branchWaviness: 1.2,
         branches: [

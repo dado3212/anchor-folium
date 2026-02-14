@@ -5,8 +5,10 @@
 
       const ctx = canvas.getContext("2d");
       if (!ctx) return null;
-      const dprCap = typeof options.devicePixelRatioCap === "number" ? options.devicePixelRatioCap : 2;
-      const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+      const scale = Number.isFinite(Number(options.scale))
+        ? Math.max(1, Number(options.scale))
+        : 1;
+      const dpr = (window.devicePixelRatio || 1) * scale;
       let sceneWidthConfig = Number(options.sceneWidth) > 0 ? Number(options.sceneWidth) : null;
       let sceneHeightConfig = Number(options.sceneHeight) > 0 ? Number(options.sceneHeight) : null;
 
@@ -47,6 +49,8 @@
       const branchWaviness = Number.isFinite(Number(options.branchWaviness))
         ? Math.max(0, Number(options.branchWaviness))
         : 1;
+      const leafColorStart = parseRgbColor(options.leafColorStart, { r: 37, g: 65, b: 37 });
+      const leafColorEnd = parseRgbColor(options.leafColorEnd, { r: 68, g: 121, b: 68 });
       let branchSpecs = normalizeBranchSpecs(options.branches);
 
       function clamp(v, lo, hi) {
@@ -60,6 +64,75 @@
       function rand(seed) {
         const x = Math.sin(seed * 127.1 + seed * seed * 311.7) * 43758.5453;
         return x - Math.floor(x);
+      }
+
+      function parseRgbColor(value, fallback) {
+        function norm(n) {
+          return clamp(Math.round(Number(n) || 0), 0, 255);
+        }
+        if (Array.isArray(value) && value.length >= 3) {
+          return { r: norm(value[0]), g: norm(value[1]), b: norm(value[2]) };
+        }
+        if (value && typeof value === "object") {
+          if (
+            Number.isFinite(Number(value.r)) &&
+            Number.isFinite(Number(value.g)) &&
+            Number.isFinite(Number(value.b))
+          ) {
+            return { r: norm(value.r), g: norm(value.g), b: norm(value.b) };
+          }
+        }
+        if (typeof value === "string") {
+          const s = value.trim();
+          const hex = s.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+          if (hex) {
+            const h = hex[1];
+            if (h.length === 3) {
+              return {
+                r: parseInt(h[0] + h[0], 16),
+                g: parseInt(h[1] + h[1], 16),
+                b: parseInt(h[2] + h[2], 16)
+              };
+            }
+            return {
+              r: parseInt(h.slice(0, 2), 16),
+              g: parseInt(h.slice(2, 4), 16),
+              b: parseInt(h.slice(4, 6), 16)
+            };
+          }
+          const rgb = s.match(/^rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)$/i);
+          if (rgb) {
+            return { r: norm(rgb[1]), g: norm(rgb[2]), b: norm(rgb[3]) };
+          }
+        }
+        return fallback;
+      }
+
+      function paletteColorAt(t) {
+        const c = paletteColorObjectAt(t);
+        return "rgb(" + c.r + ", " + c.g + ", " + c.b + ")";
+      }
+
+      function paletteColorObjectAt(t) {
+        const u = clamp(t, 0, 1);
+        return {
+          r: Math.round(lerp(leafColorStart.r, leafColorEnd.r, u)),
+          g: Math.round(lerp(leafColorStart.g, leafColorEnd.g, u)),
+          b: Math.round(lerp(leafColorStart.b, leafColorEnd.b, u))
+        };
+      }
+
+      function darkenRgb(rgb, factor) {
+        const f = clamp(factor, 0, 1);
+        return {
+          r: Math.round(rgb.r * f),
+          g: Math.round(rgb.g * f),
+          b: Math.round(rgb.b * f)
+        };
+      }
+
+      function rgbaFromRgb(rgb, a) {
+        return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + clamp(a, 0, 1) + ")";
       }
 
       function normalizeBranchSpecs(specs) {
@@ -681,7 +754,7 @@
         }
       }
 
-      function drawLeaf(x, y, size, angle, shape, colorA, colorB, alpha) {
+      function drawLeaf(x, y, size, angle, shape, colorA, colorB, borderRgb, alpha) {
         ctx.save();
         ctx.translate(x, y);
         const hover = shape.hover || 0;
@@ -690,8 +763,8 @@
         ctx.scale(1, 0.86 * shape.foldScale);
         ctx.transform(1, 0, shape.curl * 0.35, 1, 0, 0);
         ctx.globalAlpha = alpha;
-        ctx.strokeStyle = "rgba(72, 61, 34, 0.45)";
-        ctx.lineWidth = Math.max(0.8, size * 0.07);
+        ctx.strokeStyle = rgbaFromRgb(borderRgb, 0.85);
+        ctx.lineWidth = Math.max(0.8, size * 0.06);
 
         const tipX = size * (0.88 + shape.tipScale * 0.34);
         const upperY = -size * (0.24 + shape.widthScale * 0.34) * shape.bulge;
@@ -753,13 +826,13 @@
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(tipX * 0.98, 0);
-        ctx.strokeStyle = "rgba(58, 48, 30, 0.48)";
+        ctx.strokeStyle = rgbaFromRgb(borderRgb, 0.72);
         ctx.lineWidth = Math.max(0.7, size * 0.06);
         ctx.stroke();
 
         // Secondary veins: branch toward tip, taper from base to tip.
         const numVeins = Math.max(5, Math.round(size / 3.6));
-        ctx.strokeStyle = "rgba(58, 45, 24, 0.58)";
+        ctx.strokeStyle = rgbaFromRgb(borderRgb, 0.78);
         for (let i = 0; i < numVeins; i++) {
           // Choose the starting location (0 near base, 1 near tip)
           const startPerc = (i + 0.8) / numVeins;
@@ -927,28 +1000,34 @@
           }
         }
 
-        // Match leaf palette family (#6c6d3b -> #ece6c2).
-        ctx.strokeStyle = front ? "rgb(135, 135, 83)" : "rgb(108, 109, 59)";
+        // Keep vine tied to the same configurable leaf palette.
+        const v0 = trunkVisualCenterAt(0);
+        const v1 = trunkVisualCenterAt(1);
+        const vineGrad = ctx.createLinearGradient(v0.x, v0.y, v1.x, v1.y);
+        if (front) {
+          vineGrad.addColorStop(0, paletteColorAt(0.22));
+          vineGrad.addColorStop(1, paletteColorAt(0.72));
+        } else {
+          vineGrad.addColorStop(0, paletteColorAt(0.08));
+          vineGrad.addColorStop(1, paletteColorAt(0.42));
+        }
+        ctx.strokeStyle = vineGrad;
         ctx.lineWidth = front ? Math.max(0.95, w * 0.0023) : Math.max(0.8, w * 0.0018);
         ctx.lineCap = "butt";
         ctx.stroke();
       }
 
       function drawLeaves() {
-        const start = { r: 108, g: 109, b: 59 };  // #6c6d3b
-        const end = { r: 236, g: 230, b: 194 };   // #ece6c2
-
         function colorAt(t) {
-          const r = Math.round(lerp(start.r, end.r, t));
-          const g = Math.round(lerp(start.g, end.g, t));
-          const b = Math.round(lerp(start.b, end.b, t));
-          return "rgb(" + r + ", " + g + ", " + b + ")";
+          return paletteColorAt(t);
         }
 
         for (let i = 0; i < leaves.length; i++) {
           const leaf = leaves[i];
           const colorA = colorAt(leaf.gradStart);
           const colorB = colorAt(leaf.gradEnd);
+          const midT = (leaf.gradStart + leaf.gradEnd) * 0.5;
+          const borderRgb = darkenRgb(paletteColorObjectAt(midT), 0.52);
 
           // Petiole/stem: visibly connects each leaf to a twig or vine anchor.
           ctx.beginPath();
@@ -972,6 +1051,7 @@
             leaf,
             colorA,
             colorB,
+            borderRgb,
             0.9 + leaf.hover * 0.1
           );
         }
