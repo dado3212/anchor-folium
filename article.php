@@ -16,16 +16,16 @@
 		#branchWrapper {
 			overflow: hidden;
 			width: 100%;
-			height: 75px;
+			height: 68px;
 			display: flex;
 			align-items: center;
 			position: absolute;
-			margin-top: -25px;
+			margin-top: -35px;
 			z-index: 1;
 		}
 		#branchWrapper.fixed {
 			position: fixed;
-			margin-top: -106px;
+			margin-top: -117px;
 		}
 	</style>
 	<script>
@@ -34,19 +34,28 @@
 
 		const branchWrapper = document.getElementById("branchWrapper");
 		const branch = window.BranchSceneLibrary.mount(document.getElementById("progressBranch"), {
-			sceneWidth: window.innerWidth - 100,
+			sceneWidth: window.innerWidth - 50,
 			sceneHeight: 300,
 			rotationDeg: 90,
+			trunkWaviness: 0,
 			branches: [],
 		});
 
 		// Listen for scrolling to do the secondary sticky progress bar
 		// (do this immediately so it's responsive)
+		let isTop = true;
 		new IntersectionObserver(([entry]) => {
-			branchWrapper.classList.toggle('fixed', !entry.isIntersecting);
+			isTop = entry.isIntersecting;
+			branchWrapper.classList.toggle('fixed', !isTop);
+			if (isTop) {
+				branch.setTrunkLeafMaxPercent(100);
+			}
 		}).observe(document.querySelector('nav'));
 
 		function setProgress(p) {
+			if (isTop) {
+				return;
+			}
 			p = Math.max(0, Math.min(1, p));
 			branch.setTrunkLeafMaxPercent(p * 100);
 		}

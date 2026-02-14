@@ -41,6 +41,12 @@
       // Fixed trunk thickness (independent of scene size), configurable via options.trunkBaseWidth.
       const TRUNK_BASE_WIDTH = Number(options.trunkBaseWidth) > 0 ? Number(options.trunkBaseWidth) : 15;
       const TRUNK_TAPER_PERCENT = 72; // 72 = top is 28% of base width
+      const trunkWaviness = Number.isFinite(Number(options.trunkWaviness))
+        ? Math.max(0, Number(options.trunkWaviness))
+        : 1;
+      const branchWaviness = Number.isFinite(Number(options.branchWaviness))
+        ? Math.max(0, Number(options.branchWaviness))
+        : 1;
       let branchSpecs = normalizeBranchSpecs(options.branches);
 
       function clamp(v, lo, hi) {
@@ -62,7 +68,10 @@
           .map((s) => ({
             percent: clamp(Number(s.percent), 0.05, 0.95),
             direction: s.direction === "right" ? "right" : "left",
-            lengthFactor: Number(s.lengthFactor) > 0 ? Number(s.lengthFactor) : 1
+            lengthFactor: Number(s.lengthFactor) > 0 ? Number(s.lengthFactor) : 1,
+            waviness: Number.isFinite(Number(s.waviness))
+              ? Math.max(0, Number(s.waviness))
+              : null
           }))
           .filter(Boolean);
       }
@@ -161,8 +170,8 @@
         for (let i = 0; i <= segments; i++) {
           const t = i / segments;
           const y = bottom - t * height;
-          bend += (Math.sin(i * 0.4) + Math.cos(i * 0.23)) * 0.006;
-          const wind = Math.sin(t * 6.2 + 0.4) * (trunkSpan * 0.008);
+          bend += (Math.sin(i * 0.4) + Math.cos(i * 0.23)) * 0.006 * trunkWaviness;
+          const wind = Math.sin(t * 6.2 + 0.4) * (trunkSpan * 0.008 * trunkWaviness);
           const x = cx + wind + bend * trunkSpan * 0.004;
           trunkPoints.push({ x, y, t });
         }
@@ -170,7 +179,7 @@
         // Configurable side branches.
         for (let i = 0; i < branchSpecs.length; i++) {
           const b = branchSpecs[i];
-          branches.push(createBranch(b.percent, b.direction, b.lengthFactor));
+          branches.push(createBranch(b.percent, b.direction, b.lengthFactor, b.waviness));
         }
 
         const leafCount = Math.round(clamp(trunkSpan / 5, 110, 260));
@@ -402,7 +411,7 @@
         }
       }
 
-      function createBranch(percent, direction, lengthFactor) {
+      function createBranch(percent, direction, lengthFactor, waviness) {
         const t = clamp(percent, 0.05, 0.95);
         const p = pointAt(t);
         const side = direction === "right" ? 1 : -1;
@@ -439,8 +448,9 @@
 
         const unx = -dy;
         const uny = dx;
+        const waveScale = waviness == null ? branchWaviness : waviness;
         const waveCount = 2 + Math.floor(rand(1100 + t * 300) * 2);
-        const waveAmp = len * (0.035 + rand(1200 + t * 250) * 0.05);
+        const waveAmp = len * (0.035 + rand(1200 + t * 250) * 0.05) * waveScale;
         const phase = rand(1300 + t * 350) * Math.PI * 2;
         const points = [];
         const steps = 6;
