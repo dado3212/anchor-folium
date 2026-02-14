@@ -8,20 +8,47 @@
 	}
 ?>
 <?php if (admin()) { ?>
+	<div id="branchWrapper">
+		<canvas id="progressBranch" aria-label="Branch rendering A"></canvas>
+	</div>
+	<script src="/themes/folium/branch/index.js"></script>
+	<style>
+		#branchWrapper {
+			overflow: hidden;
+			width: 100%;
+			height: 75px;
+			display: flex;
+			align-items: center;
+			position: absolute;
+			margin-top: -25px;
+			z-index: 1;
+		}
+		#branchWrapper.fixed {
+			position: fixed;
+			margin-top: -106px;
+		}
+	</style>
 	<script>
 		// Inline this code higher up to enable scroll listening
 		// before the full document has loaded for smoother execution
 
+		const branchWrapper = document.getElementById("branchWrapper");
+		const branch = window.BranchSceneLibrary.mount(document.getElementById("progressBranch"), {
+			sceneWidth: window.innerWidth - 100,
+			sceneHeight: 300,
+			rotationDeg: 90,
+			branches: [],
+		});
+
 		// Listen for scrolling to do the secondary sticky progress bar
 		// (do this immediately so it's responsive)
-		const progressBar = document.getElementById('progress-bar');
 		new IntersectionObserver(([entry]) => {
-			progressBar.classList.toggle('fixed', !entry.isIntersecting);
+			branchWrapper.classList.toggle('fixed', !entry.isIntersecting);
 		}).observe(document.querySelector('nav'));
 
 		function setProgress(p) {
 			p = Math.max(0, Math.min(1, p));
-			document.documentElement.style.setProperty('--progress', p * 100 + '%');
+			branch.setTrunkLeafMaxPercent(p * 100);
 		}
 
 		function onScroll() {
