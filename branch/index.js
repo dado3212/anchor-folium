@@ -12,6 +12,7 @@
 
       let w = 0;
       let h = 0;
+      let generationSpan = 0;
       let trunkPoints = [];
       let branches = [];
       let twigs = [];
@@ -150,6 +151,7 @@
         // 90/270 => rotated-horizontal trunk uses scene width
         const card = cardinalRotationDeg();
         const trunkSpan = (card === 90 || card === 270) ? w : h;
+        generationSpan = trunkSpan;
         const yPad = (h - trunkSpan) * 0.5;
         const bottom = yPad + trunkSpan * 1.03;
         const top = yPad + trunkSpan * 0.02;
@@ -405,16 +407,38 @@
         const p = pointAt(t);
         const side = direction === "right" ? 1 : -1;
         const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
-        const len = clamp(w * (0.055 + rand(900 + t * 100) * 0.03) * lenMul, 24, 108);
-        const x1 = p.x + side * len;
-        const y1 = p.y - len * (0.25 + rand(1000 + t * 200) * 0.2);
-        const dx = x1 - p.x;
-        const dy = y1 - p.y;
-        const nx = -dy;
-        const ny = dx;
-        const nLen = Math.hypot(nx, ny) || 1;
-        const unx = nx / nLen;
-        const uny = ny / nLen;
+        const span = generationSpan;
+        const len = clamp(span * (0.055 + rand(900 + t * 100) * 0.03) * lenMul, 24, 108);
+
+        // Build branch direction from local trunk tangent so it stays consistent
+        // across cardinal rotations and different scene aspect ratios.
+        const ta = pointAt(clamp(t - 0.02, 0, 1));
+        const tb = pointAt(clamp(t + 0.02, 0, 1));
+        let tx = tb.x - ta.x;
+        let ty = tb.y - ta.y;
+        const tLen = Math.hypot(tx, ty) || 1;
+        tx /= tLen;
+        ty /= tLen;
+
+        // Outward normal from trunk tangent; choose side via x direction.
+        let nx = -ty;
+        let ny = tx;
+        if (nx * side < 0) {
+          nx = -nx;
+          ny = -ny;
+        }
+
+        // Mostly linear outward growth with slight tangent bias.
+        let dx = nx + tx * 0.22;
+        let dy = ny + ty * 0.22;
+        const dLen = Math.hypot(dx, dy) || 1;
+        dx /= dLen;
+        dy /= dLen;
+        const x1 = p.x + dx * len;
+        const y1 = p.y + dy * len;
+
+        const unx = -dy;
+        const uny = dx;
         const waveCount = 2 + Math.floor(rand(1100 + t * 300) * 2);
         const waveAmp = len * (0.035 + rand(1200 + t * 250) * 0.05);
         const phase = rand(1300 + t * 350) * Math.PI * 2;

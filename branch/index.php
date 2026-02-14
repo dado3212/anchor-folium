@@ -32,12 +32,12 @@
   </div>
   <script>
     window.BRANCH_SCENE_CONFIG = {
-      sceneWidth: 300,
-      sceneHeight: 600,
-      rotationDeg: 0,
+      sceneWidth: 600,
+      sceneHeight: 300,
+      rotationDeg: 90,
       branches: [
         { percent: 0.2, direction: "left", lengthFactor: 1.38 },
-        // { percent: 0.62, direction: "right", lengthFactor: 1.46 }
+        { percent: 0.62, direction: "right", lengthFactor: 1.46 }
       ]
     };
   </script>
