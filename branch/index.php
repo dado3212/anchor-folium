@@ -82,6 +82,8 @@
       let trunkLeafMaxPercent = 100;
 
       const TAU = Math.PI * 2;
+      // Trivial orientation config: use 0 for upright, +/-90 for sideways.
+      const SCENE_ROTATION_DEG = 0;
       const MAX_LEAF_ATTACH_DIST = 5;
       const MIN_BRANCH_TWIG_DIST = 10;
       const LEAF_HOVER_RADIUS = 70;
@@ -113,6 +115,33 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         rebuild();
         paint(performance.now());
+      }
+
+      function sceneRotationRad() {
+        return SCENE_ROTATION_DEG * Math.PI / 180;
+      }
+
+      function applySceneTransform() {
+        const rot = sceneRotationRad();
+        if (Math.abs(rot) < 0.0001) return;
+        ctx.translate(w * 0.5, h * 0.5);
+        ctx.rotate(rot);
+        ctx.translate(-w * 0.5, -h * 0.5);
+      }
+
+      function screenToWorld(x, y) {
+        const rot = sceneRotationRad();
+        if (Math.abs(rot) < 0.0001) return { x, y };
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        const dx = x - cx;
+        const dy = y - cy;
+        const c = Math.cos(-rot);
+        const s = Math.sin(-rot);
+        return {
+          x: dx * c - dy * s + cx,
+          y: dx * s + dy * c + cy
+        };
       }
 
       function trunkWidthAt(t) {
@@ -154,9 +183,6 @@
           if (maxTrunkLeafT <= 0) break;
           const seed = i * 12.73 + 17.1;
           const t = 0.03 + rand(seed) * 0.94;
-          if (t > maxTrunkLeafT) {
-            continue;
-          }
           const side = rand(seed + 9.2) > 0.5 ? 1 : -1;
           const size = 4 + rand(seed + 4.1) * 15 + (1 - t) * 6;
           const widthScale = 0.32 + rand(seed + 24.3) * 0.33;
@@ -230,6 +256,13 @@
           const stemDy = baseY - anchorY;
           const stemAngle = Math.atan2(stemDy, stemDx);
           const angle = stemAngle + side * (0.32 + rand(seed + 97.2) * 0.88);
+
+          if (1 - (anchorY / h) > maxTrunkLeafT) {
+            if (attachTwig) {
+              twigs.pop();
+            }
+            continue;
+          }
 
           leaves.push({
             seed,
@@ -837,24 +870,28 @@
       function paint(now) {
         lastPaintTime = now || performance.now();
         ctx.clearRect(0, 0, w, h);
+        ctx.save();
+        applySceneTransform();
         drawTrunk();
         drawVines(true);
         drawBranches();
         drawTwigs();
         drawLeaves();
+        ctx.restore();
       }
 
       function updatePointer(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
         const nx = clientX - rect.left;
         const ny = clientY - rect.top;
+        const world = screenToWorld(nx, ny);
         const now = performance.now();
         const dt = Math.max(1, now - pointerLastMoveMs);
-        pointerVX = (nx - pointerX) / dt;
-        pointerVY = (ny - pointerY) / dt;
+        pointerVX = (world.x - pointerX) / dt;
+        pointerVY = (world.y - pointerY) / dt;
         pointerLastMoveMs = now;
-        pointerX = nx;
-        pointerY = ny;
+        pointerX = world.x;
+        pointerY = world.y;
         pointerActive = true;
         pointerAnimateUntil = now + HOVER_ANIM_WINDOW_MS;
         ensureAnimation();
