@@ -70,10 +70,21 @@
       let branches = [];
       let twigs = [];
       let leaves = [];
+      let pointerActive = false;
+      let pointerX = 0;
+      let pointerY = 0;
+      let pointerAnimateUntil = 0;
+      let pointerVX = 0;
+      let pointerVY = 0;
+      let pointerLastMoveMs = 0;
+      let animFrame = null;
+      let lastPaintTime = 0;
 
       const TAU = Math.PI * 2;
       const MAX_LEAF_ATTACH_DIST = 5;
       const MIN_BRANCH_TWIG_DIST = 10;
+      const LEAF_HOVER_RADIUS = 70;
+      const HOVER_ANIM_WINDOW_MS = 300;
       // Tweak these for branch thickness/taper without touching drawing code.
       const TRUNK_BASE_WIDTH_RATIO = 0.012; // halved again
       const TRUNK_BASE_WIDTH_MIN = 2.5;
@@ -100,7 +111,7 @@
         canvas.height = Math.floor(h * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         rebuild();
-        paint();
+        paint(performance.now());
       }
 
       function trunkWidthAt(t) {
@@ -230,7 +241,9 @@
             curl,
             gradStart,
             gradEnd,
-            gradAngle
+            gradAngle,
+            hover: 0,
+            hoverTarget: 0
           });
         }
 
@@ -339,7 +352,9 @@
             curl,
             gradStart,
             gradEnd,
-            gradAngle
+            gradAngle,
+            hover: 0,
+            hoverTarget: 0
           });
         }
       }
@@ -499,7 +514,9 @@
       function drawLeaf(x, y, size, angle, shape, colorA, colorB, alpha) {
         ctx.save();
         ctx.translate(x, y);
-        ctx.rotate(angle);
+        const hover = shape.hover || 0;
+        const hoverSway = hover * (Math.sin(lastPaintTime * 0.012 + shape.seed * 0.37) * 0.08);
+        ctx.rotate(angle + hoverSway);
         ctx.scale(1, 0.86 * shape.foldScale);
         ctx.transform(1, 0, shape.curl * 0.35, 1, 0, 0);
         ctx.globalAlpha = alpha;
@@ -785,12 +802,13 @@
             leaf,
             colorA,
             colorB,
-            0.9
+            0.9 + leaf.hover * 0.1
           );
         }
       }
 
-      function paint() {
+      function paint(now) {
+        lastPaintTime = now || performance.now();
         ctx.clearRect(0, 0, w, h);
         drawTrunk();
         drawVines(true);
@@ -799,7 +817,69 @@
         drawLeaves();
       }
 
+      function updatePointer(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const nx = clientX - rect.left;
+        const ny = clientY - rect.top;
+        const now = performance.now();
+        const dt = Math.max(1, now - pointerLastMoveMs);
+        pointerVX = (nx - pointerX) / dt;
+        pointerVY = (ny - pointerY) / dt;
+        pointerLastMoveMs = now;
+        pointerX = nx;
+        pointerY = ny;
+        pointerActive = true;
+        pointerAnimateUntil = now + HOVER_ANIM_WINDOW_MS;
+        ensureAnimation();
+      }
+
+      function animate(now) {
+        const tNow = now || performance.now();
+        if (pointerActive && tNow > pointerAnimateUntil) {
+          pointerActive = false;
+        }
+        let stillAnimating = false;
+        const speed = Math.hypot(pointerVX, pointerVY);
+        const motionBoost = pointerActive ? clamp(speed * 22, 0.35, 1) : 0;
+        for (let i = 0; i < leaves.length; i++) {
+          const leaf = leaves[i];
+          if (pointerActive) {
+            const dx = leaf.baseX - pointerX;
+            const dy = leaf.baseY - pointerY;
+            const d = Math.hypot(dx, dy);
+            const u = clamp(1 - d / LEAF_HOVER_RADIUS, 0, 1);
+            leaf.hoverTarget = u * u * motionBoost;
+          } else {
+            leaf.hoverTarget = 0;
+          }
+          const next = leaf.hover + (leaf.hoverTarget - leaf.hover) * 0.22;
+          if (Math.abs(next - leaf.hover) > 0.002 || Math.abs(leaf.hoverTarget - next) > 0.002) {
+            stillAnimating = true;
+          }
+          leaf.hover = next;
+        }
+        pointerVX *= 0.82;
+        pointerVY *= 0.82;
+        paint(tNow);
+        if (stillAnimating || pointerActive) {
+          animFrame = requestAnimationFrame(animate);
+        } else {
+          animFrame = null;
+        }
+      }
+
+      function ensureAnimation() {
+        if (animFrame == null) animFrame = requestAnimationFrame(animate);
+      }
+
       window.addEventListener("resize", resize, { passive: true });
+      canvas.addEventListener("mousemove", function (e) {
+        updatePointer(e.clientX, e.clientY);
+      });
+      canvas.addEventListener("mouseleave", function () {
+        pointerActive = false;
+        ensureAnimation();
+      });
       resize();
     })();
   </script>
