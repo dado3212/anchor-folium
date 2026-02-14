@@ -67,16 +67,22 @@
       let w = 0;
       let h = 0;
       let trunkPoints = [];
+      let twigs = [];
       let leaves = [];
 
       const TAU = Math.PI * 2;
+      const MAX_LEAF_ATTACH_DIST = 5;
       // Tweak these for branch thickness/taper without touching drawing code.
-      const TRUNK_BASE_WIDTH_RATIO = 0.045; // thinner default branch
-      const TRUNK_BASE_WIDTH_MIN = 14;
+      const TRUNK_BASE_WIDTH_RATIO = 0.017; // halved width
+      const TRUNK_BASE_WIDTH_MIN = 5;
       const TRUNK_TAPER_PERCENT = 72; // 72 = top is 28% of base width
 
       function clamp(v, lo, hi) {
         return Math.max(lo, Math.min(hi, v));
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
       }
 
       function rand(seed) {
@@ -104,6 +110,7 @@
 
       function rebuild() {
         trunkPoints = [];
+        twigs = [];
         leaves = [];
 
         const segments = 70;
@@ -122,17 +129,12 @@
           trunkPoints.push({ x, y, t });
         }
 
-        const leafCount = Math.round(clamp(h / 10, 55, 130));
+        const leafCount = Math.round(clamp(h / 5, 110, 260));
         for (let i = 0; i < leafCount; i++) {
           const seed = i * 12.73 + 17.1;
           const t = 0.03 + rand(seed) * 0.94;
           const side = rand(seed + 9.2) > 0.5 ? 1 : -1;
-          const along = pointAt(t);
-          const width = trunkWidthAt(t);
-          const offset = width * (0.58 + rand(seed + 21.2) * 1.5);
-          const yJitter = (rand(seed + 2.9) - 0.5) * width * 0.75;
           const size = 4 + rand(seed + 4.1) * 15 + (1 - t) * 6;
-          const angle = side * (0.3 + rand(seed + 7.8) * 1.05);
           const widthScale = 0.32 + rand(seed + 24.3) * 0.33;
           const tipScale = 0.78 + rand(seed + 26.4) * 0.78;
           const bulge = 0.75 + rand(seed + 28.1) * 0.75;
@@ -141,10 +143,76 @@
           const curl = isCurled
             ? side * (0.14 + rand(seed + 35.6) * 0.58)
             : side * (rand(seed + 36.5) - 0.5) * 0.1;
+          const gradStart = rand(seed + 61.7);
+          let gradEnd = rand(seed + 67.9);
+          if (Math.abs(gradEnd - gradStart) < 0.18) {
+            gradEnd = clamp(gradStart + (rand(seed + 71.2) > 0.5 ? 0.22 : -0.22), 0, 1);
+          }
+          const gradAngle = rand(seed + 73.4) * TAU;
+          const attachTwig = rand(seed + 79.8) > 0.33;
+          let anchorX;
+          let anchorY;
+          let baseX;
+          let baseY;
+          let stemWidth;
+
+          if (attachTwig) {
+            const tt = clamp(t + (rand(seed + 81.2) - 0.5) * 0.08, 0.03, 0.97);
+            const p = pointAt(tt);
+            const width = trunkWidthAt(tt);
+            const twigLen = Math.min(MAX_LEAF_ATTACH_DIST, width * (0.28 + rand(seed + 83.4) * 0.44));
+            const rise = twigLen * (0.1 + rand(seed + 85.1) * 0.24);
+            const sx = p.x + side * width * 0.46;
+            const sy = p.y + (rand(seed + 86.7) - 0.5) * width * 0.2;
+            const tx = sx + side * twigLen;
+            const ty = sy - rise;
+
+            twigs.push({
+              x1: sx,
+              y1: sy,
+              x2: tx,
+              y2: ty,
+              width: Math.max(0.35, width * 0.055)
+            });
+
+            anchorX = tx;
+            anchorY = ty;
+            let dx = side * twigLen * (0.02 + rand(seed + 88.2) * 0.06);
+            let dy = (rand(seed + 89.4) - 0.5) * width * 0.2;
+            const d = Math.hypot(dx, dy) || 1;
+            const limited = Math.min(MAX_LEAF_ATTACH_DIST, d);
+            dx = (dx / d) * limited;
+            dy = (dy / d) * limited;
+            baseX = anchorX + dx;
+            baseY = anchorY + dy;
+            stemWidth = Math.max(0.28, width * 0.04);
+          } else {
+            const vt = clamp(t + (rand(seed + 91.2) - 0.5) * 0.06, 0.03, 0.97);
+            const p = pointAt(vt);
+            const radius = trunkWidthAt(vt) * 0.7;
+            const theta = vt * 9.5 * TAU + 0.35;
+            const vineSide = Math.sin(theta) >= 0 ? 1 : -1;
+            const petiole = Math.min(MAX_LEAF_ATTACH_DIST, trunkWidthAt(vt) * (0.14 + rand(seed + 93.1) * 0.22));
+
+            anchorX = p.x + Math.sin(theta) * radius;
+            anchorY = p.y;
+            baseX = anchorX + vineSide * petiole;
+            baseY = anchorY - petiole * (0.08 + rand(seed + 94.6) * 0.2);
+            stemWidth = Math.max(0.24, trunkWidthAt(vt) * 0.035);
+          }
+
+          const stemDx = baseX - anchorX;
+          const stemDy = baseY - anchorY;
+          const stemAngle = Math.atan2(stemDy, stemDx);
+          const angle = stemAngle + side * (0.32 + rand(seed + 97.2) * 0.88);
+
           leaves.push({
             seed,
-            baseX: along.x + side * offset,
-            baseY: along.y + yJitter,
+            anchorX,
+            anchorY,
+            baseX,
+            baseY,
+            stemWidth,
             size,
             angle,
             widthScale,
@@ -152,9 +220,9 @@
             bulge,
             foldScale,
             curl,
-            hueShift: rand(seed + 11.2) * 18 - 9,
-            sat: 28 + rand(seed + 13.4) * 24,
-            light: 36 + rand(seed + 15.6) * 17
+            gradStart,
+            gradEnd,
+            gradAngle
           });
         }
       }
@@ -171,20 +239,50 @@
         };
       }
 
-      function drawLeaf(x, y, size, angle, shape, color, alpha) {
+      function drawTwigs() {
+        for (let i = 0; i < twigs.length; i++) {
+          const twig = twigs[i];
+          ctx.beginPath();
+          ctx.moveTo(twig.x1, twig.y1);
+          ctx.lineTo(twig.x2, twig.y2);
+          ctx.strokeStyle = "rgb(84, 58, 35)";
+          ctx.lineWidth = twig.width;
+          ctx.lineCap = "round";
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(twig.x1, twig.y1);
+          ctx.lineTo(
+            lerp(twig.x1, twig.x2, 0.82),
+            lerp(twig.y1, twig.y2, 0.82)
+          );
+          ctx.strokeStyle = "rgb(126, 97, 64)";
+          ctx.lineWidth = twig.width * 0.42;
+          ctx.lineCap = "round";
+          ctx.stroke();
+        }
+      }
+
+      function drawLeaf(x, y, size, angle, shape, colorA, colorB, alpha) {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
         ctx.scale(1, 0.86 * shape.foldScale);
         ctx.transform(1, 0, shape.curl * 0.35, 1, 0, 0);
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = color;
         ctx.strokeStyle = "rgba(72, 61, 34, 0.45)";
         ctx.lineWidth = Math.max(0.8, size * 0.07);
 
         const tipX = size * (0.88 + shape.tipScale * 0.34);
         const upperY = -size * (0.24 + shape.widthScale * 0.34) * shape.bulge;
         const lowerY = size * (0.21 + shape.widthScale * 0.39) * (2 - shape.bulge);
+        const halfHeight = Math.max(Math.abs(upperY), Math.abs(lowerY));
+        const gx = Math.cos(shape.gradAngle) * tipX * 0.45;
+        const gy = Math.sin(shape.gradAngle) * halfHeight * 1.1;
+        const fillGradient = ctx.createLinearGradient(-gx, -gy, gx, gy);
+        fillGradient.addColorStop(0, colorA);
+        fillGradient.addColorStop(1, colorB);
+        ctx.fillStyle = fillGradient;
 
         // Small wave detail along edge (kept subtle near base and tip).
         const waveCount = 3 + Math.floor(rand(shape.seed + 41.1) * 3);
@@ -273,35 +371,86 @@
       }
 
       function drawTrunk() {
+        // Main trunk body.
         for (let layer = 0; layer < 4; layer++) {
-          const shade = 27 + layer * 8;
-          const alpha = 0.19 + layer * 0.12;
+          const shade = 26 + layer * 8;
           ctx.beginPath();
           for (let i = 0; i < trunkPoints.length; i++) {
             const p = trunkPoints[i];
-            const n = Math.sin(i * 0.82 + layer * 0.6) * (1.5 + layer * 0.65);
+            const n = Math.sin(i * 0.72 + layer * 0.6) * (1.3 + layer * 0.55);
             const x = p.x + n;
             const y = p.y;
             if (i === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
           }
-          ctx.strokeStyle = "hsla(33, 28%," + shade + "%," + alpha + ")";
-          ctx.lineWidth = trunkWidthAt(0.5) * (1.7 - layer * 0.3);
+          ctx.strokeStyle = "hsl(31, 27%," + shade + "%)";
+          ctx.lineWidth = trunkWidthAt(0.5) * (1.68 - layer * 0.28);
           ctx.lineCap = "round";
           ctx.lineJoin = "round";
           ctx.stroke();
         }
 
-        for (let i = 2; i < trunkPoints.length - 2; i += 2) {
+        // Broad side lighting to imply cylindrical bark volume.
+        for (let i = 1; i < trunkPoints.length - 1; i++) {
+          const p = trunkPoints[i];
+          const width = trunkWidthAt(p.t);
+
+          ctx.beginPath();
+          ctx.moveTo(p.x - width * 0.34, p.y - width * 0.22);
+          ctx.lineTo(p.x - width * 0.15, p.y + width * 0.24);
+          ctx.strokeStyle = "rgb(145, 118, 82)";
+          ctx.lineWidth = Math.max(0.55, width * 0.06);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(p.x + width * 0.2, p.y - width * 0.24);
+          ctx.lineTo(p.x + width * 0.38, p.y + width * 0.2);
+          ctx.strokeStyle = "rgb(44, 29, 16)";
+          ctx.lineWidth = Math.max(0.55, width * 0.065);
+          ctx.stroke();
+        }
+
+        // A few deep vertical bark seams (not many, to avoid hairiness).
+        const seamOffsets = [-0.3, -0.08, 0.13, 0.31];
+        for (let s = 0; s < seamOffsets.length; s++) {
+          const offset = seamOffsets[s];
+          ctx.beginPath();
+          let started = false;
+          for (let i = 1; i < trunkPoints.length - 1; i++) {
+            const p = trunkPoints[i];
+            const width = trunkWidthAt(p.t);
+            const jitter = (rand((s + 1) * 37 + i * 0.9) - 0.5) * width * 0.04;
+            const x = p.x + offset * width + jitter;
+            const y = p.y;
+            if (!started) {
+              ctx.moveTo(x, y);
+              started = true;
+            } else {
+              ctx.lineTo(x, y);
+            }
+          }
+          const depth = 1 - Math.abs(offset) * 1.8;
+          ctx.strokeStyle = "rgb(58, 38, 22)";
+          ctx.lineWidth = Math.max(0.55, trunkWidthAt(0.5) * (0.03 + depth * 0.015));
+          ctx.lineCap = "round";
+          ctx.stroke();
+        }
+
+        // Occasional short cross-fissures.
+        for (let i = 5; i < trunkPoints.length - 5; i += 4) {
           const p = trunkPoints[i];
           const q = trunkPoints[i + 1];
-          const t = p.t;
-          const width = trunkWidthAt(t);
+          const width = trunkWidthAt(p.t);
+          const side = rand(i * 2.7) > 0.5 ? 1 : -1;
+          const x0 = p.x + side * width * (0.04 + rand(i * 4.1) * 0.22);
+          const y0 = p.y + (rand(i * 3.3) - 0.5) * width * 0.35;
+          const len = width * (0.16 + rand(i * 5.2) * 0.2);
+
           ctx.beginPath();
-          ctx.moveTo(p.x - width * 0.33, p.y);
-          ctx.lineTo(q.x + width * 0.28, q.y - width * 0.45);
-          ctx.strokeStyle = "rgba(74, 52, 32, 0.19)";
-          ctx.lineWidth = Math.max(0.8, width * 0.06);
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x0 + len * 0.42, q.y + (y0 - p.y) - len * 0.2);
+          ctx.strokeStyle = "rgb(52, 34, 20)";
+          ctx.lineWidth = Math.max(0.4, width * 0.04);
           ctx.stroke();
         }
       }
@@ -335,8 +484,8 @@
           }
 
           ctx.strokeStyle = front
-            ? "rgba(90, 68, 44,0.86)"
-            : "rgba(58, 42, 27,0.32)";
+            ? "rgb(90, 68, 44)"
+            : "rgb(58, 42, 27)";
           ctx.lineWidth = front ? Math.max(1.2, w * 0.0036) : Math.max(1, w * 0.0028);
           ctx.lineCap = "round";
           ctx.stroke();
@@ -347,16 +496,43 @@
       }
 
       function drawLeaves() {
+        const start = { r: 108, g: 109, b: 59 };  // #6c6d3b
+        const end = { r: 236, g: 230, b: 194 };   // #ece6c2
+
+        function colorAt(t) {
+          const r = Math.round(lerp(start.r, end.r, t));
+          const g = Math.round(lerp(start.g, end.g, t));
+          const b = Math.round(lerp(start.b, end.b, t));
+          return "rgb(" + r + ", " + g + ", " + b + ")";
+        }
+
         for (let i = 0; i < leaves.length; i++) {
           const leaf = leaves[i];
-          const color = "hsl(" + (85 + leaf.hueShift) + ", " + leaf.sat + "%, " + leaf.light + "%)";
+          const colorA = colorAt(leaf.gradStart);
+          const colorB = colorAt(leaf.gradEnd);
+
+          // Petiole/stem: visibly connects each leaf to a twig or vine anchor.
+          ctx.beginPath();
+          ctx.moveTo(leaf.anchorX, leaf.anchorY);
+          ctx.quadraticCurveTo(
+            lerp(leaf.anchorX, leaf.baseX, 0.5),
+            lerp(leaf.anchorY, leaf.baseY, 0.5) - leaf.stemWidth * 1.8,
+            leaf.baseX,
+            leaf.baseY
+          );
+          ctx.strokeStyle = "rgb(88, 72, 42)";
+          ctx.lineWidth = leaf.stemWidth;
+          ctx.lineCap = "round";
+          ctx.stroke();
+
           drawLeaf(
             leaf.baseX,
             leaf.baseY,
             leaf.size,
             leaf.angle,
             leaf,
-            color,
+            colorA,
+            colorB,
             0.9
           );
         }
@@ -366,6 +542,7 @@
         ctx.clearRect(0, 0, w, h);
         drawVines();
         drawTrunk();
+        drawTwigs();
         drawLeaves();
       }
 
