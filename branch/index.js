@@ -7,6 +7,8 @@
       if (!ctx) return null;
       const dprCap = typeof options.devicePixelRatioCap === "number" ? options.devicePixelRatioCap : 2;
       const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+      let sceneWidthConfig = Number(options.sceneWidth) > 0 ? Number(options.sceneWidth) : null;
+      let sceneHeightConfig = Number(options.sceneHeight) > 0 ? Number(options.sceneHeight) : null;
 
       let w = 0;
       let h = 0;
@@ -35,9 +37,8 @@
       const MIN_BRANCH_TWIG_DIST = 10;
       const LEAF_HOVER_RADIUS = 70;
       const HOVER_ANIM_WINDOW_MS = 300;
-      // Tweak these for branch thickness/taper without touching drawing code.
-      const TRUNK_BASE_WIDTH_RATIO = 0.012; // halved again
-      const TRUNK_BASE_WIDTH_MIN = 2.5;
+      // Fixed trunk thickness (independent of scene size), configurable via options.trunkBaseWidth.
+      const TRUNK_BASE_WIDTH = Number(options.trunkBaseWidth) > 0 ? Number(options.trunkBaseWidth) : 15;
       const TRUNK_TAPER_PERCENT = 72; // 72 = top is 28% of base width
       let branchSpecs = normalizeBranchSpecs(options.branches);
 
@@ -68,8 +69,12 @@
       function resize() {
         const scene = canvas.parentElement || canvas;
         const rect = scene.getBoundingClientRect();
-        w = Math.max(320, Math.floor(rect.width));
-        h = Math.max(320, Math.floor(rect.height));
+        w = sceneWidthConfig != null
+          ? Math.max(1, Math.floor(sceneWidthConfig))
+          : Math.max(320, Math.floor(rect.width || 320));
+        h = sceneHeightConfig != null
+          ? Math.max(1, Math.floor(sceneHeightConfig))
+          : Math.max(320, Math.floor(rect.height || 320));
         rebuild();
 
         const pad = 18;
@@ -89,6 +94,15 @@
 
       function sceneRotationRad() {
         return sceneRotationDeg * Math.PI / 180;
+      }
+
+      function cardinalRotationDeg() {
+        const raw = Number(sceneRotationDeg) || 0;
+        let n = ((raw % 360) + 360) % 360;
+        // Snap to nearest cardinal direction (0, 90, 180, 270).
+        n = Math.round(n / 90) * 90;
+        if (n === 360) n = 0;
+        return n;
       }
 
       function applySceneTransform() {
@@ -117,7 +131,7 @@
       }
 
       function trunkWidthAt(t) {
-        const base = Math.max(TRUNK_BASE_WIDTH_MIN, w * TRUNK_BASE_WIDTH_RATIO);
+        const base = TRUNK_BASE_WIDTH;
         const taperPct = clamp(TRUNK_TAPER_PERCENT, 0, 95) / 100;
         const top = base * (1 - taperPct);
         return base + (top - base) * t;
@@ -131,8 +145,14 @@
 
         const segments = 70;
         const cx = w * 0.5;
-        const bottom = h * 1.03;
-        const top = h * 0.02;
+        // Choose span by cardinal rotation:
+        // 0/180 => vertical trunk uses scene height
+        // 90/270 => rotated-horizontal trunk uses scene width
+        const card = cardinalRotationDeg();
+        const trunkSpan = (card === 90 || card === 270) ? w : h;
+        const yPad = (h - trunkSpan) * 0.5;
+        const bottom = yPad + trunkSpan * 1.03;
+        const top = yPad + trunkSpan * 0.02;
         const height = bottom - top;
 
         let bend = 0;
@@ -140,8 +160,8 @@
           const t = i / segments;
           const y = bottom - t * height;
           bend += (Math.sin(i * 0.4) + Math.cos(i * 0.23)) * 0.006;
-          const wind = Math.sin(t * 6.2 + 0.4) * (w * 0.008);
-          const x = cx + wind + bend * w * 0.004;
+          const wind = Math.sin(t * 6.2 + 0.4) * (trunkSpan * 0.008);
+          const x = cx + wind + bend * trunkSpan * 0.004;
           trunkPoints.push({ x, y, t });
         }
 
@@ -151,7 +171,7 @@
           branches.push(createBranch(b.percent, b.direction, b.lengthFactor));
         }
 
-        const leafCount = Math.round(clamp(h / 5, 110, 260));
+        const leafCount = Math.round(clamp(trunkSpan / 5, 110, 260));
         const maxTrunkLeafT = clamp(trunkLeafMaxPercent / 100, 0, 1);
         for (let i = 0; i < leafCount; i++) {
           if (maxTrunkLeafT <= 0) break;
@@ -179,6 +199,7 @@
           let baseX;
           let baseY;
           let stemWidth;
+          let progressRefY;
 
           if (attachTwig) {
             const tt = clamp(t + (rand(seed + 81.2) - 0.5) * 0.08, 0.03, 0.97);
@@ -202,6 +223,7 @@
 
             anchorX = tx;
             anchorY = ty;
+            progressRefY = sy;
             let dx = side * twigLen * (0.02 + rand(seed + 88.2) * 0.06);
             let dy = (rand(seed + 89.4) - 0.5) * width * 0.2;
             const d = Math.hypot(dx, dy) || 1;
@@ -221,6 +243,7 @@
 
             anchorX = p.x + Math.sin(theta) * radius;
             anchorY = p.y;
+            progressRefY = p.y;
             baseX = anchorX + vineSide * petiole;
             baseY = anchorY - petiole * (0.08 + rand(seed + 94.6) * 0.2);
             stemWidth = Math.max(0.24, trunkWidthAt(vt) * 0.035);
@@ -231,7 +254,10 @@
           const stemAngle = Math.atan2(stemDy, stemDx);
           const angle = stemAngle + side * (0.32 + rand(seed + 97.2) * 0.88);
 
-          if (1 - (anchorY / h) > maxTrunkLeafT) {
+          // Use trunk attach Y projected onto trunk span to avoid a 99%->100% pop-in
+          // from twig/leaf offsets that can move anchorY outside the trunk range.
+          const progressPerc = clamp((progressRefY - top) / (bottom - top), 0, 1);
+          if (1 - progressPerc > maxTrunkLeafT) {
             if (attachTwig) {
               twigs.pop();
             }
@@ -262,7 +288,7 @@
 
         // Extra leaves specifically for side branches (without removing trunk leaves).
         if (branches.length > 0) {
-          const branchLeafCount = Math.round(clamp(h / 14, 5, 13));
+          const branchLeafCount = Math.round(clamp(trunkSpan / 14, 5, 13));
           const perBranchCount = Math.ceil(branchLeafCount / Math.max(1, branches.length));
           for (let i = 0; i < branchLeafCount; i++) {
             const seed = 20000 + i * 17.31;
@@ -379,7 +405,7 @@
         const p = pointAt(t);
         const side = direction === "right" ? 1 : -1;
         const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
-        const len = clamp(h * (0.055 + rand(900 + t * 100) * 0.03) * lenMul, 24, 108);
+        const len = clamp(w * (0.055 + rand(900 + t * 100) * 0.03) * lenMul, 24, 108);
         const x1 = p.x + side * len;
         const y1 = p.y - len * (0.25 + rand(1000 + t * 200) * 0.2);
         const dx = x1 - p.x;
@@ -521,11 +547,27 @@
         let minY = Infinity;
         let maxX = -Infinity;
         let maxY = -Infinity;
+        const rot = sceneRotationRad();
+        const hasRotation = Math.abs(rot) >= 0.0001;
+        const c = Math.cos(rot);
+        const s = Math.sin(rot);
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        function rotatePoint(x, y) {
+          if (!hasRotation) return { x, y };
+          const dx = x - cx;
+          const dy = y - cy;
+          return {
+            x: dx * c - dy * s + cx,
+            y: dx * s + dy * c + cy
+          };
+        }
         function add(x, y, r) {
-          minX = Math.min(minX, x - r);
-          minY = Math.min(minY, y - r);
-          maxX = Math.max(maxX, x + r);
-          maxY = Math.max(maxY, y + r);
+          const p = rotatePoint(x, y);
+          minX = Math.min(minX, p.x - r);
+          minY = Math.min(minY, p.y - r);
+          maxX = Math.max(maxX, p.x + r);
+          maxY = Math.max(maxY, p.y + r);
         }
 
         for (let i = 0; i < trunkPoints.length; i++) {
@@ -541,6 +583,19 @@
           for (let j = 0; j < points.length; j++) {
             add(points[j].x, points[j].y, r);
           }
+        }
+
+        for (let i = 0; i < twigs.length; i++) {
+          const twig = twigs[i];
+          const r = Math.max(0.8, twig.width);
+          add(twig.x1, twig.y1, r);
+          add(twig.x2, twig.y2, r);
+        }
+
+        for (let i = 0; i < leaves.length; i++) {
+          const leaf = leaves[i];
+          const size = Math.max(1, leaf.size);
+          add(leaf.baseX, leaf.baseY, size * 1.35);
         }
 
         // Include front vine radius around trunk axis.
@@ -892,8 +947,8 @@
         lastPaintTime = now || performance.now();
         ctx.clearRect(0, 0, drawWidth || w, drawHeight || h);
         ctx.save();
-        applySceneTransform();
         ctx.translate(drawOffsetX, drawOffsetY);
+        applySceneTransform();
         drawTrunk();
         drawVines(true);
         drawBranches();
@@ -975,6 +1030,14 @@
         paint(performance.now());
       }
 
+      function setSceneSize(width, height) {
+        const wNum = Number(width);
+        const hNum = Number(height);
+        sceneWidthConfig = wNum > 0 ? wNum : null;
+        sceneHeightConfig = hNum > 0 ? hNum : null;
+        resize();
+      }
+
       const onResize = () => resize();
       const onMouseMove = function (e) {
         updatePointer(e.clientX, e.clientY);
@@ -992,6 +1055,7 @@
         setTrunkLeafMaxPercent,
         setRotationDeg,
         setBranches,
+        setSceneSize,
         resize,
         destroy: function () {
           window.removeEventListener("resize", onResize);
