@@ -1,7 +1,12 @@
     (function () {
-      const canvas = document.getElementById("branchCanvas");
+      function createBranchScene(canvas, options) {
+      if (!canvas) return null;
+      options = options || {};
+
       const ctx = canvas.getContext("2d");
-      const dpr = window.devicePixelRatio || 1;
+      if (!ctx) return null;
+      const dprCap = typeof options.devicePixelRatioCap === "number" ? options.devicePixelRatioCap : 2;
+      const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
 
       let w = 0;
       let h = 0;
@@ -19,10 +24,13 @@
       let animFrame = null;
       let lastPaintTime = 0;
       let trunkLeafMaxPercent = 100;
+      let drawOffsetX = 0;
+      let drawOffsetY = 0;
+      let drawWidth = 0;
+      let drawHeight = 0;
 
       const TAU = Math.PI * 2;
-      // Trivial orientation config: use 0 for upright, +/-90 for sideways.
-      const SCENE_ROTATION_DEG = 0;
+      let sceneRotationDeg = Number(options.rotationDeg) || 0;
       const MAX_LEAF_ATTACH_DIST = 5;
       const MIN_BRANCH_TWIG_DIST = 10;
       const LEAF_HOVER_RADIUS = 70;
@@ -31,6 +39,7 @@
       const TRUNK_BASE_WIDTH_RATIO = 0.012; // halved again
       const TRUNK_BASE_WIDTH_MIN = 2.5;
       const TRUNK_TAPER_PERCENT = 72; // 72 = top is 28% of base width
+      let branchSpecs = normalizeBranchSpecs(options.branches);
 
       function clamp(v, lo, hi) {
         return Math.max(lo, Math.min(hi, v));
@@ -45,19 +54,41 @@
         return x - Math.floor(x);
       }
 
+      function normalizeBranchSpecs(specs) {
+        if (!Array.isArray(specs) || specs.length === 0) return [];
+        return specs
+          .map((s) => ({
+            percent: clamp(Number(s.percent), 0.05, 0.95),
+            direction: s.direction === "right" ? "right" : "left",
+            lengthFactor: Number(s.lengthFactor) > 0 ? Number(s.lengthFactor) : 1
+          }))
+          .filter(Boolean);
+      }
+
       function resize() {
-        const rect = canvas.getBoundingClientRect();
+        const scene = canvas.parentElement || canvas;
+        const rect = scene.getBoundingClientRect();
         w = Math.max(320, Math.floor(rect.width));
         h = Math.max(320, Math.floor(rect.height));
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         rebuild();
+
+        const pad = 18;
+        const bounds = structureBounds();
+        drawWidth = Math.ceil(bounds.maxX - bounds.minX + pad * 2);
+        drawHeight = Math.ceil(bounds.maxY - bounds.minY + pad * 2);
+        drawOffsetX = -bounds.minX + pad;
+        drawOffsetY = -bounds.minY + pad;
+
+        canvas.style.width = drawWidth + "px";
+        canvas.style.height = drawHeight + "px";
+        canvas.width = Math.floor(drawWidth * dpr);
+        canvas.height = Math.floor(drawHeight * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         paint(performance.now());
       }
 
       function sceneRotationRad() {
-        return SCENE_ROTATION_DEG * Math.PI / 180;
+        return sceneRotationDeg * Math.PI / 180;
       }
 
       function applySceneTransform() {
@@ -69,12 +100,14 @@
       }
 
       function screenToWorld(x, y) {
+        const lx = x - drawOffsetX;
+        const ly = y - drawOffsetY;
         const rot = sceneRotationRad();
-        if (Math.abs(rot) < 0.0001) return { x, y };
+        if (Math.abs(rot) < 0.0001) return { x: lx, y: ly };
         const cx = w * 0.5;
         const cy = h * 0.5;
-        const dx = x - cx;
-        const dy = y - cy;
+        const dx = lx - cx;
+        const dy = ly - cy;
         const c = Math.cos(-rot);
         const s = Math.sin(-rot);
         return {
@@ -112,9 +145,11 @@
           trunkPoints.push({ x, y, t });
         }
 
-        // Two very thin, curvier side branches.
-        branches.push(createBranch(0.36, "left", 1.38));
-        branches.push(createBranch(0.62, "right", 1.46));
+        // Configurable side branches.
+        for (let i = 0; i < branchSpecs.length; i++) {
+          const b = branchSpecs[i];
+          branches.push(createBranch(b.percent, b.direction, b.lengthFactor));
+        }
 
         const leafCount = Math.round(clamp(h / 5, 110, 260));
         const maxTrunkLeafT = clamp(trunkLeafMaxPercent / 100, 0, 1);
@@ -226,114 +261,116 @@
         }
 
         // Extra leaves specifically for side branches (without removing trunk leaves).
-        const branchLeafCount = Math.round(clamp(h / 14, 5, 13));
-        const perBranchCount = Math.ceil(branchLeafCount / Math.max(1, branches.length));
-        for (let i = 0; i < branchLeafCount; i++) {
-          const seed = 20000 + i * 17.31;
-          const branchIdx = i % Math.max(1, branches.length);
-          const branch = branches[branchIdx];
-          const slot = Math.floor(i / Math.max(1, branches.length));
-          const bt = clamp((slot + 1) / (perBranchCount + 1), 0.06, 0.94);
-          const p = pointOnBranch(branch, bt);
-          const p2 = pointOnBranch(branch, Math.min(1, bt + 0.03));
-          const width = lerp(branch.width, branch.width * 0.55, bt);
-          const side = branch.side;
-          const tangentAngle = Math.atan2(p2.y - p.y, p2.x - p.x);
-          const normalSign = rand(seed + 22.4) > 0.5 ? 1 : -1;
-          const normalAngle = tangentAngle + normalSign * Math.PI / 2;
+        if (branches.length > 0) {
+          const branchLeafCount = Math.round(clamp(h / 14, 5, 13));
+          const perBranchCount = Math.ceil(branchLeafCount / Math.max(1, branches.length));
+          for (let i = 0; i < branchLeafCount; i++) {
+            const seed = 20000 + i * 17.31;
+            const branchIdx = i % Math.max(1, branches.length);
+            const branch = branches[branchIdx];
+            const slot = Math.floor(i / Math.max(1, branches.length));
+            const bt = clamp((slot + 1) / (perBranchCount + 1), 0.06, 0.94);
+            const p = pointOnBranch(branch, bt);
+            const p2 = pointOnBranch(branch, Math.min(1, bt + 0.03));
+            const width = lerp(branch.width, branch.width * 0.55, bt);
+            const side = branch.side;
+            const tangentAngle = Math.atan2(p2.y - p.y, p2.x - p.x);
+            const normalSign = rand(seed + 22.4) > 0.5 ? 1 : -1;
+            const normalAngle = tangentAngle + normalSign * Math.PI / 2;
 
-          const size = 3 + rand(seed + 4.1) * 11;
-          const widthScale = 0.3 + rand(seed + 5.2) * 0.35;
-          const tipScale = 0.78 + rand(seed + 6.3) * 0.72;
-          const bulge = 0.8 + rand(seed + 7.4) * 0.9;
-          const foldScale = 0.68 + rand(seed + 8.5) * 0.5;
-          const curl = side * (rand(seed + 9.6) - 0.5) * 0.22;
-          const gradStart = rand(seed + 10.7);
-          let gradEnd = rand(seed + 11.8);
-          if (Math.abs(gradEnd - gradStart) < 0.18) {
-            gradEnd = clamp(gradStart + (rand(seed + 12.9) > 0.5 ? 0.22 : -0.22), 0, 1);
-          }
-          const gradAngle = rand(seed + 13.1) * TAU;
-
-          const attachTwig = rand(seed + 14.2) > 0.2;
-          let anchorX;
-          let anchorY;
-          let baseX;
-          let baseY;
-          let stemWidth;
-
-          if (attachTwig) {
-            const twigLen = Math.max(MIN_BRANCH_TWIG_DIST, width * (3.3 + rand(seed + 15.3) * 3.4));
-            // Make branch twigs follow branch tangent with a -10deg offset.
-            const twigAngle = tangentAngle - (10 * Math.PI / 180);
-            let tx = p.x + Math.cos(twigAngle) * twigLen;
-            let ty = p.y + Math.sin(twigAngle) * twigLen;
-            // Keep twigs extending outward from branch side.
-            if ((tx - p.x) * side < 0) {
-              const flip = twigAngle + Math.PI;
-              tx = p.x + Math.cos(flip) * twigLen;
-              ty = p.y + Math.sin(flip) * twigLen;
+            const size = 3 + rand(seed + 4.1) * 11;
+            const widthScale = 0.3 + rand(seed + 5.2) * 0.35;
+            const tipScale = 0.78 + rand(seed + 6.3) * 0.72;
+            const bulge = 0.8 + rand(seed + 7.4) * 0.9;
+            const foldScale = 0.68 + rand(seed + 8.5) * 0.5;
+            const curl = side * (rand(seed + 9.6) - 0.5) * 0.22;
+            const gradStart = rand(seed + 10.7);
+            let gradEnd = rand(seed + 11.8);
+            if (Math.abs(gradEnd - gradStart) < 0.18) {
+              gradEnd = clamp(gradStart + (rand(seed + 12.9) > 0.5 ? 0.22 : -0.22), 0, 1);
             }
-            twigs.push({
-              x1: p.x,
-              y1: p.y,
-              x2: tx,
-              y2: ty,
-              width: Math.max(0.22, width * 0.85),
-              onBranch: true
-            });
-            anchorX = tx;
-            anchorY = ty;
-            const outward = twigLen * (0.28 + rand(seed + 17.5) * 0.2);
-            let ox = anchorX - p.x;
-            let oy = anchorY - p.y;
-            const od = Math.hypot(ox, oy);
-            if (od > 0.001) {
-              ox /= od;
-              oy /= od;
+            const gradAngle = rand(seed + 13.1) * TAU;
+
+            const attachTwig = rand(seed + 14.2) > 0.2;
+            let anchorX;
+            let anchorY;
+            let baseX;
+            let baseY;
+            let stemWidth;
+
+            if (attachTwig) {
+              const twigLen = Math.max(MIN_BRANCH_TWIG_DIST, width * (3.3 + rand(seed + 15.3) * 3.4));
+              // Make branch twigs follow branch tangent with a -10deg offset.
+              const twigAngle = tangentAngle - (10 * Math.PI / 180);
+              let tx = p.x + Math.cos(twigAngle) * twigLen;
+              let ty = p.y + Math.sin(twigAngle) * twigLen;
+              // Keep twigs extending outward from branch side.
+              if ((tx - p.x) * side < 0) {
+                const flip = twigAngle + Math.PI;
+                tx = p.x + Math.cos(flip) * twigLen;
+                ty = p.y + Math.sin(flip) * twigLen;
+              }
+              twigs.push({
+                x1: p.x,
+                y1: p.y,
+                x2: tx,
+                y2: ty,
+                width: Math.max(0.22, width * 0.85),
+                onBranch: true
+              });
+              anchorX = tx;
+              anchorY = ty;
+              const outward = twigLen * (0.28 + rand(seed + 17.5) * 0.2);
+              let ox = anchorX - p.x;
+              let oy = anchorY - p.y;
+              const od = Math.hypot(ox, oy);
+              if (od > 0.001) {
+                ox /= od;
+                oy /= od;
+              } else {
+                ox = Math.cos(normalAngle);
+                oy = Math.sin(normalAngle);
+              }
+              baseX = anchorX + ox * outward;
+              baseY = anchorY + oy * outward;
+              stemWidth = Math.max(0.18, width * 0.5);
             } else {
-              ox = Math.cos(normalAngle);
-              oy = Math.sin(normalAngle);
+              const petiole = Math.min(MAX_LEAF_ATTACH_DIST, width * (1.9 + rand(seed + 19.7) * 1.9));
+              anchorX = p.x;
+              anchorY = p.y;
+              baseX = anchorX + Math.cos(normalAngle) * petiole;
+              baseY = anchorY + Math.sin(normalAngle) * petiole;
+              stemWidth = Math.max(0.16, width * 0.45);
             }
-            baseX = anchorX + ox * outward;
-            baseY = anchorY + oy * outward;
-            stemWidth = Math.max(0.18, width * 0.5);
-          } else {
-            const petiole = Math.min(MAX_LEAF_ATTACH_DIST, width * (1.9 + rand(seed + 19.7) * 1.9));
-            anchorX = p.x;
-            anchorY = p.y;
-            baseX = anchorX + Math.cos(normalAngle) * petiole;
-            baseY = anchorY + Math.sin(normalAngle) * petiole;
-            stemWidth = Math.max(0.16, width * 0.45);
+
+            const stemDx = baseX - anchorX;
+            const stemDy = baseY - anchorY;
+            const stemAngle = Math.atan2(stemDy, stemDx);
+            // Point leaves away from the branch along the stem direction.
+            // If a twig is above the branch, this naturally points the leaf upward.
+            const angle = stemAngle + (rand(seed + 21.9) - 0.5) * 0.18;
+
+            leaves.push({
+              seed,
+              anchorX,
+              anchorY,
+              baseX,
+              baseY,
+              stemWidth,
+              size,
+              angle,
+              widthScale,
+              tipScale,
+              bulge,
+              foldScale,
+              curl,
+              gradStart,
+              gradEnd,
+              gradAngle,
+              hover: 0,
+              hoverTarget: 0
+            });
           }
-
-          const stemDx = baseX - anchorX;
-          const stemDy = baseY - anchorY;
-          const stemAngle = Math.atan2(stemDy, stemDx);
-          // Point leaves away from the branch along the stem direction.
-          // If a twig is above the branch, this naturally points the leaf upward.
-          const angle = stemAngle + (rand(seed + 21.9) - 0.5) * 0.18;
-
-          leaves.push({
-            seed,
-            anchorX,
-            anchorY,
-            baseX,
-            baseY,
-            stemWidth,
-            size,
-            angle,
-            widthScale,
-            tipScale,
-            bulge,
-            foldScale,
-            curl,
-            gradStart,
-            gradEnd,
-            gradAngle,
-            hover: 0,
-            hoverTarget: 0
-          });
         }
       }
 
@@ -477,6 +514,51 @@
         const visualBase = trunkWidthAt(0.5);
         const tapered = trunkWidthAt(t);
         return (visualBase * 0.64 + tapered * 0.36) * 0.7;
+      }
+
+      function structureBounds() {
+        let minX = Infinity;
+        let minY = Infinity;
+        let maxX = -Infinity;
+        let maxY = -Infinity;
+        function add(x, y, r) {
+          minX = Math.min(minX, x - r);
+          minY = Math.min(minY, y - r);
+          maxX = Math.max(maxX, x + r);
+          maxY = Math.max(maxY, y + r);
+        }
+
+        for (let i = 0; i < trunkPoints.length; i++) {
+          const p = trunkPoints[i];
+          const r = trunkWidthAt(p.t) * 1.1;
+          add(p.x, p.y, r);
+        }
+
+        for (let i = 0; i < branches.length; i++) {
+          const b = branches[i];
+          const points = b.points || [];
+          const r = Math.max(1.2, b.width * 0.8);
+          for (let j = 0; j < points.length; j++) {
+            add(points[j].x, points[j].y, r);
+          }
+        }
+
+        // Include front vine radius around trunk axis.
+        const samples = 90;
+        for (let i = 0; i <= samples; i++) {
+          const t = i / samples;
+          const p = trunkVisualCenterAt(t);
+          const r = trunkVineRadiusAt(t) + Math.max(0.95, w * 0.0023);
+          add(p.x, p.y, r);
+        }
+
+        if (!isFinite(minX)) {
+          minX = 0;
+          minY = 0;
+          maxX = w;
+          maxY = h;
+        }
+        return { minX, minY, maxX, maxY };
       }
 
       function drawTwigs() {
@@ -808,9 +890,10 @@
 
       function paint(now) {
         lastPaintTime = now || performance.now();
-        ctx.clearRect(0, 0, w, h);
+        ctx.clearRect(0, 0, drawWidth || w, drawHeight || h);
         ctx.save();
         applySceneTransform();
+        ctx.translate(drawOffsetX, drawOffsetY);
         drawTrunk();
         drawVines(true);
         drawBranches();
@@ -881,16 +964,48 @@
         paint(performance.now());
       }
 
-      window.addEventListener("resize", resize, { passive: true });
-      canvas.addEventListener("mousemove", function (e) {
+      function setRotationDeg(deg) {
+        sceneRotationDeg = Number(deg) || 0;
+        paint(performance.now());
+      }
+
+      function setBranches(specs) {
+        branchSpecs = normalizeBranchSpecs(specs);
+        rebuild();
+        paint(performance.now());
+      }
+
+      const onResize = () => resize();
+      const onMouseMove = function (e) {
         updatePointer(e.clientX, e.clientY);
-      });
-      canvas.addEventListener("mouseleave", function () {
+      };
+      const onMouseLeave = function () {
         pointerActive = false;
         ensureAnimation();
-      });
+      };
 
-      // Expose runtime control for scroll-driven leaf reveal.
-      window.setTrunkLeafMaxPercent = setTrunkLeafMaxPercent;
+      window.addEventListener("resize", onResize, { passive: true });
+      canvas.addEventListener("mousemove", onMouseMove);
+      canvas.addEventListener("mouseleave", onMouseLeave);
       resize();
+      return {
+        setTrunkLeafMaxPercent,
+        setRotationDeg,
+        setBranches,
+        resize,
+        destroy: function () {
+          window.removeEventListener("resize", onResize);
+          canvas.removeEventListener("mousemove", onMouseMove);
+          canvas.removeEventListener("mouseleave", onMouseLeave);
+          if (animFrame != null) {
+            cancelAnimationFrame(animFrame);
+            animFrame = null;
+          }
+        }
+      };
+    }
+
+      window.BranchSceneLibrary = {
+        mount: createBranchScene
+      };
     })();
