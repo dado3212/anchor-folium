@@ -73,8 +73,8 @@
       const TAU = Math.PI * 2;
       const MAX_LEAF_ATTACH_DIST = 5;
       // Tweak these for branch thickness/taper without touching drawing code.
-      const TRUNK_BASE_WIDTH_RATIO = 0.017; // halved width
-      const TRUNK_BASE_WIDTH_MIN = 5;
+      const TRUNK_BASE_WIDTH_RATIO = 0.012; // halved again
+      const TRUNK_BASE_WIDTH_MIN = 2.5;
       const TRUNK_TAPER_PERCENT = 72; // 72 = top is 28% of base width
 
       function clamp(v, lo, hi) {
@@ -373,7 +373,7 @@
       function drawTrunk() {
         // Main trunk body.
         for (let layer = 0; layer < 4; layer++) {
-          const shade = 26 + layer * 8;
+          const shade = 35 + layer * 6;
           ctx.beginPath();
           for (let i = 0; i < trunkPoints.length; i++) {
             const p = trunkPoints[i];
@@ -411,7 +411,7 @@
         }
 
         // A few deep vertical bark seams (not many, to avoid hairiness).
-        const seamOffsets = [-0.3, -0.08, 0.13, 0.31];
+        const seamOffsets = [-0.36, 0, 0.36];
         for (let s = 0; s < seamOffsets.length; s++) {
           const offset = seamOffsets[s];
           ctx.beginPath();
@@ -430,14 +430,14 @@
             }
           }
           const depth = 1 - Math.abs(offset) * 1.8;
-          ctx.strokeStyle = "rgb(58, 38, 22)";
-          ctx.lineWidth = Math.max(0.55, trunkWidthAt(0.5) * (0.03 + depth * 0.015));
+          ctx.strokeStyle = "rgba(58, 22, 22, 1)";
+          ctx.lineWidth = Math.max(0.8, trunkWidthAt(0.5) * (0.045 + depth * 0.02));
           ctx.lineCap = "round";
           ctx.stroke();
         }
 
         // Occasional short cross-fissures.
-        for (let i = 5; i < trunkPoints.length - 5; i += 4) {
+        for (let i = 7; i < trunkPoints.length - 7; i += 9) {
           const p = trunkPoints[i];
           const q = trunkPoints[i + 1];
           const width = trunkWidthAt(p.t);
@@ -450,7 +450,7 @@
           ctx.moveTo(x0, y0);
           ctx.lineTo(x0 + len * 0.42, q.y + (y0 - p.y) - len * 0.2);
           ctx.strokeStyle = "rgb(52, 34, 20)";
-          ctx.lineWidth = Math.max(0.4, width * 0.04);
+          ctx.lineWidth = Math.max(0.65, width * 0.06);
           ctx.stroke();
         }
       }
