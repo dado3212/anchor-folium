@@ -79,6 +79,7 @@
       let pointerLastMoveMs = 0;
       let animFrame = null;
       let lastPaintTime = 0;
+      let trunkLeafMaxPercent = 100;
 
       const TAU = Math.PI * 2;
       const MAX_LEAF_ATTACH_DIST = 5;
@@ -148,9 +149,14 @@
         branches.push(createBranch(0.62, "right", 1.46));
 
         const leafCount = Math.round(clamp(h / 5, 110, 260));
+        const maxTrunkLeafT = clamp(trunkLeafMaxPercent / 100, 0, 1);
         for (let i = 0; i < leafCount; i++) {
+          if (maxTrunkLeafT <= 0) break;
           const seed = i * 12.73 + 17.1;
           const t = 0.03 + rand(seed) * 0.94;
+          if (t > maxTrunkLeafT) {
+            continue;
+          }
           const side = rand(seed + 9.2) > 0.5 ? 1 : -1;
           const size = 4 + rand(seed + 4.1) * 15 + (1 - t) * 6;
           const widthScale = 0.32 + rand(seed + 24.3) * 0.33;
@@ -480,6 +486,27 @@
         };
       }
 
+      function trunkVisualCenterAt(t) {
+        const p = pointAt(t);
+        const idx = clamp(t, 0, 1) * (trunkPoints.length - 1);
+        // Match vine axis to the perceived center of stacked trunk layers.
+        const widthWeights = [1.68, 1.4, 1.12, 0.84];
+        const sumW = widthWeights[0] + widthWeights[1] + widthWeights[2] + widthWeights[3];
+        let n = 0;
+        for (let layer = 0; layer < 4; layer++) {
+          const layerN = Math.sin(idx * 0.72 + layer * 0.6) * (1.3 + layer * 0.55);
+          n += layerN * widthWeights[layer];
+        }
+        return { x: p.x + n / sumW, y: p.y };
+      }
+
+      function trunkVineRadiusAt(t) {
+        // Blend tapered geometry with visual trunk width used by layered strokes.
+        const visualBase = trunkWidthAt(0.5);
+        const tapered = trunkWidthAt(t);
+        return (visualBase * 0.64 + tapered * 0.36) * 0.7;
+      }
+
       function drawTwigs() {
         for (let i = 0; i < twigs.length; i++) {
           const twig = twigs[i];
@@ -738,8 +765,8 @@
         let started = false;
         for (let i = 0; i <= samples; i++) {
           const t = i / samples;
-          const p = pointAt(t);
-          const radius = trunkWidthAt(t) * 0.7;
+          const p = trunkVisualCenterAt(t);
+          const radius = trunkVineRadiusAt(t);
           const theta = t * turns * TAU + 1.2;
           const depth = Math.cos(theta);
           const shouldDraw = front ? depth > 0 : depth <= 0;
@@ -759,7 +786,7 @@
 
         // Match leaf palette family (#6c6d3b -> #ece6c2).
         ctx.strokeStyle = front ? "rgb(135, 135, 83)" : "rgb(108, 109, 59)";
-        ctx.lineWidth = front ? Math.max(0.7, w * 0.0018) : Math.max(0.6, w * 0.0014);
+        ctx.lineWidth = front ? Math.max(0.95, w * 0.0023) : Math.max(0.8, w * 0.0018);
         ctx.lineCap = "butt";
         ctx.stroke();
       }
@@ -872,6 +899,12 @@
         if (animFrame == null) animFrame = requestAnimationFrame(animate);
       }
 
+      function setTrunkLeafMaxPercent(percent) {
+        trunkLeafMaxPercent = clamp(Number(percent) || 0, 0, 100);
+        rebuild();
+        paint(performance.now());
+      }
+
       window.addEventListener("resize", resize, { passive: true });
       canvas.addEventListener("mousemove", function (e) {
         updatePointer(e.clientX, e.clientY);
@@ -880,6 +913,9 @@
         pointerActive = false;
         ensureAnimation();
       });
+
+      // Expose runtime control for scroll-driven leaf reveal.
+      window.setTrunkLeafMaxPercent = setTrunkLeafMaxPercent;
       resize();
     })();
   </script>
