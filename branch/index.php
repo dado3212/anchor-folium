@@ -713,44 +713,38 @@
         }
       }
 
-      function drawVines() {
+      function drawVines(front) {
         const turns = 9.5;
         const samples = 230;
 
-        function drawPass(front) {
-          ctx.beginPath();
-          let started = false;
-          for (let i = 0; i <= samples; i++) {
-            const t = i / samples;
-            const p = pointAt(t);
-            const radius = trunkWidthAt(t) * 0.7;
-            const theta = t * turns * TAU + 0.35;
-            const depth = Math.cos(theta);
-            const shouldDraw = front ? depth > 0 : depth <= 0;
-            if (!shouldDraw) {
-              started = false;
-              continue;
-            }
-            const x = p.x + Math.sin(theta) * radius;
-            const y = p.y;
-            if (!started) {
-              ctx.moveTo(x, y);
-              started = true;
-            } else {
-              ctx.lineTo(x, y);
-            }
+        ctx.beginPath();
+        let started = false;
+        for (let i = 0; i <= samples; i++) {
+          const t = i / samples;
+          const p = pointAt(t);
+          const radius = trunkWidthAt(t) * 0.7;
+          const theta = t * turns * TAU + 1.2;
+          const depth = Math.cos(theta);
+          const shouldDraw = front ? depth > 0 : depth <= 0;
+          if (!shouldDraw) {
+            started = false;
+            continue;
           }
-
-          ctx.strokeStyle = front
-            ? "rgb(90, 68, 44)"
-            : "rgb(58, 42, 27)";
-          ctx.lineWidth = front ? Math.max(1.2, w * 0.0036) : Math.max(1, w * 0.0028);
-          ctx.lineCap = "round";
-          ctx.stroke();
+          const x = p.x + Math.sin(theta) * radius;
+          const y = p.y;
+          if (!started) {
+            ctx.moveTo(x, y);
+            started = true;
+          } else {
+            ctx.lineTo(x, y);
+          }
         }
 
-        drawPass(false);
-        drawPass(true);
+        // Match leaf palette family (#6c6d3b -> #ece6c2).
+        ctx.strokeStyle = front ? "rgb(135, 135, 83)" : "rgb(108, 109, 59)";
+        ctx.lineWidth = front ? Math.max(0.7, w * 0.0018) : Math.max(0.6, w * 0.0014);
+        ctx.lineCap = "butt";
+        ctx.stroke();
       }
 
       function drawLeaves() {
@@ -798,8 +792,8 @@
 
       function paint() {
         ctx.clearRect(0, 0, w, h);
-        drawVines();
         drawTrunk();
+        drawVines(true);
         drawBranches();
         drawTwigs();
         drawLeaves();
