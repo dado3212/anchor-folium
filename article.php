@@ -13,6 +13,18 @@
 	</div>
 	<script src="/themes/folium/branch/index.js"></script>
 	<style>
+		header#top {
+			border-bottom: 0px;
+			margin-bottom: 8px;
+			padding-bottom: 7px;
+			box-shadow: none;
+		}
+		header#top nav {
+			border: none;
+		}
+		main {
+			margin-top: 40px;
+		}
 		:root {
 			/* My gut, unadjusted */
 			--text: black;
@@ -51,7 +63,7 @@
 		}
 		#branchWrapper.fixed {
 			position: fixed;
-			margin-top: -117px;
+			margin-top: -121px;
 		}
 		#branchWrapper canvas {
 			margin-left: -35px;
@@ -91,7 +103,7 @@
 			if (isTop) {
 				branch.setTrunkLeafMaxPercent(100);
 			}
-		}).observe(document.querySelector('nav'));
+		}).observe(document.querySelector('header'));
 
 		function setProgress(p) {
 			if (isTop) {

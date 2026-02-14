@@ -9,8 +9,8 @@
         ? Math.max(1, Number(options.scale))
         : 1;
       const dpr = (window.devicePixelRatio || 1) * scale;
-      let sceneWidthConfig = Number(options.sceneWidth) > 0 ? Number(options.sceneWidth) : null;
-      let sceneHeightConfig = Number(options.sceneHeight) > 0 ? Number(options.sceneHeight) : null;
+      let sceneWidthConfig = options.sceneWidth;
+      let sceneHeightConfig = options.sceneHeight;
 
       let w = 0;
       let h = 0;
@@ -149,14 +149,29 @@
           .filter(Boolean);
       }
 
+      function resolveSceneDimension(input) {
+        let v = input;
+        if (typeof v === "function") {
+          try {
+            v = v();
+          } catch (err) {
+            v = null;
+          }
+        }
+        const n = Number(v);
+        return Number.isFinite(n) && n > 0 ? n : null;
+      }
+
       function resize() {
         const scene = canvas.parentElement || canvas;
         const rect = scene.getBoundingClientRect();
-        w = sceneWidthConfig != null
-          ? Math.max(1, Math.floor(sceneWidthConfig))
+        const cfgW = resolveSceneDimension(sceneWidthConfig);
+        const cfgH = resolveSceneDimension(sceneHeightConfig);
+        w = cfgW != null
+          ? Math.max(1, Math.floor(cfgW))
           : Math.max(320, Math.floor(rect.width || 320));
-        h = sceneHeightConfig != null
-          ? Math.max(1, Math.floor(sceneHeightConfig))
+        h = cfgH != null
+          ? Math.max(1, Math.floor(cfgH))
           : Math.max(320, Math.floor(rect.height || 320));
         rebuild();
 
@@ -255,7 +270,7 @@
           branches.push(createBranch(b.percent, b.direction, b.lengthFactor, b.waviness));
         }
 
-        const leafCount = Math.round(clamp(trunkSpan / 5, 110, 260));
+        const leafCount = Math.round(clamp(trunkSpan / 5, 50, 1000));
         const maxTrunkLeafT = clamp(trunkLeafMaxPercent / 100, 0, 1);
         for (let i = 0; i < leafCount; i++) {
           if (maxTrunkLeafT <= 0) break;
@@ -649,6 +664,60 @@
         return (visualBase * 0.64 + tapered * 0.36) * 0.7;
       }
 
+      function buildFrontVineSegments(turns, samplesPerBand) {
+        const phase = 1.2;
+        const twoPi = TAU;
+        const tDen = Math.max(0.0001, turns * twoPi);
+        const bands = [];
+        const bandSamples = Math.max(8, Math.floor(samplesPerBand || 16));
+        const nMax = Math.ceil(turns) + 2;
+
+        for (let n = -2; n <= nMax; n++) {
+          const thetaL = -Math.PI * 0.5 + twoPi * n;
+          const thetaR = Math.PI * 0.5 + twoPi * n;
+          const tL = (thetaL - phase) / tDen;
+          const tR = (thetaR - phase) / tDen;
+          const a = Math.max(0, tL);
+          const b = Math.min(1, tR);
+          if (b - a < 0.0001) continue;
+
+          const points = [];
+          for (let i = 0; i <= bandSamples; i++) {
+            const t = a + (b - a) * (i / bandSamples);
+            const p = trunkVisualCenterAt(t);
+            const r = trunkVineRadiusAt(t);
+            const theta = t * turns * TAU + phase;
+            points.push({
+              x: p.x + Math.sin(theta) * r,
+              y: p.y,
+              r
+            });
+          }
+          if (points.length < 2) continue;
+
+          bands.push(points);
+        }
+
+        return bands;
+      }
+
+      function vineBandCurveParams(points, endExtendPx) {
+        const first = points[0];
+        const last = points[points.length - 1];
+        const sx = first.x - endExtendPx;
+        const sy = first.y;
+        const ex = last.x + endExtendPx;
+        const ey = last.y;
+        let cx = (sx + ex) * 0.5;
+        let cy = (sy + ey) * 0.5;
+        if (points.length > 2) {
+          const mid = points[Math.floor(points.length / 2)];
+          cx = mid.x;
+          cy = mid.y;
+        }
+        return { sx, sy, cx, cy, ex, ey, r: Math.max(first.r || 0, last.r || 0) };
+      }
+
       function structureBounds() {
         let minX = Infinity;
         let minY = Infinity;
@@ -705,13 +774,24 @@
           add(leaf.baseX, leaf.baseY, size * 1.35);
         }
 
-        // Include front vine radius around trunk axis.
-        const samples = 90;
-        for (let i = 0; i <= samples; i++) {
-          const t = i / samples;
-          const p = trunkVisualCenterAt(t);
-          const r = trunkVineRadiusAt(t) + Math.max(0.95, w * 0.0023);
-          add(p.x, p.y, r);
+        // Include front-vine geometry.
+        const autoLoopSpacing = 90;
+        const turns = Math.max(2, generationSpan / autoLoopSpacing);
+        const endExtendPx = 3;
+        const vineHalfWidth = Math.max(0.75, trunkWidthAt(0.5) * 0.11);
+        const vineBands = buildFrontVineSegments(turns, 14);
+        for (let i = 0; i < vineBands.length; i++) {
+          const band = vineBands[i];
+          for (let j = 0; j < band.length; j++) {
+            const p = band[j];
+            add(p.x, p.y, p.r + vineHalfWidth);
+          }
+          if (band.length > 0) {
+            const c = vineBandCurveParams(band, endExtendPx);
+            add(c.sx, c.sy, c.r + vineHalfWidth);
+            add(c.cx, c.cy, c.r + vineHalfWidth);
+            add(c.ex, c.ey, c.r + vineHalfWidth);
+          }
         }
 
         if (!isFinite(minX)) {
@@ -973,48 +1053,44 @@
         }
       }
 
-      function drawVines(front) {
-        const turns = 9.5;
-        const samples = 230;
+      function drawVines() {
+        const autoLoopSpacing = 90;
+        const turns = Math.max(2, generationSpan / autoLoopSpacing);
+        const endExtendPx = 3;
+        const segments = buildFrontVineSegments(turns, 18);
 
-        ctx.beginPath();
-        let started = false;
-        for (let i = 0; i <= samples; i++) {
-          const t = i / samples;
-          const p = trunkVisualCenterAt(t);
-          const radius = trunkVineRadiusAt(t);
-          const theta = t * turns * TAU + 1.2;
-          const depth = Math.cos(theta);
-          const shouldDraw = front ? depth > 0 : depth <= 0;
-          if (!shouldDraw) {
-            started = false;
-            continue;
-          }
-          const x = p.x + Math.sin(theta) * radius;
-          const y = p.y;
-          if (!started) {
-            ctx.moveTo(x, y);
-            started = true;
-          } else {
-            ctx.lineTo(x, y);
-          }
+        function drawSegment(points) {
+          if (!points || points.length < 2) return;
+          const c = vineBandCurveParams(points, endExtendPx);
+          ctx.beginPath();
+          ctx.moveTo(c.sx, c.sy);
+          ctx.quadraticCurveTo(c.cx, c.cy, c.ex, c.ey);
+          ctx.stroke();
+        }
+
+        if (segments.length === 0) {
+          const p = trunkVisualCenterAt(0.5);
+          segments.push([
+            { x: p.x - endExtendPx, y: p.y },
+            { x: p.x + endExtendPx, y: p.y }
+          ]);
         }
 
         // Keep vine tied to the same configurable leaf palette.
         const v0 = trunkVisualCenterAt(0);
         const v1 = trunkVisualCenterAt(1);
         const vineGrad = ctx.createLinearGradient(v0.x, v0.y, v1.x, v1.y);
-        if (front) {
-          vineGrad.addColorStop(0, paletteColorAt(0.22));
-          vineGrad.addColorStop(1, paletteColorAt(0.72));
-        } else {
-          vineGrad.addColorStop(0, paletteColorAt(0.08));
-          vineGrad.addColorStop(1, paletteColorAt(0.42));
-        }
+        vineGrad.addColorStop(0, paletteColorAt(0.22));
+        vineGrad.addColorStop(1, paletteColorAt(0.72));
         ctx.strokeStyle = vineGrad;
-        ctx.lineWidth = front ? Math.max(0.95, w * 0.0023) : Math.max(0.8, w * 0.0018);
+        const minWidth = Math.max(0.75, trunkWidthAt(0.5) * 0.11);
+        const maxWidth = 4;
+        const targetWidth = generationSpan * 0.0019;
+        ctx.lineWidth = clamp(targetWidth, minWidth, maxWidth);
         ctx.lineCap = "butt";
-        ctx.stroke();
+        for (let i = 0; i < segments.length; i++) {
+          drawSegment(segments[i]);
+        }
       }
 
       function drawLeaves() {
@@ -1064,7 +1140,7 @@
         ctx.translate(drawOffsetX, drawOffsetY);
         applySceneTransform();
         drawTrunk();
-        drawVines(true);
+        drawVines();
         drawBranches();
         drawTwigs();
         drawLeaves();
