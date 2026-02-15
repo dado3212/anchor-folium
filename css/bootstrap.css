@@ -228,27 +228,6 @@ blockquote:before,
 blockquote:after {
   content: "";
 }
-.row {
-  margin-right: -15px;
-  margin-left: -15px;
-}
-.col-md-5, .col-md-7 {
-  position: relative;
-  min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
-}
-@media (min-width: 992px) {
-  .col-md-5, .col-md-7 {
-    float: left;
-  }
-  .col-md-7 {
-    width: 58.33333333%;
-  }
-  .col-md-5 {
-    width: 41.66666667%;
-  }
-}
 label {
   display: inline-block;
   max-width: 100%;
@@ -474,8 +453,6 @@ button.close {
 }
 .container:before,
 .container:after,
-.row:before,
-.row:after,
 .form-horizontal .form-group:before,
 .form-horizontal .form-group:after,
 .nav:before,
@@ -490,7 +467,6 @@ button.close {
   content: " ";
 }
 .container:after,
-.row:after,
 .form-horizontal .form-group:after,
 .nav:after,
 .navbar:after,

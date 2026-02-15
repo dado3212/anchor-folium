@@ -1,20 +1,9 @@
 <footer>
-	<div class="container-wide padding-container">
-		<div class="row">
-			<div class="col-md-7">
-				<p><?php echo " © " . date("Y") . " " . site_name() . " - All rights reserved."; ?></p>
-			</div>
-
-			<div class="col-md-5">
-				<nav>
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="<?php echo rss_url(); ?>">RSS</a></li>
-						<li class="active"><a href="<?php echo base_url('admin'); ?>" title="Manage your site!">Admin area</a></li>
-						<li class="active"><a href="<?php echo base_url(); ?>" title="Return to my website!">Home</a></li>
-					</ul>
-				</nav>
-			</div>
-		</div>
+	<div class="wrapper">
+		<p style="flex: 1;"><?php echo " © " . date("Y") . " " . site_name() . " - All rights reserved."; ?></p>
+		<span><a href="<?php echo rss_url(); ?>">RSS</a></span>
+		<span><a href="<?php echo base_url('admin'); ?>">Admin area</a></span>
+		<span><a href="<?php echo base_url(); ?>">Home</a></span>
 	</div>
 </footer>
 
