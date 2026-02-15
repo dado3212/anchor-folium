@@ -275,7 +275,7 @@
         for (let i = 0; i < leafCount; i++) {
           if (maxTrunkLeafT <= 0) break;
           const seed = i * 12.73 + 17.1;
-          const t = 0.03 + rand(seed) * 0.94;
+          const t = rand(seed);
           const side = rand(seed + 9.2) > 0.5 ? 1 : -1;
           const size = 4 + rand(seed + 4.1) * 15 + (1 - t) * 6;
           const widthScale = 0.32 + rand(seed + 24.3) * 0.33;
@@ -301,7 +301,7 @@
           let progressRefY;
 
           if (attachTwig) {
-            const tt = clamp(t + (rand(seed + 81.2) - 0.5) * 0.08, 0.03, 0.97);
+            const tt = clamp(t + (rand(seed + 81.2) - 0.5) * 0.08, 0, 1);
             const p = pointAt(tt);
             const width = trunkWidthAt(tt);
             const twigLen = Math.min(MAX_LEAF_ATTACH_DIST, width * (0.28 + rand(seed + 83.4) * 0.44));
@@ -333,7 +333,7 @@
             baseY = anchorY + dy;
             stemWidth = Math.max(0.28, width * 0.04);
           } else {
-            const vt = clamp(t + (rand(seed + 91.2) - 0.5) * 0.06, 0.03, 0.97);
+            const vt = clamp(t + (rand(seed + 91.2) - 0.5) * 0.06, 0, 1);
             const p = pointAt(vt);
             const radius = trunkWidthAt(vt) * 0.7;
             const theta = vt * 9.5 * TAU + 0.35;
@@ -400,7 +400,7 @@
             const branchLeafCount = Math.max(2, Math.round(branchLen / BRANCH_LEAF_SPACING_PX));
             for (let slot = 0; slot < branchLeafCount; slot++) {
               const seed = 20000 + branchIdx * 1000 + slot * 17.31;
-              const bt = clamp((slot + 0.5) / branchLeafCount, 0.02, 0.98);
+              const bt = branchLeafCount <= 1 ? 0 : (slot / (branchLeafCount - 1));
             const p = pointOnBranch(branch, bt);
             const p2 = pointOnBranch(branch, Math.min(1, bt + 0.03));
             const width = lerp(branch.width, branch.width * 0.55, bt);
@@ -511,7 +511,7 @@
         const side = direction === "right" ? 1 : -1;
         const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
         const span = generationSpan;
-        const len = clamp(span * (0.055 + rand(900 + percent * 100) * 0.03) * lenMul, 24, 108);
+        const baseLen = clamp(span * (0.055 + rand(900 + percent * 100) * 0.03) * lenMul, 24, 108);
 
         // Build branch direction from local trunk tangent so it stays consistent
         // across cardinal rotations and different scene aspect ratios.
@@ -537,6 +537,18 @@
         const dLen = Math.hypot(dx, dy) || 1;
         dx /= dLen;
         dy /= dLen;
+        // Normalize branch reach by horizontal distance so equal lengthFactor
+        // yields similar final x-reach even when trunk waviness shifts attach x.
+        const cx = w * 0.5;
+        const desiredX = cx + side * baseLen;
+        let len = baseLen;
+        if (Math.abs(dx) > 0.04) {
+          const candidateLen = (desiredX - p.x) / dx;
+          if (candidateLen > 0) {
+            len = candidateLen;
+          }
+        }
+        len = clamp(len, 24, 220);
         const x1 = p.x + dx * len;
         const y1 = p.y + dy * len;
 

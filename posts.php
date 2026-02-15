@@ -61,12 +61,12 @@
 			margin-top: -121px;
 		}
 		#branchWrapper canvas {
-			margin-left: -35px;
+			margin-left: -10px;
 		}
 		#branchSidebar {
 			position: absolute;
 			top: -30px;
-    	left: -240px;
+    	left: -255px;
 		}
 	</style>
 	<script>
@@ -84,7 +84,7 @@
 			}
 
 			const branch = window.BranchSceneLibrary.mount(progressCanvas, {
-				sceneWidth: document.documentElement.clientWidth,
+				sceneWidth: document.documentElement.clientWidth + 20,
 				sceneHeight: 300,
 				rotationDeg: 90,
 				trunkWaviness: 0,
@@ -117,7 +117,8 @@
 					return {
 						percent: 1 - (y / totalHeight) - 0.022,
 						direction: "right",
-						lengthFactor: 0.2
+						lengthFactor: 0.35,
+						waviness: 1.2,
 					};
 				});
 				sidebarBranch.setBranches(branchSpecs);

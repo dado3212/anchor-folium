@@ -66,7 +66,7 @@
 			margin-top: -121px;
 		}
 		#branchWrapper canvas {
-			margin-left: -35px;
+			margin-left: -10px;
 		}
 	</style>
 	<script>
@@ -75,7 +75,7 @@
 
 		const branchWrapper = document.getElementById("branchWrapper");
 		const branch = window.BranchSceneLibrary.mount(document.getElementById("progressBranch"), {
-			sceneWidth: document.documentElement.clientWidth,
+			sceneWidth: document.documentElement.clientWidth + 20,
 			sceneHeight: 300,
 			rotationDeg: 90,
 			trunkWaviness: 0,
