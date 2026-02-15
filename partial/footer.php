@@ -30,7 +30,7 @@
 	<button class="btn btn-default close">&times;</button>
 </section>
 
-<script src="<?php echo theme_url('js/bootstrap.min.js'); ?>"></script>
+<script src="<?php echo theme_url('js/bootstrap.js'); ?>"></script>
 
 <!-- Lightbox -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css" />
