@@ -766,11 +766,43 @@ main article h4 {
   padding-top: 5px;
 }
 main .pager {
+  padding-left: 0;
+  margin: 20px 0;
+  text-align: center;
+  list-style: none;
+
   margin-bottom: 50px;
+
+  &:before, &:after {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+  }
+}
+main .pager li {
+  display: inline;
 }
 main .pager a {
+  display: inline-block;
+  padding: 5px 14px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 15px;
   font-size: 13px;
   color: #848484;
+
+  &:hover, &:focus {
+    text-decoration: none;
+    background-color: #eee;
+  }
+}
+.pager .previous > a{
+  float: left;
+}
+main .pager .next > a {
+  float: right;
 }
 main .pager a:hover {
   color: var(--text);
