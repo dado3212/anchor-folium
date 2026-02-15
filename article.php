@@ -225,7 +225,7 @@
 			<?php echo comment_form_input_text('placeholder="Your comment" class="form-control"'); ?><br>
 			<!-- Captcha (site key must be modified for your uses) -->
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
-			<button class="btn btn-default">Post Comment</button>
+			<button class="post-comment">Post Comment</button>
 		</form>
 		<!-- Captcha -->
 		<script>
