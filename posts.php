@@ -65,8 +65,8 @@
 		}
 		#branchSidebar {
 			position: absolute;
-			top: -55px;
-    	left: -150px;
+			top: -30px;
+    	left: -240px;
 		}
 	</style>
 	<script>
@@ -80,7 +80,7 @@
 
 			function mainHeight() {
 				const el = document.querySelector('main');
-				return el ? el.scrollHeight : 0;
+				return el ? el.scrollHeight + 45 : 0;
 			}
 
 			const branch = window.BranchSceneLibrary.mount(progressCanvas, {
@@ -117,7 +117,7 @@
 					return {
 						percent: 1 - (y / totalHeight) - 0.022,
 						direction: "right",
-						lengthFactor: 1.2 + (idx % 2) * 0.12
+						lengthFactor: 0.2
 					};
 				});
 				sidebarBranch.setBranches(branchSpecs);

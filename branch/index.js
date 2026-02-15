@@ -175,12 +175,10 @@
           : Math.max(320, Math.floor(rect.height || 320));
         rebuild();
 
-        const pad = 18;
-        const bounds = structureBounds();
-        drawWidth = Math.ceil(bounds.maxX - bounds.minX + pad * 2);
-        drawHeight = Math.ceil(bounds.maxY - bounds.minY + pad * 2);
-        drawOffsetX = -bounds.minX + pad;
-        drawOffsetY = -bounds.minY + pad;
+        drawWidth = w;
+        drawHeight = h;
+        drawOffsetX = 0;
+        drawOffsetY = 0;
 
         canvas.style.width = drawWidth + "px";
         canvas.style.height = drawHeight + "px";
@@ -250,8 +248,10 @@
         const trunkSpan = (card === 90 || card === 270) ? w : h;
         generationSpan = trunkSpan;
         const yPad = (h - trunkSpan) * 0.5;
-        const bottom = yPad + trunkSpan * 1.03;
-        const top = yPad + trunkSpan * 0.02;
+        // Keep trunk endpoints inside the scene so round caps do not clip.
+        const capInset = clamp(trunkWidthAt(0.5) * 0.9, 2, Math.max(2, trunkSpan * 0.15));
+        const top = yPad + capInset;
+        const bottom = yPad + trunkSpan - capInset;
         const height = bottom - top;
 
         let bend = 0;
@@ -387,14 +387,20 @@
 
         // Extra leaves specifically for side branches (without removing trunk leaves).
         if (branches.length > 0) {
-          const branchLeafCount = Math.round(clamp(trunkSpan / 14, 5, 13));
-          const perBranchCount = Math.ceil(branchLeafCount / Math.max(1, branches.length));
-          for (let i = 0; i < branchLeafCount; i++) {
-            const seed = 20000 + i * 17.31;
-            const branchIdx = i % Math.max(1, branches.length);
+          const BRANCH_LEAF_SPACING_PX = 12;
+          for (let branchIdx = 0; branchIdx < branches.length; branchIdx++) {
             const branch = branches[branchIdx];
-            const slot = Math.floor(i / Math.max(1, branches.length));
-            const bt = clamp((slot + 1) / (perBranchCount + 1), 0.06, 0.94);
+            const curve = (branch.curveSamples && branch.curveSamples.length > 1)
+              ? branch.curveSamples
+              : (branch.points || [{ x: branch.x0, y: branch.y0 }, { x: branch.x1, y: branch.y1 }]);
+            let branchLen = 0;
+            for (let j = 1; j < curve.length; j++) {
+              branchLen += Math.hypot(curve[j].x - curve[j - 1].x, curve[j].y - curve[j - 1].y);
+            }
+            const branchLeafCount = Math.max(2, Math.round(branchLen / BRANCH_LEAF_SPACING_PX));
+            for (let slot = 0; slot < branchLeafCount; slot++) {
+              const seed = 20000 + branchIdx * 1000 + slot * 17.31;
+              const bt = clamp((slot + 0.5) / branchLeafCount, 0.02, 0.98);
             const p = pointOnBranch(branch, bt);
             const p2 = pointOnBranch(branch, Math.min(1, bt + 0.03));
             const width = lerp(branch.width, branch.width * 0.55, bt);
@@ -495,6 +501,7 @@
               hover: 0,
               hoverTarget: 0
             });
+          }
           }
         }
       }
@@ -753,7 +760,7 @@
 
         for (let i = 0; i < branches.length; i++) {
           const b = branches[i];
-          const points = b.points || [];
+          const points = (b.curveSamples && b.curveSamples.length > 1) ? b.curveSamples : (b.points || []);
           const r = Math.max(1.2, b.width * 0.8);
           for (let j = 0; j < points.length; j++) {
             add(points[j].x, points[j].y, r);
