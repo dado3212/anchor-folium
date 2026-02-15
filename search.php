@@ -26,15 +26,6 @@
 			</ul>
 		</article>
 
-		<?php if(has_pagination()): ?>
-		<nav class="pagination">
-			<div class="wrap">
-				<?php echo search_prev(); ?>
-				<?php echo search_next(); ?>
-			</div>
-		</nav>
-		<?php endif; ?>
-
 		<?php else: ?>
 			<article>
 				<header>
