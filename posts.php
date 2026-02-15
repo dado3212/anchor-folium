@@ -50,7 +50,7 @@
 			}
 
 			const branch = window.BranchSceneLibrary.mount(progressCanvas, {
-				sceneWidth: document.documentElement.clientWidth * 0.6,
+				sceneWidth: document.documentElement.clientWidth + 20,
 				sceneHeight: 300,
 				rotationDeg: 90,
 				trunkWaviness: Math.random() * 0.3,
@@ -92,18 +92,19 @@
 			}
 
 			updateSidebarBranchesFromHeadings();
+			sidebarBranch.resize();
 
-			let resizeRaf = null;
+			let resizeDebounceTimer = null;
 			function onResize() {
-				if (resizeRaf != null) {
-					return;
-				}
 				// Don't do anything
 				if (document.documentElement.clientWidth <= 790) {
 					return;
 				}
-				resizeRaf = requestAnimationFrame(() => {
-					resizeRaf = null;
+				if (resizeDebounceTimer != null) {
+					clearTimeout(resizeDebounceTimer);
+				}
+				resizeDebounceTimer = setTimeout(() => {
+					resizeDebounceTimer = null;
 					const newHeight = mainHeight();
 					if (lastHeight == newHeight) {
 						return;
@@ -112,7 +113,7 @@
 					}
 					updateSidebarBranchesFromHeadings();
 					sidebarBranch.setSceneSize(300, newHeight);
-				});
+				}, 50);
 			}
 
 			window.addEventListener('resize', onResize, { passive:true });
