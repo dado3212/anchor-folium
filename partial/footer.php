@@ -16,7 +16,7 @@
 		</div>
 	</div>
 
-	<button class="btn btn-default close">&times;</button>
+	<button class="close">&times;</button>
 </section>
 
 <!-- Lightbox -->

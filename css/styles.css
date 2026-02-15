@@ -1147,13 +1147,32 @@ footer .wrapper a:hover {
 #search .cell .cell-inner input[type="text"]:focus {
   border-color: #999999;
 }
-#search .close {
+#search button.close {
   position: fixed;
   top: 10px;
   right: 20px;
+  
   padding: 3px 8px;
   background: none;
   font-size: 30px;
+  cursor: pointer;
+  border: 0;
+  color: #333;
+  font-weight: normal;
+  line-height: 1.42857143;
+
+  display: inline-block;
+
+  text-align: center;
+  user-select: none;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.2;
+
+  &:focus, &:hover {
+    color: #000;
+    text-decoration: none;
+    opacity: .5;
+  }
 }
 /** Retina screens */
 @media (min-resolution: 192dpi) {
