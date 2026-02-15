@@ -18,7 +18,7 @@
 				<li>
 					<h2>
 						<a href="<?php echo $item['url']; ?>" title="<?php echo $item['title']; ?>">
-							<?php echo $item['title']; ?>
+							<?php echo $item['title'] . ($item['status'] != 'published' ? " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>" : ""); ?>
 						</a>
 					</h2>
 				</li>
