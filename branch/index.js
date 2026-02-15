@@ -139,7 +139,7 @@
         if (!Array.isArray(specs) || specs.length === 0) return [];
         return specs
           .map((s) => ({
-            percent: clamp(Number(s.percent), 0.05, 0.95),
+            percent: clamp(Number(s.percent), 0.0, 1.0),
             direction: s.direction === "right" ? "right" : "left",
             lengthFactor: Number(s.lengthFactor) > 0 ? Number(s.lengthFactor) : 1,
             waviness: Number.isFinite(Number(s.waviness))
@@ -500,17 +500,16 @@
       }
 
       function createBranch(percent, direction, lengthFactor, waviness) {
-        const t = clamp(percent, 0.05, 0.95);
-        const p = pointAt(t);
+        const p = pointAt(percent);
         const side = direction === "right" ? 1 : -1;
         const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
         const span = generationSpan;
-        const len = clamp(span * (0.055 + rand(900 + t * 100) * 0.03) * lenMul, 24, 108);
+        const len = clamp(span * (0.055 + rand(900 + percent * 100) * 0.03) * lenMul, 24, 108);
 
         // Build branch direction from local trunk tangent so it stays consistent
         // across cardinal rotations and different scene aspect ratios.
-        const ta = pointAt(clamp(t - 0.02, 0, 1));
-        const tb = pointAt(clamp(t + 0.02, 0, 1));
+        const ta = pointAt(clamp(percent - 0.02, 0, 1));
+        const tb = pointAt(clamp(percent + 0.02, 0, 1));
         let tx = tb.x - ta.x;
         let ty = tb.y - ta.y;
         const tLen = Math.hypot(tx, ty) || 1;
@@ -537,9 +536,9 @@
         const unx = -dy;
         const uny = dx;
         const waveScale = waviness == null ? branchWaviness : waviness;
-        const waveCount = 2 + Math.floor(rand(1100 + t * 300) * 2);
-        const waveAmp = len * (0.035 + rand(1200 + t * 250) * 0.05) * waveScale;
-        const phase = rand(1300 + t * 350) * Math.PI * 2;
+        const waveCount = 2 + Math.floor(rand(1100 + percent * 300) * 2);
+        const waveAmp = len * (0.035 + rand(1200 + percent * 250) * 0.05) * waveScale;
+        const phase = rand(1300 + percent * 350) * Math.PI * 2;
         const points = [];
         const steps = 6;
 
@@ -566,7 +565,7 @@
           y1,
           points,
           curveSamples,
-          width: Math.max(0.28, trunkWidthAt(t) * 0.22)
+          width: Math.max(0.28, trunkWidthAt(percent) * 0.22)
         };
       }
 

@@ -105,6 +105,26 @@
 				branches: [],
 			});
 
+			function updateSidebarBranchesFromHeadings() {
+				const el = document.querySelector('main');
+				if (!el || !sidebarBranch || !sidebarBranch.setBranches) {
+					return;
+				}
+				const h1s = Array.from(el.querySelectorAll('article h1'));
+				const totalHeight = Math.max(1, el.scrollHeight);
+				const branchSpecs = h1s.map((h1, idx) => {
+					const y = h1.offsetTop;
+					return {
+						percent: 1 - (y / totalHeight) - 0.022,
+						direction: "right",
+						lengthFactor: 1.2 + (idx % 2) * 0.12
+					};
+				});
+				sidebarBranch.setBranches(branchSpecs);
+			}
+
+			updateSidebarBranchesFromHeadings();
+
 			let resizeRaf = null;
 			function onResize() {
 				if (resizeRaf != null) {
@@ -114,6 +134,7 @@
 					resizeRaf = null;
 					branch.setSceneSize(document.documentElement.clientWidth, 300);
 					sidebarBranch.setSceneSize(300, mainHeight());
+					updateSidebarBranchesFromHeadings();
 				});
 			}
 
