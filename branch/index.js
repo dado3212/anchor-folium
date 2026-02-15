@@ -144,7 +144,10 @@
             lengthFactor: Number(s.lengthFactor) > 0 ? Number(s.lengthFactor) : 1,
             waviness: Number.isFinite(Number(s.waviness))
               ? Math.max(0, Number(s.waviness))
-              : null
+              : null,
+            thickness: Number.isFinite(Number(s.thickness))
+              ? Math.max(0.1, Number(s.thickness))
+              : 1
           }))
           .filter(Boolean);
       }
@@ -267,7 +270,7 @@
         // Configurable side branches.
         for (let i = 0; i < branchSpecs.length; i++) {
           const b = branchSpecs[i];
-          branches.push(createBranch(b.percent, b.direction, b.lengthFactor, b.waviness));
+          branches.push(createBranch(b.percent, b.direction, b.lengthFactor, b.waviness, b.thickness));
         }
 
         const leafCount = Math.round(clamp(trunkSpan / 5, 50, 1000));
@@ -406,7 +409,8 @@
             const width = lerp(branch.width, branch.width * 0.55, bt);
             const side = branch.side;
             const tangentAngle = Math.atan2(p2.y - p.y, p2.x - p.x);
-            const normalSign = rand(seed + 22.4) > 0.5 ? 1 : -1;
+            // Keep upper/lower placement balanced along straighter branches.
+            const normalSign = (slot % 2 === 0) ? 1 : -1;
             const normalAngle = tangentAngle + normalSign * Math.PI / 2;
 
             const size = 3 + rand(seed + 4.1) * 11;
@@ -430,9 +434,10 @@
             let stemWidth;
 
             if (attachTwig) {
-              const twigLen = Math.max(MIN_BRANCH_TWIG_DIST, width * (3.3 + rand(seed + 15.3) * 3.4));
-              // Make branch twigs follow branch tangent with a -10deg offset.
-              const twigAngle = tangentAngle - (10 * Math.PI / 180);
+              const twigLen = clamp(width * (2.2 + rand(seed + 15.3) * 2.2), MIN_BRANCH_TWIG_DIST, MIN_BRANCH_TWIG_DIST * 2.2);
+              // Keep twigs mostly tangent (-10deg), but fan them above/below branch
+              // so leaves distribute more evenly on both sides.
+              const twigAngle = tangentAngle - (10 * Math.PI / 180) + normalSign * (24 * Math.PI / 180);
               let tx = p.x + Math.cos(twigAngle) * twigLen;
               let ty = p.y + Math.sin(twigAngle) * twigLen;
               // Keep twigs extending outward from branch side.
@@ -506,7 +511,7 @@
         }
       }
 
-      function createBranch(percent, direction, lengthFactor, waviness) {
+      function createBranch(percent, direction, lengthFactor, waviness, thickness) {
         const p = pointAt(percent);
         const side = direction === "right" ? 1 : -1;
         const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
@@ -574,6 +579,8 @@
         }
 
         const curveSamples = buildBranchCurveSamples(points);
+        const lengthThicknessBoost = clamp(len / 80, 0.8, 3.2);
+        const thicknessScale = thickness;
 
         return {
           side,
@@ -583,7 +590,7 @@
           y1,
           points,
           curveSamples,
-          width: Math.max(0.28, trunkWidthAt(percent) * 0.22)
+          width: Math.max(0.28, trunkWidthAt(percent) * 0.22 * lengthThicknessBoost * thicknessScale)
         };
       }
 

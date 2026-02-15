@@ -472,7 +472,7 @@ header#top nav {
   border-width: 0 0 1px 0;
   border-bottom-color: #eee;
   margin-bottom: 0;
-  min-height: 80px;
+  min-height: 85px;
   display: flex;
 }
 header#top nav .navbar-brand {
@@ -487,6 +487,22 @@ header#top nav .navbar-brand {
   font-weight: 500;
   text-transform: initial;
   color: var(--text);
+}
+#topBranch {
+  overflow: hidden;
+  height: 81px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  margin-top: -41px;
+  z-index: 1;
+}
+#topBranch.fixed {
+  position: fixed;
+  margin-top: -121px;
+}
+#topBranch canvas {
+  margin-left: -10px;
 }
 header#top nav .navbar-brand img {
   width: 37px;

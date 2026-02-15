@@ -8,14 +8,14 @@
 	}
 ?>
 <?php if (admin()) { ?>
-	<div id="branchWrapper">
-		<canvas id="progressBranch" aria-label="Branch rendering A"></canvas>
+	<div id="topBranch">
+		<canvas id="progressBranch"></canvas>
 	</div>
 	<script src="/themes/folium/branch/index.js"></script>
 	<style>
 		header#top {
 			border-bottom: 0px;
-			margin-bottom: 8px;
+			margin-bottom: 12px;
 			padding-bottom: 7px;
 			box-shadow: none;
 		}
@@ -23,31 +23,14 @@
 			border: none;
 		}
 		main {
-			margin-top: 40px;
-		}
-		#branchWrapper {
-			overflow: hidden;
-			width: 100%;
-			height: 68px;
-			display: flex;
-			align-items: center;
-			position: absolute;
-			margin-top: -35px;
-			z-index: 1;
-		}
-		#branchWrapper.fixed {
-			position: fixed;
-			margin-top: -121px;
-		}
-		#branchWrapper canvas {
-			margin-left: -10px;
+			margin-top: 45px;
 		}
 	</style>
 	<script>
 		// Inline this code higher up to enable scroll listening
 		// before the full document has loaded for smoother execution
 
-		const branchWrapper = document.getElementById("branchWrapper");
+		const branchWrapper = document.getElementById("topBranch");
 		const branch = window.BranchSceneLibrary.mount(document.getElementById("progressBranch"), {
 			sceneWidth: document.documentElement.clientWidth + 20,
 			sceneHeight: 300,

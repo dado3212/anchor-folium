@@ -1,8 +1,8 @@
 <?php theme_include('partial/header'); ?>
 
 <?php if (admin()) { ?>
-	<div id="branchWrapper">
-		<canvas id="progressBranch" aria-label="Branch rendering A"></canvas>
+	<div id="topBranch">
+		<canvas id="progressBranch"></canvas>
 	</div>
 	<script src="/themes/folium/branch/index.js"></script>
 	<style>
@@ -19,24 +19,14 @@
 			margin-top: 40px;
 			position: relative;
 		}
-		#branchWrapper {
-			overflow: hidden;
-			height: 81px;
-			display: flex;
-			align-items: center;
-			position: absolute;
-			margin-top: -42px;
-			z-index: 1;
-			right: 0;
-		}
-		#branchWrapper.fixed {
+		#topBranch.fixed {
 			position: fixed;
 			margin-top: -121px;
 		}
 		#branchSidebar {
 			position: absolute;
 			bottom: -5px;
-    	left: -255px;
+    	left: -300px;
 		}
 	</style>
 	<script>
@@ -65,7 +55,7 @@
 			});
 
 			const sidebarBranch = window.BranchSceneLibrary.mount(sidebarCanvas, {
-				sceneWidth: 300,
+				sceneWidth: 350,
 				sceneHeight: mainHeight,
 				rotationDeg: 0,
 				trunkWaviness: 1.2,
@@ -85,18 +75,29 @@
 				const branchSpecs = h1s.map((h1, idx) => {
 					const y = h1.offsetTop;
 					return {
-						percent: 1 - ((y - 140) / (totalHeight - 140)) - 0.022,
+						percent: (totalHeight - y) / (totalHeight + 140) - 0.014,
 						direction: "right",
 						lengthFactor: 0.35,
 						waviness: 1.2,
 					};
 				});
-				branchSpecs.push({
-					percent: 0.98,
-					direction: "right",
-					lengthFactor: 20,
-					waviness: 1.2,
-				});
+				// branchSpecs.push({
+				// 	percent: 0.95,
+				// 	direction: "right",
+				// 	lengthFactor: 3,
+				// 	waviness: 1.2,
+				// 	thickness: 1.2,
+				// });
+				// for (var i = 1; i <= 30; i++) {
+				// 	branchSpecs.push({
+				// 		percent: 0.9 + (i / 30) ** 0.4 * 0.1,
+				// 		direction: i % 2 === 0 ? "right" : "left",
+				// 		lengthFactor: 0.8 * (i / 30),
+				// 		waviness: 1.2,
+				// 		thickness: 4,
+				// 	});
+				// }
+				
 				sidebarBranch.setBranches(branchSpecs);
 			}
 

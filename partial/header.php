@@ -167,7 +167,7 @@
 				--leafEnd: var(--code-text);
 			}
 		</style> -->
-		<style>
+		<!-- <style>
 			/* Valentine's Day */
 			:root {
 				--text: black;
@@ -178,14 +178,14 @@
 				--code-text: rgb(247, 74, 178);
 				--code-background: rgba(245, 224, 237, 1);
 				--border: #ddd;
-				--bg: rgba(255, 255, 255);
+				--bg: #fff6f6;
 				--secondary-text: rgb(64, 64, 64);
 				--header: var(--text);
 
 				--leafStart: rgb(247, 74, 178);
 				--leafEnd: rgb(222, 180, 218);
 			}
-		</style>
+		</style> -->
 	<?php } ?>
 	<header id="top" <?php if (preg_match('/^posts\/.+/', $current_url)) { echo 'class="article-header"'; } ?>>
 		<nav class="navbar navbar-default padding-container">
