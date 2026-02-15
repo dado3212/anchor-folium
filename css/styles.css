@@ -140,14 +140,6 @@ section#comments > h2:hover:before {
   padding-right: 7px;
   left: -20px;
 }
-.container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-  width: var(--container-width);
-  min-height: calc(100vh - 228px);
-}
 @media (min-width: 768px) {
   .container {
     width: 750px;
@@ -162,6 +154,14 @@ section#comments > h2:hover:before {
   .container {
     width: 1170px;
   }
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  width: var(--container-width);
+  min-height: calc(100vh - 228px);
 }
 .padding-container {
   /* iOS 11 */
@@ -1140,6 +1140,11 @@ footer nav > ul.navbar-nav li > a:hover {
   border-radius: 50px;
   outline: none;
   width: 100%;
+
+  height: 46px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
 }
 #search .cell .cell-inner input[type="text"]:focus {
   border-color: #999999;

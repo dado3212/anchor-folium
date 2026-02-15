@@ -22,7 +22,7 @@
 	<div class="cell">
 		<div class="cell-inner">
 			<form action="<?php echo search_url(); ?>" method="post">
-				<input type="text" name="term" class="input-lg col-md-12" placeholder="Type here to search...">
+				<input type="text" name="term" placeholder="Type here to search...">
 			</form>
 		</div>
 	</div>

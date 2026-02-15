@@ -232,18 +232,15 @@ blockquote:after {
   margin-right: -15px;
   margin-left: -15px;
 }
-.col-md-5, .col-md-7, .col-md-12 {
+.col-md-5, .col-md-7 {
   position: relative;
   min-height: 1px;
   padding-right: 15px;
   padding-left: 15px;
 }
 @media (min-width: 992px) {
-  .col-md-5, .col-md-7, .col-md-12 {
+  .col-md-5, .col-md-7 {
     float: left;
-  }
-  .col-md-12 {
-    width: 100%;
   }
   .col-md-7 {
     width: 58.33333333%;
@@ -260,13 +257,6 @@ label {
 }
 textarea.form-control {
   height: auto;
-}
-.input-lg {
-  height: 46px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 6px;
 }
 .collapse {
   display: none;
