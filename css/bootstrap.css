@@ -42,20 +42,6 @@ audio:not([controls]) {
 template {
   display: none;
 }
-a {
-  background: transparent;
-}
-a:active,
-a:hover {
-  outline: 0;
-}
-abbr[title] {
-  border-bottom: 1px dotted;
-}
-b,
-strong {
-  font-weight: bold;
-}
 h1 {
   margin: .67em 0;
   font-size: 2em;
@@ -217,29 +203,6 @@ ol ul,
 ul ol,
 ol ol {
   margin-bottom: 0;
-}
-.list-unstyled {
-  padding-left: 0;
-  list-style: none;
-}
-.list-inline {
-  padding-left: 0;
-  margin-left: -5px;
-  list-style: none;
-}
-.list-inline > li {
-  display: inline-block;
-  padding-right: 5px;
-  padding-left: 5px;
-}
-abbr[title],
-abbr[data-original-title] {
-  cursor: help;
-  border-bottom: 1px dotted #777;
-}
-.initialism {
-  font-size: 90%;
-  text-transform: uppercase;
 }
 blockquote {
   padding: 10px 20px;
