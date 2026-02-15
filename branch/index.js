@@ -40,6 +40,7 @@
     const MIN_BRANCH_TWIG_DIST = 10;
     const LEAF_HOVER_RADIUS = 70;
     const HOVER_ANIM_WINDOW_MS = 300;
+    const LEAF_PATH_STEPS = 26;
     // Fixed trunk thickness (independent of scene size), configurable via options.trunkBaseWidth.
     const TRUNK_BASE_WIDTH = Number(options.trunkBaseWidth) > 0 ? Number(options.trunkBaseWidth) : 15;
     const TRUNK_TAPER_PERCENT = 72; // 72 = top is 28% of base width
@@ -133,6 +134,81 @@
 
     function rgbaFromRgb(rgb, a) {
       return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + clamp(a, 0, 1) + ")";
+    }
+
+    function buildLeafStaticData(leaf) {
+      const size = leaf.size;
+      const tipX = size * (0.88 + leaf.tipScale * 0.34);
+      const upperY = -size * (0.24 + leaf.widthScale * 0.34) * leaf.bulge;
+      const lowerY = size * (0.21 + leaf.widthScale * 0.39) * (2 - leaf.bulge);
+      const halfHeight = Math.max(Math.abs(upperY), Math.abs(lowerY));
+      const gx = Math.cos(leaf.gradAngle) * tipX * 0.45;
+      const gy = Math.sin(leaf.gradAngle) * halfHeight * 1.1;
+
+      const waveCount = 3 + Math.floor(rand(leaf.seed + 41.1) * 3);
+      const waveAmp = 0.06 + rand(leaf.seed + 43.2) * 0.12;
+      const upperPhase = rand(leaf.seed + 47.3) * Math.PI * 2;
+      const lowerPhase = rand(leaf.seed + 53.4) * Math.PI * 2;
+      const a = 0.78;
+      const b = 1.38;
+      const maxT = a / (a + b);
+      const maxBase = Math.pow(maxT, a) * Math.pow(1 - maxT, b);
+
+      function edgeYAt(t, isUpper) {
+        const base = (Math.pow(t, a) * Math.pow(1 - t, b)) / maxBase;
+        const target = isUpper ? upperY : lowerY;
+        const fade = Math.pow(Math.sin(Math.PI * t), 1.5) * Math.pow(t, 1.25);
+        const phase = isUpper ? upperPhase : lowerPhase;
+        const wave = Math.sin((t * waveCount * Math.PI * 2) + phase);
+        const wobble = 1 + wave * waveAmp * fade;
+        return base * target * wobble;
+      }
+
+      const upperPath = [];
+      const lowerPath = [];
+      for (let i = 0; i <= LEAF_PATH_STEPS; i++) {
+        const t = i / LEAF_PATH_STEPS;
+        const x = tipX * t;
+        upperPath.push({ x, y: edgeYAt(t, true) });
+        lowerPath.push({ x, y: edgeYAt(t, false) });
+      }
+
+      const numVeins = Math.max(5, Math.round(size / 3.6));
+      const veins = [];
+      for (let i = 0; i < numVeins; i++) {
+        const startPerc = (i + 0.8) / numVeins;
+        const endPerc = (i + 0.8 + Math.pow(0.7, i + 1)) / numVeins;
+        veins.push({
+          startX: startPerc * tipX,
+          endX: endPerc * tipX,
+          upStartY: edgeYAt(startPerc, true) * 0.5,
+          upEndY: edgeYAt(endPerc, true) * 0.8,
+          loStartY: edgeYAt(startPerc, false) * 0.5,
+          loEndY: edgeYAt(endPerc, false) * 0.8,
+          width: size * 0.03 * (1 - startPerc)
+        });
+      }
+
+      const colorA = paletteColorAt(leaf.gradStart);
+      const colorB = paletteColorAt(leaf.gradEnd);
+      const midT = (leaf.gradStart + leaf.gradEnd) * 0.5;
+      const borderRgb = darkenRgb(paletteColorObjectAt(midT), 0.52);
+
+      return {
+        tipX,
+        gradX0: -gx,
+        gradY0: -gy,
+        gradX1: gx,
+        gradY1: gy,
+        upperPath,
+        lowerPath,
+        veins,
+        colorA,
+        colorB,
+        border85: rgbaFromRgb(borderRgb, 0.85),
+        border78: rgbaFromRgb(borderRgb, 0.78),
+        border72: rgbaFromRgb(borderRgb, 0.72)
+      };
     }
 
     function normalizeBranchSpecs(specs) {
@@ -366,7 +442,7 @@
           continue;
         }
 
-        leaves.push({
+        const leaf = {
           seed,
           anchorX,
           anchorY,
@@ -385,7 +461,9 @@
           gradAngle,
           hover: 0,
           hoverTarget: 0
-        });
+        };
+        leaf.staticData = buildLeafStaticData(leaf);
+        leaves.push(leaf);
       }
 
       // Extra leaves specifically for side branches (without removing trunk leaves).
@@ -486,7 +564,7 @@
           // If a twig is above the branch, this naturally points the leaf upward.
           const angle = stemAngle + (rand(seed + 21.9) - 0.5) * 0.18;
 
-          leaves.push({
+          const leaf = {
             seed,
             anchorX,
             anchorY,
@@ -505,7 +583,9 @@
             gradAngle,
             hover: 0,
             hoverTarget: 0
-          });
+          };
+          leaf.staticData = buildLeafStaticData(leaf);
+          leaves.push(leaf);
         }
         }
       }
@@ -773,7 +853,8 @@
       }
     }
 
-    function drawLeaf(x, y, size, angle, shape, colorA, colorB, borderRgb, alpha) {
+    function drawLeaf(x, y, angle, shape, alpha) {
+      const data = shape.staticData;
       ctx.save();
       ctx.translate(x, y);
       const hover = shape.hover || 0;
@@ -782,52 +863,24 @@
       ctx.scale(1, 0.86 * shape.foldScale);
       ctx.transform(1, 0, shape.curl * 0.35, 1, 0, 0);
       ctx.globalAlpha = alpha;
-      ctx.strokeStyle = rgbaFromRgb(borderRgb, 0.85);
-      ctx.lineWidth = Math.max(0.8, size * 0.06);
+      ctx.strokeStyle = data.border85;
+      ctx.lineWidth = Math.max(0.8, shape.size * 0.06);
 
-      const tipX = size * (0.88 + shape.tipScale * 0.34);
-      const upperY = -size * (0.24 + shape.widthScale * 0.34) * shape.bulge;
-      const lowerY = size * (0.21 + shape.widthScale * 0.39) * (2 - shape.bulge);
-      const halfHeight = Math.max(Math.abs(upperY), Math.abs(lowerY));
-      const gx = Math.cos(shape.gradAngle) * tipX * 0.45;
-      const gy = Math.sin(shape.gradAngle) * halfHeight * 1.1;
-      const fillGradient = ctx.createLinearGradient(-gx, -gy, gx, gy);
-      fillGradient.addColorStop(0, colorA);
-      fillGradient.addColorStop(1, colorB);
+      const fillGradient = ctx.createLinearGradient(data.gradX0, data.gradY0, data.gradX1, data.gradY1);
+      fillGradient.addColorStop(0, data.colorA);
+      fillGradient.addColorStop(1, data.colorB);
       ctx.fillStyle = fillGradient;
 
-      // Small wave detail along edge (kept subtle near base and tip).
-      const waveCount = 3 + Math.floor(rand(shape.seed + 41.1) * 3);
-      const waveAmp = 0.06 + rand(shape.seed + 43.2) * 0.12;
-      const upperPhase = rand(shape.seed + 47.3) * Math.PI * 2;
-      const lowerPhase = rand(shape.seed + 53.4) * Math.PI * 2;
-
-      function edgeYAt(t, isUpper) {
-        // Width envelope: broader earlier, tapering more toward tip.
-        const a = 0.78;
-        const b = 1.38;
-        const maxT = a / (a + b);
-        const maxBase = Math.pow(maxT, a) * Math.pow(1 - maxT, b);
-        const base = (Math.pow(t, a) * Math.pow(1 - t, b)) / maxBase;
-        const target = isUpper ? upperY : lowerY;
-        const fade = Math.pow(Math.sin(Math.PI * t), 1.5) * Math.pow(t, 1.25);
-        const phase = isUpper ? upperPhase : lowerPhase;
-        const wave = Math.sin((t * waveCount * Math.PI * 2) + phase);
-        const wobble = 1 + wave * waveAmp * fade;
-        return base * target * wobble;
-      }
-
       function leafPath() {
-        const steps = 26;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        for (let i = 1; i <= steps; i++) {
-          const t = i / steps;
-          ctx.lineTo(tipX * t, edgeYAt(t, true));
+        for (let i = 1; i < data.upperPath.length; i++) {
+          const p = data.upperPath[i];
+          ctx.lineTo(p.x, p.y);
         }
-        for (let i = steps - 1; i >= 0; i--) {
-          const t = i / steps;
-          ctx.lineTo(tipX * t, edgeYAt(t, false));
+        for (let i = data.lowerPath.length - 1; i >= 0; i--) {
+          const p = data.lowerPath[i];
+          ctx.lineTo(p.x, p.y);
         }
         ctx.closePath();
       }
@@ -844,36 +897,29 @@
       // Midrib.
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(tipX * 0.98, 0);
-      ctx.strokeStyle = rgbaFromRgb(borderRgb, 0.72);
-      ctx.lineWidth = Math.max(0.7, size * 0.06);
+      ctx.lineTo(data.tipX * 0.98, 0);
+      ctx.strokeStyle = data.border72;
+      ctx.lineWidth = Math.max(0.7, shape.size * 0.06);
       ctx.stroke();
 
       // Secondary veins: branch toward tip, taper from base to tip.
-      const numVeins = Math.max(5, Math.round(size / 3.6));
-      ctx.strokeStyle = rgbaFromRgb(borderRgb, 0.78);
-      for (let i = 0; i < numVeins; i++) {
-        // Choose the starting location (0 near base, 1 near tip)
-        const startPerc = (i + 0.8) / numVeins;
-        const endPerc = (i + 0.8 + Math.pow(0.7, i + 1)) / numVeins;
-        const midPerc = startPerc * 0.7 + endPerc * 0.3;
-
-        // Width narrows as we approach the tip
-        ctx.lineWidth = size * 0.03 * (1 - startPerc);
-        
+      ctx.strokeStyle = data.border78;
+      for (let i = 0; i < data.veins.length; i++) {
+        const vein = data.veins[i];
+        ctx.lineWidth = vein.width;
         ctx.beginPath();
-        ctx.moveTo(startPerc * tipX, 0);
+        ctx.moveTo(vein.startX, 0);
         ctx.quadraticCurveTo(
-          startPerc * tipX, edgeYAt(startPerc, true) * 0.5,
-          endPerc * tipX, edgeYAt(endPerc, true) * 0.8
+          vein.startX, vein.upStartY,
+          vein.endX, vein.upEndY
         );
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(startPerc * tipX, 0);
+        ctx.moveTo(vein.startX, 0);
         ctx.quadraticCurveTo(
-          startPerc * tipX, edgeYAt(startPerc, false) * 0.5,
-          endPerc * tipX, edgeYAt(endPerc, false) * 0.8
+          vein.startX, vein.loStartY,
+          vein.endX, vein.loEndY
         );
         ctx.stroke();
       }
@@ -1033,16 +1079,8 @@
     }
 
     function drawLeaves() {
-      function colorAt(t) {
-        return paletteColorAt(t);
-      }
-
       for (let i = 0; i < leaves.length; i++) {
         const leaf = leaves[i];
-        const colorA = colorAt(leaf.gradStart);
-        const colorB = colorAt(leaf.gradEnd);
-        const midT = (leaf.gradStart + leaf.gradEnd) * 0.5;
-        const borderRgb = darkenRgb(paletteColorObjectAt(midT), 0.52);
 
         // Petiole/stem: visibly connects each leaf to a twig or vine anchor.
         ctx.beginPath();
@@ -1061,12 +1099,8 @@
         drawLeaf(
           leaf.baseX,
           leaf.baseY,
-          leaf.size,
           leaf.angle,
           leaf,
-          colorA,
-          colorB,
-          borderRgb,
           0.9 + leaf.hover * 0.1
         );
       }
