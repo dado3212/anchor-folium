@@ -25,7 +25,7 @@
   background: var(--highlight);
   color: #fff;
 }
-* {
+*, *:before, *:after {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -48,6 +48,7 @@ body {
   color: var(--text);
   font-smooth: always;
   overscroll-behavior-x: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 a {
   transform: translate3d(0, 0, 0);
@@ -60,8 +61,13 @@ a {
   -o-transition: ease-in-out 0.1s;
   color: var(--link);
   position: relative;
+  text-decoration: none;
 
   text-decoration-skip: ink;
+
+  &:hover, &:focus {
+    text-decoration: underline;
+  }
 }
 a.inline {
   text-decoration: underline;
@@ -81,6 +87,11 @@ article[id] a.inline:hover {
 }
 a:hover, a:focus {
   color: var(--link);
+}
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
 }
 hr {
   border-top: 1px solid color-mix(in srgb, var(--bg) 85%, black);
@@ -360,7 +371,57 @@ li .even-sidenote {
 .img-row img {
   max-height: 500px;
 }
+/* Bootstrap inheritance */
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+img {
+  vertical-align: middle;
+}
+textarea {
+  overflow: auto;
+}
+/* Glyphicons */
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('../fonts/glyphicons-halflings-regular-subset.woff2') format('woff2'),
+    url('../fonts/glyphicons-halflings-regular-subset.woff') format('woff');
+}
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon-search:before {
+  content: "\e003";
+}
+.glyphicon-lock:before {
+  content: "\e033";
+}
+.glyphicon-list:before {
+  content: "\e056";
+}
 /** Code */
+code, kbd, pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+pre {
+  overflow: auto;
+}
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
   font-size: 75%;
