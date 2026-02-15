@@ -1542,7 +1542,7 @@ footer .wrapper a:hover {
     margin: -10px auto;
   }
 }
-@media only screen and (min-width: 790px) {
+@media only screen and (min-width: 791px) {
   .navbar {
     border-radius: 4px;
   }
@@ -1585,7 +1585,7 @@ footer .wrapper a:hover {
     float: right !important;
   }
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 790px) {
   .navbar-nav>li {
     float: none;
   }

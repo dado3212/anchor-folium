@@ -28,19 +28,25 @@
 			bottom: -5px;
     	left: -300px;
 		}
+		@media only screen and (max-width: 790px) {
+			#branchSidebar {
+				display: none;
+			}
+		}
 	</style>
 	<script>
 		function initBranches() {
 			const main = document.querySelector('main');
+			const h1s = Array.from(main.querySelectorAll('article h1'));
 			const progressCanvas = document.getElementById("progressBranch");
 			const sidebarCanvas = document.getElementById("sidebar");
 			if (!main || !progressCanvas || !sidebarCanvas || !window.BranchSceneLibrary) {
 				return;
 			}
+			let lastHeight = mainHeight();
 
 			function mainHeight() {
-				const el = document.querySelector('main');
-				return el ? el.offsetHeight + 140 : 0; // + 45 : 0;
+				return main.offsetHeight + 140;
 			}
 
 			const branch = window.BranchSceneLibrary.mount(progressCanvas, {
@@ -52,6 +58,7 @@
 				leafColorStart: getComputedStyle(document.documentElement).getPropertyValue('--leafStart').trim(),
 				leafColorEnd: getComputedStyle(document.documentElement).getPropertyValue('--leafEnd').trim(),
 				branches: [],
+				autoResize: false,
 			});
 
 			const sidebarBranch = window.BranchSceneLibrary.mount(sidebarCanvas, {
@@ -63,15 +70,14 @@
 				leafColorStart: getComputedStyle(document.documentElement).getPropertyValue('--leafStart').trim(),
 				leafColorEnd: getComputedStyle(document.documentElement).getPropertyValue('--leafEnd').trim(),
 				branches: [],
+				autoResize: false,
 			});
 
 			function updateSidebarBranchesFromHeadings() {
-				const el = document.querySelector('main');
-				if (!el || !sidebarBranch || !sidebarBranch.setBranches) {
+				if (!sidebarBranch || !sidebarBranch.setBranches) {
 					return;
 				}
-				const h1s = Array.from(el.querySelectorAll('article h1'));
-				const totalHeight = Math.max(1, el.scrollHeight);
+				const totalHeight = Math.max(1, main.scrollHeight);
 				const branchSpecs = h1s.map((h1, idx) => {
 					const y = h1.offsetTop;
 					return {
@@ -81,22 +87,6 @@
 						waviness: 1.2,
 					};
 				});
-				// branchSpecs.push({
-				// 	percent: 0.95,
-				// 	direction: "right",
-				// 	lengthFactor: 3,
-				// 	waviness: 1.2,
-				// 	thickness: 1.2,
-				// });
-				// for (var i = 1; i <= 30; i++) {
-				// 	branchSpecs.push({
-				// 		percent: 0.9 + (i / 30) ** 0.4 * 0.1,
-				// 		direction: i % 2 === 0 ? "right" : "left",
-				// 		lengthFactor: 0.8 * (i / 30),
-				// 		waviness: 1.2,
-				// 		thickness: 4,
-				// 	});
-				// }
 				
 				sidebarBranch.setBranches(branchSpecs);
 			}
@@ -108,11 +98,20 @@
 				if (resizeRaf != null) {
 					return;
 				}
+				// Don't do anything
+				if (document.documentElement.clientWidth <= 790) {
+					return;
+				}
 				resizeRaf = requestAnimationFrame(() => {
 					resizeRaf = null;
-					branch.setSceneSize(420, 300);
-					sidebarBranch.setSceneSize(300, mainHeight());
+					const newHeight = mainHeight();
+					if (lastHeight == newHeight) {
+						return;
+					} else {
+						lastHeight = newHeight;
+					}
 					updateSidebarBranchesFromHeadings();
+					sidebarBranch.setSceneSize(300, newHeight);
 				});
 			}
 
