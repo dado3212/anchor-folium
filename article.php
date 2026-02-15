@@ -82,7 +82,7 @@
 			}
 			resizeRaf = requestAnimationFrame(() => {
 				resizeRaf = null;
-				branch.setSceneSize(document.documentElement.clientWidth, 300);
+				branch.setSceneSize(document.documentElement.clientWidth + 20, 300);
 				onScroll();
 			});
 		}

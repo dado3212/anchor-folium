@@ -32,7 +32,7 @@
 	<link rel="preload" href="/themes/folium/fonts/dropcap.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" href="/themes/folium/fonts/fa-solid-900-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
-	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/bootstrap.min.css'); ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/bootstrap.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
 	<?php
