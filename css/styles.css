@@ -70,8 +70,8 @@ a.inline {
   transition: none;
 }
 article[id] a.inline:visited {
-  color: var(--text);
-  text-decoration-color: var(--text);
+  color: var(--visited-link);
+  text-decoration-color: var(--visited-link);
 }
 article[id] a.inline:hover {
   color: var(--link);

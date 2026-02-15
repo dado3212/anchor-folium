@@ -90,6 +90,103 @@
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 </head>
 <body>
+	<?php if (admin()) { ?>
+		<!-- Old -->
+		<style>
+			:root {
+				--text: black;
+				--meta-text: #636a66;
+				--highlight: rgb(68, 121, 68);
+				--link: rgb(68, 121, 68);
+				--visited-link: rgb(37, 65, 37);
+				--code-text: rgb(46, 82, 46);
+				--code-background: rgb(224, 245, 230);
+				--border: #ddd;
+				--bg: rgb(248, 251, 243);
+				--secondary-text: rgb(64, 64, 64);
+				--header: var(--text);
+
+				--leafStart: var(--highlight);
+				--leafEnd: var(--code-text);
+			}
+		</style>
+		<style>
+			/* New */
+			:root {
+				--text: black;
+				--meta-text: #636a66;
+				--highlight: rgb(68, 121, 68);
+				--link: rgb(68, 121, 68);
+				--visited-link: rgb(37, 65, 37);
+				--code-text: rgb(46, 82, 46);
+				--code-background: rgb(224, 245, 230);
+				--border: #ddd;
+				--bg: rgb(248, 251, 243);
+				--secondary-text: rgb(64, 64, 64);
+				--header: var(--text);
+
+				--leafStart: var(--highlight);
+				--leafEnd: var(--code-text);
+			}
+		</style>
+		<!-- <style>
+			/* Fall */
+			:root {
+				--text: black;
+				--meta-text: #636a66;
+				--highlight: rgb(68, 121, 68);
+				--link: rgb(68, 121, 68);
+				--visited-link: rgb(37, 65, 37);
+				--code-text: rgb(46, 82, 46);
+				--code-background: rgb(224, 245, 230);
+				--border: #ddd;
+				--bg: rgb(248, 251, 243);
+				--secondary-text: rgb(64, 64, 64);
+				--header: var(--text);
+
+				--leafStart: var(--highlight);
+				--leafEnd: var(--code-text);
+			}
+		</style> -->
+		<!-- <style>
+			/* Winter */
+			:root {
+				--text: black;
+				--meta-text: #636a66;
+				--highlight: rgb(68, 121, 68);
+				--link: rgb(68, 121, 68);
+				--visited-link: rgb(37, 65, 37);
+				--code-text: rgb(46, 82, 46);
+				--code-background: rgb(224, 245, 230);
+				--border: #ddd;
+				--bg: rgb(248, 251, 243);
+				--secondary-text: rgb(64, 64, 64);
+				--header: var(--text);
+
+				--leafStart: var(--highlight);
+				--leafEnd: var(--code-text);
+			}
+		</style> -->
+		<style>
+			/* Valentine's Day */
+			:root {
+				--text: black;
+				--meta-text: #6a6369ff;
+				--highlight: rgb(247, 74, 178);
+				--link: rgb(247, 74, 178);
+				--visited-link: rgb(65, 37, 56);
+				--code-text: rgb(247, 74, 178);
+				--code-background: rgba(245, 224, 237, 1);
+				--border: #ddd;
+				--bg: rgba(255, 255, 255);
+				--secondary-text: rgb(64, 64, 64);
+				--header: var(--text);
+
+				--leafStart: rgb(247, 74, 178);
+				--leafEnd: rgb(222, 180, 218);
+			}
+		</style>
+	<?php } ?>
 	<header id="top" <?php if (preg_match('/^posts\/.+/', $current_url)) { echo 'class="article-header"'; } ?>>
 		<nav class="navbar navbar-default padding-container">
 			<div class="navbar-header">

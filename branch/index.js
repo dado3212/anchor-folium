@@ -511,7 +511,7 @@
         const side = direction === "right" ? 1 : -1;
         const lenMul = typeof lengthFactor === "number" ? lengthFactor : 1;
         const span = generationSpan;
-        const baseLen = clamp(span * (0.055 + rand(900 + percent * 100) * 0.03) * lenMul, 24, 108);
+        const baseLen = span * (0.055 + rand(900 + percent * 100) * 0.03) * lenMul;
 
         // Build branch direction from local trunk tangent so it stays consistent
         // across cardinal rotations and different scene aspect ratios.
@@ -548,7 +548,6 @@
             len = candidateLen;
           }
         }
-        len = clamp(len, 24, 220);
         const x1 = p.x + dx * len;
         const y1 = p.y + dy * len;
 

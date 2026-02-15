@@ -6,7 +6,6 @@
 	</div>
 	<script src="/themes/folium/branch/index.js"></script>
 	<style>
-
 		header#top {
 			border-bottom: 0px;
 			margin-bottom: 8px;
@@ -20,52 +19,23 @@
 			margin-top: 40px;
 			position: relative;
 		}
-		:root {
-			/* My gut, unadjusted */
-			--text: black;
-			--meta-text: #636a66;
-			--highlight: rgb(68, 121, 68);
-			--link: rgb(105 118 68);
-			--visited-link: rgb(37, 65, 37);
-			--code-text: rgb(46, 82, 46);
-			--code-background: rgb(224, 245, 230);
-			--border: #ddd;
-			--bg: rgb(253 253 250);
-			--secondary-text: rgb(64, 64, 64);
-			--header: var(--text);
-
-			/* ROBOT COLORS */
-			/* --text: #2f2f1f;
-    --meta-text: #6f7357;
-    --highlight: #878753;
-    --link: #7f8450;
-    --visited-link: #5f6338;
-    --code-text: #4a4f2f;
-    --code-background: #ece6c2;
-    --bg: #f4f2e6;
-    --secondary-text: #54563f;
-    --header: var(--text); */
-		}
 		#branchWrapper {
 			overflow: hidden;
-			width: 100%;
-			height: 68px;
+			height: 81px;
 			display: flex;
 			align-items: center;
 			position: absolute;
-			margin-top: -35px;
+			margin-top: -42px;
 			z-index: 1;
+			right: 0;
 		}
 		#branchWrapper.fixed {
 			position: fixed;
 			margin-top: -121px;
 		}
-		#branchWrapper canvas {
-			margin-left: -10px;
-		}
 		#branchSidebar {
 			position: absolute;
-			top: -30px;
+			bottom: -5px;
     	left: -255px;
 		}
 	</style>
@@ -80,17 +50,17 @@
 
 			function mainHeight() {
 				const el = document.querySelector('main');
-				return el ? el.scrollHeight + 45 : 0;
+				return el ? el.offsetHeight + 140 : 0; // + 45 : 0;
 			}
 
 			const branch = window.BranchSceneLibrary.mount(progressCanvas, {
-				sceneWidth: document.documentElement.clientWidth + 20,
+				sceneWidth: document.documentElement.clientWidth * 0.6,
 				sceneHeight: 300,
 				rotationDeg: 90,
-				trunkWaviness: 0,
+				trunkWaviness: Math.random() * 0.3,
 				scale: 2,
-				leafColorStart: "#d73333",
-				leafColorEnd: "#c4af38",
+				leafColorStart: getComputedStyle(document.documentElement).getPropertyValue('--leafStart').trim(),
+				leafColorEnd: getComputedStyle(document.documentElement).getPropertyValue('--leafEnd').trim(),
 				branches: [],
 			});
 
@@ -98,10 +68,10 @@
 				sceneWidth: 300,
 				sceneHeight: mainHeight,
 				rotationDeg: 0,
-				trunkWaviness: 0.5,
+				trunkWaviness: 1.2,
 				scale: 2,
-				leafColorStart: "#d73333",
-				leafColorEnd: "#c4af38",
+				leafColorStart: getComputedStyle(document.documentElement).getPropertyValue('--leafStart').trim(),
+				leafColorEnd: getComputedStyle(document.documentElement).getPropertyValue('--leafEnd').trim(),
 				branches: [],
 			});
 
@@ -115,11 +85,17 @@
 				const branchSpecs = h1s.map((h1, idx) => {
 					const y = h1.offsetTop;
 					return {
-						percent: 1 - (y / totalHeight) - 0.022,
+						percent: 1 - ((y - 140) / (totalHeight - 140)) - 0.022,
 						direction: "right",
 						lengthFactor: 0.35,
 						waviness: 1.2,
 					};
+				});
+				branchSpecs.push({
+					percent: 0.98,
+					direction: "right",
+					lengthFactor: 20,
+					waviness: 1.2,
 				});
 				sidebarBranch.setBranches(branchSpecs);
 			}
@@ -133,7 +109,7 @@
 				}
 				resizeRaf = requestAnimationFrame(() => {
 					resizeRaf = null;
-					branch.setSceneSize(document.documentElement.clientWidth, 300);
+					branch.setSceneSize(420, 300);
 					sidebarBranch.setSceneSize(300, mainHeight());
 					updateSidebarBranchesFromHeadings();
 				});
