@@ -30,8 +30,6 @@
 	<button class="btn btn-default close">&times;</button>
 </section>
 
-<script src="<?php echo theme_url('js/bootstrap.js'); ?>"></script>
-
 <!-- Lightbox -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.js"></script>
@@ -46,6 +44,86 @@ $(document).ready(function(){
 		event.preventDefault();
 		searchWindow.css('display', 'table');
 		$('#search input').focus();
+	});
+
+	// Lightweight navbar collapse replacement for Bootstrap's JS plugin
+	var navbarToggle = $('#top .navbar-toggle');
+	var navbarMenu = $('#navbar-collapse-menu');
+	var isNavbarTransitioning = false;
+	var collapseDurationMs = 350;
+
+	function setNavbarToggleState(isExpanded) {
+		navbarToggle.toggleClass('collapsed', !isExpanded);
+		navbarToggle.attr('aria-expanded', isExpanded ? 'true' : 'false');
+	}
+
+	function onNavbarTransitionEnd(callback) {
+		var finished = false;
+		function done() {
+			if (finished) return;
+			finished = true;
+			navbarMenu.off('transitionend webkitTransitionEnd oTransitionEnd otransitionend', done);
+			callback();
+		}
+		navbarMenu.on('transitionend webkitTransitionEnd oTransitionEnd otransitionend', done);
+		setTimeout(done, collapseDurationMs + 50);
+	}
+
+	function expandNavbar() {
+		if (isNavbarTransitioning || navbarMenu.hasClass('in')) return;
+		isNavbarTransitioning = true;
+		setNavbarToggleState(true);
+
+		navbarMenu
+			.removeClass('collapse')
+			.addClass('collapsing')
+			.height(0);
+
+		// Force reflow before setting target height.
+		navbarMenu[0].offsetHeight;
+		navbarMenu.height(navbarMenu[0].scrollHeight);
+
+		onNavbarTransitionEnd(function() {
+			navbarMenu
+				.removeClass('collapsing')
+				.addClass('collapse in')
+				.height('');
+			isNavbarTransitioning = false;
+		});
+	}
+
+	function collapseNavbar() {
+		if (isNavbarTransitioning || !navbarMenu.hasClass('in')) return;
+		isNavbarTransitioning = true;
+		setNavbarToggleState(false);
+
+		navbarMenu
+			.height(navbarMenu.height())
+			.removeClass('collapse in')
+			.addClass('collapsing');
+
+		// Force reflow before transitioning to zero height.
+		navbarMenu[0].offsetHeight;
+		navbarMenu.height(0);
+
+		onNavbarTransitionEnd(function() {
+			navbarMenu
+				.removeClass('collapsing')
+				.addClass('collapse')
+				.height('');
+			isNavbarTransitioning = false;
+		});
+	}
+
+	setNavbarToggleState(navbarMenu.hasClass('in'));
+
+	navbarToggle.on('click', function(event) {
+		event.preventDefault();
+		if (navbarMenu.hasClass('in')) {
+			collapseNavbar();
+		} else {
+			expandNavbar();
+		}
 	});
 
 	$('button.close').click(function() {
