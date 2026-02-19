@@ -67,10 +67,11 @@
 			if (!el) {
 				return;
 			}
-			// Add in a little more padding (80px) because of top height in the window.
+			// Add in a little more padding (93px) because of top height in the window.
 			// We're ignoring the footnotes
-			const max = el.scrollHeight - window.innerHeight - (footnotes?.scrollHeight ?? 0) + 80;
-			const y = Math.max(0, Math.min(max, window.scrollY));
+			const max = el.scrollHeight - window.innerHeight - (footnotes?.scrollHeight ?? 0);
+			const y = Math.max(0, Math.min(max, window.scrollY - 93));
+			console.log(max, el.scrollHeight, window.innerHeight, (footnotes?.scrollHeight ?? 0), window.scrollY);
 			setProgress(max ? y / max : 0);
 		}
 
