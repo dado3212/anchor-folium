@@ -1,5 +1,9 @@
 <?php theme_include('partial/header'); ?>
 <?php theme_include('partial/allowlisted') ?>
+<?php
+$article_content = Registry::prop('article', 'html');
+$needs_katex = str_contains($article_content, '$$') || str_contains($article_content, '\(');
+?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
 <?php if (article_status() == "published" || admin() || isArticlePublicWithCode()):
 	$suffix = "";
@@ -325,6 +329,7 @@
 <?php endif; ?>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 
+<?php if ($needs_katex): ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
@@ -344,9 +349,10 @@ function renderKatex() {
 	.katex {
 		font: normal 1em "Crimson Pro", KaTeX_Main, Times New Roman, serif;
 		font-weight: 340;
-		color: var(--text); 
+		color: var(--text);
 	}
 </style>
+<?php endif; ?>
 <style>
 	/** Fallback inline styles for prism.js */
 	pre:not([class]) > code[class^="language-"] {
