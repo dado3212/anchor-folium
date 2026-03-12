@@ -325,7 +325,28 @@
 <?php endif; ?>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 
-<script type="text/javascript" id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderKatex()"></script>
+<script>
+function renderKatex() {
+    renderMathInElement(document.body, {
+        delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\(", right: "\\)", display: false }
+        ],
+        throwOnError: false
+    });
+}
+</script>
+<style>
+	.katex {
+		font: normal 1em "Crimson Pro", KaTeX_Main, Times New Roman, serif;
+		font-weight: 340;
+		color: var(--text); 
+	}
+</style>
 <style>
 	/** Fallback inline styles for prism.js */
 	pre:not([class]) > code[class^="language-"] {
