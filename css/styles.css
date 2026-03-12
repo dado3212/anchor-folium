@@ -21,6 +21,13 @@
   background: var(--highlight);
   color: #fff;
 }
+/* Images on iOS Safari keep showing highlight, so disable that */
+@supports (-webkit-touch-callout: none) {
+  a[data-fancybox="gallery"] img {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
 ::-moz-selection {
   background: var(--highlight);
   color: #fff;
@@ -1194,7 +1201,7 @@ main img.pixelated {
   font-size: 14px;
   color: #333;
   background-color: #fff;
-  border-color: #ccc;
+  border: 1px solid #ccc;
 
   font-weight: normal;
   line-height: 1.42857143;
@@ -1207,7 +1214,6 @@ main img.pixelated {
       -ms-user-select: none;
           user-select: none;
   background-image: none;
-  border: 1px solid transparent;
   border-radius: 4px;
 
   &:focus, &:active {
