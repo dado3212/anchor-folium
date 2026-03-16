@@ -11,7 +11,7 @@ $needs_katex = str_contains($article_content, '$$') || str_contains($article_con
 		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
 	}
 ?>
-<?php if (admin()) { ?>
+<?php if (admin() && false) { ?>
 	<div id="topBranch">
 		<canvas id="progressBranch"></canvas>
 	</div>

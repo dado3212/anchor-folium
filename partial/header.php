@@ -89,7 +89,7 @@
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 </head>
 <body>
-	<?php if (admin()) { ?>
+	<?php if (admin() && false) { ?>
 		<!-- Old -->
 		<style>
 			:root {

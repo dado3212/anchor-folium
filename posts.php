@@ -1,6 +1,6 @@
 <?php theme_include('partial/header'); ?>
 
-<?php if (admin()) { ?>
+<?php if (admin() && false) { ?>
 	<div id="topBranch">
 		<canvas id="progressBranch"></canvas>
 	</div>
