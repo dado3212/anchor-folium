@@ -378,7 +378,8 @@ if ($needs_pdf): ?>
 			// Can support dark/light mode if added
       theme: { preference: 'system' },
 			// Remove non-view options
-      disabledCategories: ['annotation', 'redaction', 'panel-search', 'panel-comment'],
+			// Selection breaks copy-paste
+      disabledCategories: ['annotation', 'redaction', 'panel-search', 'panel-comment', 'selection'],
     });
     
 		const registry = await viewer.registry;

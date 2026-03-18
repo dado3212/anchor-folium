@@ -1124,7 +1124,7 @@ main article header h1 {
 main article[id] header h1 {
   color: var(--link);
   font-size: 60px;
-  line-height: 52px;
+  line-height: 0.95;
 }
 main article header h1 a {
   color: var(--header);
@@ -1194,7 +1194,9 @@ main img.pixelated {
   image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
   -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
-
+.pdf-embed {
+  margin-bottom: 10px;
+}
 .post-comment {
   display: inline-block;
   padding: 6px 12px;
