@@ -172,6 +172,7 @@ section#comments > h2:hover:before {
   margin-left: auto;
   width: var(--container-width);
   min-height: calc(100vh - 228px);
+  container-type: inline-size;
 }
 .padding-container {
   /* iOS 11 */
@@ -1035,7 +1036,7 @@ header#top .navbar-default .navbar-toggle {
 .articleLink .name {
   font-weight: 400;
   transition: 0.2s ease;
-  padding-right: 10px;
+  padding-right: 20px;
 }
 .articleLink .date {
   opacity: 0;

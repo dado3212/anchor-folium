@@ -128,7 +128,7 @@
 <?php } ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
 	<main class="container">
-		<?php if (admin()) { ?>
+		<?php if (admin() && false) { ?>
 		<div id="branchSidebar">
 			<canvas id="sidebar" aria-label="Branch rendering B"></canvas>
 		</div>
