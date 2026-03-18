@@ -2,7 +2,6 @@
 <?php theme_include('partial/allowlisted') ?>
 <?php
 $article_content = Registry::prop('article', 'html');
-$needs_katex = str_contains($article_content, '$$') || str_contains($article_content, '\(');
 ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
 <?php if (article_status() == "published" || admin() || isArticlePublicWithCode()):
@@ -328,8 +327,10 @@ $needs_katex = str_contains($article_content, '$$') || str_contains($article_con
 	</main>
 <?php endif; ?>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
-
-<?php if ($needs_katex): ?>
+<?php
+// If we're doing inline latex, then load the relevant JS
+$needs_katex = str_contains($article_content, '$$') || str_contains($article_content, '\(');
+if ($needs_katex): ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
@@ -352,6 +353,43 @@ function renderKatex() {
 		color: var(--text);
 	}
 </style>
+<?php endif; ?>
+<?php
+// If we're doing inline pdfs then load the relevant JS libraries
+$needs_pdf = str_contains($article_content, '![pdf ');
+if ($needs_pdf): ?>
+<script type="module">
+  import EmbedPDF from 'https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js';
+
+  for (const el of document.querySelectorAll('.pdf-embed')) {
+    const src = el.dataset.src;
+    const page = parseInt(el.dataset.page ?? '1', 10);
+
+    const viewer = EmbedPDF.init({
+      type: 'container',
+      target: el,
+      documentManager: {
+        initialDocuments: [{
+          url: src,
+          documentId: 'doc',
+          autoActivate: false,
+        }]
+      },
+			// Can support dark/light mode if added
+      theme: { preference: 'system' },
+			// Remove non-view options
+      disabledCategories: ['annotation', 'redaction', 'panel-search', 'panel-comment'],
+    });
+    
+		const registry = await viewer.registry;
+		const zoom = registry.getPlugin('zoom').provides();
+		const scroll = registry.getPlugin('scroll').provides();
+		scroll.onLayoutReady((event) => {
+			zoom.forDocument('doc').requestZoom('fit-width');
+			scroll.scrollToPage({ pageNumber: page, behavior: 'instant' });
+		});
+  }
+</script>
 <?php endif; ?>
 <style>
 	/** Fallback inline styles for prism.js */
