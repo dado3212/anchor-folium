@@ -6,7 +6,7 @@
   --visited-link: rgb(37, 65, 37);
   --code-text: rgb(46, 82, 46);
   --code-background: rgb(224, 245, 230);
-  --border: #ddd;
+  --border: color-mix(in srgb, var(--bg) 85%, black);
   --bg: rgb(248, 251, 243);
   --secondary-text: rgb(64, 64, 64);
   --header: var(--text);
@@ -104,7 +104,24 @@ a:focus {
   outline-offset: -2px;
 }
 hr {
-  border-top: 1px solid color-mix(in srgb, var(--bg) 85%, black);
+  margin: 30px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+
+  &.fleuron {
+    &:before {
+      content: "❧";
+      display: block;
+      color: var(--link);
+      text-align: center;
+      position: absolute;
+      left: calc(50% - 25px);
+      margin-top: -13px;
+      width: 50px;
+      height: 40px;
+      background: var(--bg);
+    }
+  }
 }
 /* Get strikethrough to render in the right place */
 s {
@@ -472,12 +489,6 @@ button::-moz-focus-inner,
 input::-moz-focus-inner {
   padding: 0;
   border: 0;
-}
-hr {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: 0;
-  border-top: 1px solid #eee;
 }
 h1,
 h2,
@@ -1013,6 +1024,25 @@ header#top .navbar-default .navbar-toggle {
 /**
  *  List of Posts
  */
+.listHeading {
+  padding: 0 25px 10px 25px
+}
+.listHeading h2 {
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 2em;
+  margin: 20px 0 5px 0;
+}
+.listHeading p {
+  font-style: italic;
+  color: var(--secondary-text);
+  text-align: center;
+  font-size: 0.9em;
+  line-height: 1.3;
+  margin-bottom: 40px;
+}
 #previousPosts {
   padding: 0 25px 50px 25px;
 }
@@ -1635,7 +1665,7 @@ footer .wrapper a:hover {
     opacity: 1;
     transform: initial;
     background-color: color-mix(in srgb, var(--bg) 95%, white);
-    border: 1px solid var(--border);
+    border: 1px solid #ddd;
 
     width: 36px;
     height: 36px;

@@ -1,6 +1,10 @@
 <?php theme_include('partial/header'); ?>
 
 	<main class="container padding-container">
+		<div class="listHeading">
+      <h2>Posts</h2>
+    </div>
+
 		<?php
 			$items = Query::table(Base::table('posts'))
 				->left_join(Base::table('post_meta'), 'anchor_post_meta.extend` = "4" and `anchor_post_meta.post', '=', Base::table('posts.id'))
@@ -22,7 +26,7 @@
 					$suffixClass = ' unpublished';
 				}
 				echo "<div class='post'>
-          <div class='title${suffixClass}'><a class='articleLink' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "$suffix</a></div>
+          <div class='title{$suffixClass}'><a class='articleLink' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "$suffix</a></div>
           <div class='date'>" . $itemDate . "</div>
         </div>";
 			}
@@ -44,30 +48,29 @@
 		#previousPosts .year {
 			display: flex;
     	align-items: center;
+			padding-left: 0px;
 		}
 		#previousPosts .yearText {
 			font-size: 0.7em;
 			font-weight: 500;
 			letter-spacing: 0.25em;
-			color: var(--bk-muted);
 			padding: 0 16px;
 		}
 		#previousPosts .year .line {
 			height: 0;
-			border-top: 1px solid color-mix(in srgb, var(--link), white 60%);
+			border-top: 1px solid var(--border);
 			flex: 1;
 		}
 		#previousPosts .post {
 			display: flex;
 			flex-direction: column;
-			align-items: center;
 			margin-bottom: 4px;
 		}
 		#previousPosts .post .date {
 			font-size: 0.75em;
 			font-style: italic;
-			color: #888;
-			margin-top: -8px;
+			color: var(--secondary-text);
+			margin-top: -7px;
 		}
 		#previousPosts .post .title.unpublished {
 			text-decoration: line-through;
@@ -75,11 +78,11 @@
 		.articleLink {
 			font-size: 1em;
 			font-weight: 400;
-			color: var(--bk-text);
+			color: var(--text);
 			cursor: pointer;
 			transition: color 0.2s;
 			align-items: center;
-			text-align: center;
+			padding: 10px 0;
 		}
 		@media (hover: hover) and (pointer: fine) {
 			.articleLink:hover {
