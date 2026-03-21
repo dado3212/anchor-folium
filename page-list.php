@@ -20,13 +20,12 @@
 		<?php
 			function renderPostLink($page, $item) {
 				$itemDate = date('F j', strtotime($item->created));
-				$suffix = "";
 				$suffixClass = '';
 				if ($item->status != 'published') {
 					$suffixClass = ' unpublished';
 				}
 				echo "<div class='post'>
-          <div class='title{$suffixClass}'><a class='articleLink' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "$suffix</a></div>
+          <div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
           <div class='date'>" . $itemDate . "</div>
         </div>";
 			}

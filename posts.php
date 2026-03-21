@@ -136,14 +136,6 @@
 		<?php if(has_posts()): ?>
 			<?php while(posts()): ?>
 			<article>
-				<?php
-				// if (admin()) {
-				// 	$og_image = article_custom_field('og_image') ?? "";
-				// 	if ($og_image !== "") {
-				// 		echo '<img src="' . URI::full($og_image, true) . '" class="post-preview" />';
-				// 	}
-				// }
-				?>
 				<header>
 					<h1><a href="<?php echo article_url(); ?>"><?php echo article_title(); if (article_status() != 'published') { echo " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>"; } ?></a></h1>
 					<div class="meta">
@@ -166,12 +158,13 @@
 			<p>Looks like you have some writing to do!</p>
 		<?php endif; ?>
 
-		<?php if(has_pagination()): ?>
-		<ul class="pager">
-			<li class="previous"><?php echo posts_prev($_GET['home'] ?? false); ?></li>
-			<li class="next"><?php echo posts_next($_GET['home'] ?? false); ?></li>
-		</ul>
-		<?php endif; ?>
+		<?php if(has_pagination()) { ?>
+		<div class="pagination">
+			<span class="newer"><?php echo posts_newer($_GET['home'] ?? false); ?></span>
+			<span class="count"><span>—</span><span class="num"><?php echo Registry::get('page_offset'); ?></span><span>—</span></span>
+			<span class="older"><?php echo posts_older($_GET['home'] ?? false); ?></span>
+		</div>
+		<?php	} ?>
 	</main>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 

@@ -78,12 +78,20 @@ a {
   &:hover, &:focus {
     text-decoration: underline;
   }
+  &.unpublished {
+    &:hover, &:focus {
+      text-decoration: line-through underline;
+    }
+  }
 }
 a.inline {
   text-decoration: underline;
   text-decoration-color: var(--link);
   text-underline-offset: 0.1em;
   transition: none;
+}
+article[id] {
+  border-bottom: 0px;
 }
 article[id] a.inline:visited {
   color: var(--visited-link);
@@ -103,7 +111,7 @@ a:focus {
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
-.unpublished {
+a.unpublished {
   text-decoration: line-through;
 }
 hr {
@@ -1128,7 +1136,7 @@ main {
 main article {
   padding-bottom: 25px;
   margin-bottom: 5px;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid var(--border);
   word-break: break-word;
   font-family: "Crimson Pro", serif;
 
@@ -1145,9 +1153,6 @@ main article[id] > p:nth-of-type(1)::first-letter {
   margin-right: 0.05em;
   margin-top: 0.05em;
   color: var(--link);
-}
-main article:last-of-type {
-  border-bottom: none;
 }
 main article header {
   margin-bottom: 15px;
@@ -1320,6 +1325,52 @@ main .pager {
   }
   &:after {
     clear: both;
+  }
+}
+.pagination {
+  display: flex;
+  position: relative;
+  padding: 20px 10px;
+  margin: 20px 0;
+}
+.count {
+  flex: 1;
+  font-size: 0.9em;
+  text-align: center;
+}
+.count .num {
+  padding: 0 10px;
+}
+.pagination .newer {
+  position: absolute;
+  left: 15px;
+
+  a {
+    padding-left: 15px;
+  }
+
+  &:before {
+    content: "‹ ";
+    color: var(--link);
+    position: absolute;
+    left: 0px;
+    z-index: -1;
+  }
+}
+.pagination .older {
+  position: absolute;
+  right: 15px;
+
+  a {
+    padding-right: 15px;
+  }
+
+  &:after {
+    content: " ›";
+    color: var(--link);
+    position: absolute;
+    right: 0px;
+    z-index: -1;
   }
 }
 

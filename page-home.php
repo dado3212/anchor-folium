@@ -2,25 +2,10 @@
 if (Uri::current() !== '/') {
   header('Location: /', true, 301); exit;
 }
-
-// Currently just show posts if you're not an admin
-if (!admin()) {
-	// Load up all of the posts information
-	$per_page = Config::meta('posts_per_page');
-	list($total, $posts) = Post::listing(null, 1, $per_page);
-	$posts = new Items($posts);
-
-	Registry::set('posts', $posts);
-	Registry::set('total_posts', $total);
-	Registry::set('page_offset', 1);
-
-  include __DIR__ . '/posts.php';
-  exit;
-}
 ?>
 <?php 
 // Load up all of the posts information
-$per_page = (int)(Config::meta('home_posts_per_page') ?: 3);
+$per_page = Config::meta('home_posts_per_page');
 list($total, $posts) = Post::listing(null, 1, $per_page);
 $posts = new Items($posts);
 
@@ -60,9 +45,10 @@ theme_include('partial/header');
 
 	<?php if($total > $per_page): ?>
 	<?php $posts_page_obj = Registry::get('posts_page'); ?>
-	<ul class="pager">
-		<li class="previous"><a href="<?php echo base_url($posts_page_obj->slug . '/2?home=1'); ?>">&larr; Previous</a></li>
-	</ul>
+	<div class="pagination">
+		<div class="count"><span>—</span><span class="num">1</span><span>—</span></div>
+		<span class="older"><a href="<?php echo base_url($posts_page_obj->slug . '/2?home=1'); ?>">Older posts</a></span>
+	</div>
 	<?php endif; ?>
 	<?php
 		// Snippets
@@ -75,7 +61,7 @@ theme_include('partial/header');
 			echo "<div class='snippet-item'><div class='snippet-wrapper'>
       <span class='snippet-bullet'>❧</span>
       <div>
-        <div class='title{$suffixClass}'><a class='articleLink' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
+        <div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
         <div class='date'>" . $itemDate . "</div>
       </div>
 			</div>
@@ -189,6 +175,10 @@ theme_include('partial/header');
 				justify-content: center;
 				font-size: 0.9em;
 				color: var(--secondary-text);
+			}
+			main article:last-of-type {
+				border-bottom: none;
+				padding-bottom: 0px;
 			}
 		</style>
 </main>
