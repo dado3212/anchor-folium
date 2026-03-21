@@ -53,13 +53,6 @@
 				align-items: center;
 				padding-left: 0px;
 			}
-			#previousPosts .yearText {
-				font-size: 0.7em;
-				font-weight: 500;
-				letter-spacing: 0.25em;
-				color: var(--bk-muted);
-				padding: 0 16px;
-			}
 			#previousPosts .year .line {
 				height: 0;
 				border-top: 1px solid color-mix(in srgb, var(--link), white 60%);
@@ -76,13 +69,10 @@
 				color:  var(--secondary-text);
 				margin-top: -7px;
 			}
-			#previousPosts .post .title.unpublished {
-				text-decoration: line-through;
-			}
 			.articleLink {
 				font-size: 1em;
 				font-weight: 400;
-				color: var(--bk-text);
+				color: var(--text);
 				cursor: pointer;
 				transition: color 0.2s;
 				align-items: center;

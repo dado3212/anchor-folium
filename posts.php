@@ -168,8 +168,8 @@
 
 		<?php if(has_pagination()): ?>
 		<ul class="pager">
-			<li class="previous"><?php echo posts_prev(); ?></li>
-			<li class="next"><?php echo posts_next(); ?></li>
+			<li class="previous"><?php echo posts_prev($_GET['home'] ?? false); ?></li>
+			<li class="next"><?php echo posts_next($_GET['home'] ?? false); ?></li>
 		</ul>
 		<?php endif; ?>
 	</main>

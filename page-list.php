@@ -72,9 +72,6 @@
 			color: var(--secondary-text);
 			margin-top: -7px;
 		}
-		#previousPosts .post .title.unpublished {
-			text-decoration: line-through;
-		}
 		.articleLink {
 			font-size: 1em;
 			font-weight: 400;

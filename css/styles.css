@@ -103,6 +103,9 @@ a:focus {
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
+.unpublished {
+  text-decoration: line-through;
+}
 hr {
   margin: 30px 0;
   border: 0;
@@ -120,6 +123,12 @@ hr {
       width: 50px;
       height: 40px;
       background: var(--bg);
+    }
+  }
+
+  &.fleuron.alt {
+    &:before {
+      content: "❦";
     }
   }
 }
@@ -1025,7 +1034,7 @@ header#top .navbar-default .navbar-toggle {
  *  List of Posts
  */
 .listHeading {
-  padding: 0 25px 10px 25px
+  padding: 0 25px 10px 25px;
 }
 .listHeading h2 {
   text-transform: uppercase;
