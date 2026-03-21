@@ -88,7 +88,7 @@ theme_include('partial/header');
 		$page = Registry::get('posts_page');
 		
 		?>
-		<hr class="fleuron alt" />
+		<hr class="fleuron alt" style="margin: 40px 0;" />
 		<div class="listHeading">
       <h2>Snippets</h2>
     </div>
@@ -179,6 +179,9 @@ theme_include('partial/header');
 			main article:last-of-type {
 				border-bottom: none;
 				padding-bottom: 0px;
+			}
+			.listHeading h2 {
+				font-size: 1.5em;
 			}
 		</style>
 </main>
