@@ -1764,14 +1764,13 @@ footer .wrapper a:hover {
     float: none;
     clear: both;
     width: calc(100vw - 2 * var(--container-padding) - 2em);
-    margin: 1em;
+    margin: 0;
+    padding: 1em;
+    box-sizing: content-box;
     text-align: left;
   }
-  .even-sidenote {
-    padding-left: 0px;
-  }
   blockquote .sidenote, blockquote .even-sidenote {
-    margin: 1em;
+    margin: 0;
   }
   li .sidenote, li .even-sidenote {
     /* offset the 40px ul indent + 1em margin */
