@@ -100,6 +100,7 @@ $article_content = Registry::prop('article', 'html');
 				<div class="meta">
 					<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
 					<?php if (admin()) {
+						echo '<span class="delimiter">𐫱</span>';
 						$category = article_category();
 						echo '<a class="tag" href="'. article_category_url() . '">' . $category . '</a>';
 					} ?>

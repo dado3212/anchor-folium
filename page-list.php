@@ -19,7 +19,7 @@
 		<div id="previousPosts">
 		<?php
 			function renderPostLink($page, $item) {
-				$itemDate = date('F j', strtotime($item->created));
+				$itemDate = date('F j', Date::format($item->created, 'U'));
 				$suffixClass = '';
 				if ($item->status != 'published') {
 					$suffixClass = ' unpublished';

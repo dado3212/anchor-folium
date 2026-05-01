@@ -669,6 +669,24 @@ pre[class*="language-"] {
   margin: 20px -10px;
   border-radius: 7px;
 }
+pre[data-title] {
+  container-type: inline-size;
+}
+pre[data-title] + .toolbar .toolbar-item:first-of-type {
+  background: linear-gradient(90deg, #272822 90%, transparent);
+}
+pre[data-title] + .toolbar .toolbar-item:last-of-type {
+  background: linear-gradient(90deg, transparent, #272822 10%);
+}
+pre[data-title]:after {
+  content: attr(data-title);
+  position: absolute;
+  top: 9px;
+  width: 100%;
+  left: 0px;
+  text-align: center;
+  font-size: min(3cqw, 1em);
+}
 :not(pre) > code {
   padding:2px 4px;
   font-size:90%;
@@ -686,6 +704,26 @@ pre[class*="language-"] {
   border-left: 0.3em solid var(--link);
   margin-top: 38px;
 }
+/**
+Ruby styling (the defaults are crap on Safari)
+*/
+rt {
+  margin-top: -1em;
+}
+/** Position: relative doesn't work on Safari */
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  rt {
+    transform: translateY(0.7em);
+  }
+}
+/** And transform: translateY doesn't work on Chrome */
+@supports not (-webkit-backdrop-filter: blur(1px)) {
+  rt {
+    position: relative;
+    bottom: -0.6em;
+  }
+}
+/** And if you're on Firefox...sorry? */
 /**
   Code toolbar
 */
@@ -1181,43 +1219,37 @@ main article header .meta {
   font-style: italic;
   color: var(--meta-text);
   margin-top: 15px;
+  display: flex;
+  align-items: center;
 }
 /** Tags (TODO: CLEAN THIS UP) */
-main article header .tag {
-  background-color: var(--link);
-  /* border: 3px solid var(--link); */
-  /* color: var(--meta-text); */
-  /* color: var(--link); */
-  color: white;
-  font-weight: 500;
+main article header .meta .delimiter {
   font-style: normal;
-  padding: 2px 7px;
-  border-radius: 10px 0px 10px 0px;
-  position: relative;
-  margin: 0px 9px;
-  display: inline-block;
+  margin: -2px 12px 0 12px;
+}
+main article header .tag {
+  color: var(--meta-text);
+  font-style: normal;
+  font-variant: small-caps;
+  letter-spacing: 1px;
 
-  clip-path: shape(
-    from 0% 50%,
-    curve to 50% 0% with -1% 0%,
-    curve to 100% 50% with 101% 0%,
-    curve to 50% 100% with 101% 100%,
-    curve to 0% 50% with -1% 100%,
-    close
-  );
+  font-size: 1.1em;
+  margin-top: -2px;
 
-  &:after {
-    content: "";
-    display: block;
-    position: absolute;
-    background-color: var(--link);
-    left: -3px;
-    bottom: -2px;
-    width: 3px;
-    height: 8px;
-    transform-origin: bottom;
-    transform: rotate(-135deg);
-  }
+  text-decoration: underline;
+  text-decoration-color: var(--meta-text);
+  text-underline-offset: 0.1em;
+  transition: none;
+}
+main article header .tag:hover {
+  color: var(--link);
+  text-decoration-color: var(--link);
+  text-decoration-thickness: 0.14em;
+  text-decoration-skip-ink: none;
+}
+article[id] a.inline:visited {
+  color: var(--visited-link);
+  text-decoration-color: var(--visited-link);
 }
 main img {
   max-width: 100%;
@@ -1682,6 +1714,32 @@ footer .wrapper a:hover {
   }
   .navbar-right {
     float: right !important;
+  }
+  .sidenote[data-footnote-name^="clip"] {
+    display: block;
+    max-height: 300px;
+    overflow-y: clip;
+    position: relative;
+    transition: 0.2s ease;
+  }
+  .sidenote[data-footnote-name^="clip"]:hover {
+    max-height: 50em;
+  }
+  .sidenote[data-footnote-name^="clip"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 48px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    transition: 0.2s ease;
+    transition-delay: 0.1s;
+  }
+  .sidenote[data-footnote-name^="clip"]:hover:after {
+    height: 0px;
+    transition-delay: 0s;
   }
 }
 @media only screen and (max-width: 790px) {
