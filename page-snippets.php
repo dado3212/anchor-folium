@@ -10,7 +10,7 @@
 
 		<?php
 			function renderPostLink($page, $item) {
-				$itemDate = date('F j, Y', strtotime($item->created));
+				$itemDate = date('F j, Y', Date::format($item->created, 'U'));
 				$suffixClass = '';
 				if ($item->status != 'published') {
 					$suffixClass = ' unpublished';
