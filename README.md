@@ -72,6 +72,8 @@ and in the UI, to be able to adjust publication date.
 * * https://www.benkuhn.net/abyss/#fnref:1 - breaks, and content
 * https://www.fromjason.xyz/p/notebook/openai-s-operator-is-facebook-s-like-button/ - everything
 * https://lucumr.pocoo.org/about/ - lots
+* https://blog.kayleesk.com/ - colophon and print-based, good fonts
+* https://www.henrystanley.com/weighing-animal-minds/ - subtle background texture, appearing scroll view, dark mode
 
 TODO
 - Display category of post (or tags?)
