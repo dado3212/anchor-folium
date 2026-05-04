@@ -169,16 +169,15 @@ theme_include('partial/header');
 						text-decoration: inherit;
 				}
 			}
+			main article:last-of-type {
+				padding-bottom: 0px;
+			}
 			.viewAllSnippets {
 				margin: 20px 0 50px 0;
 				display: flex;
 				justify-content: center;
 				font-size: 0.9em;
 				color: var(--secondary-text);
-			}
-			main article:last-of-type {
-				border-bottom: none;
-				padding-bottom: 0px;
 			}
 			.listHeading h2 {
 				font-size: 1.5em;

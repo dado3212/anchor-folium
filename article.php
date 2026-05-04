@@ -99,10 +99,13 @@ $article_content = Registry::prop('article', 'html');
 				<h1><?php echo article_title() . $suffix; ?></h1>
 				<div class="meta">
 					<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
-					<?php if (admin()) {
-						echo '<span class="delimiter">𐫱</span>';
-						$category = article_category();
-						echo '<a class="tag" href="'. article_category_url() . '">' . $category . '</a>';
+					<?php if (admin() && has_categories()) {
+						echo '<span class="delimiter">𐫱</span><span class="bridge">filed under</span>';
+						$strings = [];
+						foreach (article_categories() as $cat) {
+							$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
+						}
+						echo implode(' & ', $strings);
 					} ?>
 				</div>
 			</header>

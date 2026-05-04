@@ -8,6 +8,7 @@
   --code-background: rgb(224, 245, 230);
   --border: color-mix(in srgb, var(--bg) 85%, black);
   --bg: rgb(248, 251, 243);
+  --image-load: rgb(239, 242, 232);
   --secondary-text: rgb(64, 64, 64);
   --header: var(--text);
   
@@ -1183,6 +1184,9 @@ main article {
   padding-bottom: 25px;
   color: var(--text);
 }
+main article:last-of-type {
+  border-bottom: none;
+}
 main article[id] > p:nth-of-type(1)::first-letter {
   font-family: "Drop Cap", serif;
   font-size: 4em;
@@ -1216,20 +1220,22 @@ main article header h1 a:hover {
 }
 main article header .meta {
   font-size: 18px;
-  font-style: italic;
   color: var(--meta-text);
   margin-top: 15px;
   display: flex;
   align-items: center;
+  gap: 0.3em;
+  flex-wrap: wrap;
 }
-/** Tags (TODO: CLEAN THIS UP) */
+main article header .meta time {
+  font-style: italic;
+}
+/* Tags */
 main article header .meta .delimiter {
-  font-style: normal;
-  margin: -2px 12px 0 12px;
+  margin: -2px 4px 0 6px;
 }
 main article header .tag {
   color: var(--meta-text);
-  font-style: normal;
   font-variant: small-caps;
   letter-spacing: 1px;
 
@@ -1250,6 +1256,10 @@ main article header .tag:hover {
 article[id] a.inline:visited {
   color: var(--visited-link);
   text-decoration-color: var(--visited-link);
+}
+main a[data-fancybox="gallery"]:has(> img) {
+  /* Used while loading in */
+  background-color: var(--image-load);
 }
 main img {
   max-width: 100%;
@@ -1361,6 +1371,7 @@ main .pager {
 }
 .pagination {
   display: flex;
+  align-items: center;
   position: relative;
   padding: 20px 10px;
   margin: 20px 0;

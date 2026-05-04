@@ -158,11 +158,14 @@
 			<p>Looks like you have some writing to do!</p>
 		<?php endif; ?>
 
-		<?php if(has_pagination()) { ?>
+		<?php if(has_pagination()) {
+			$posts_newer = posts_newer($_GET['home'] ?? false);
+			$posts_older = posts_older($_GET['home'] ?? false);
+		?>
 		<div class="pagination">
-			<span class="newer"><?php echo posts_newer($_GET['home'] ?? false); ?></span>
+			<?php if ($posts_newer) { ?><span class="newer"><?php echo $posts_newer ?></span><?php } ?>
 			<span class="count"><span>—</span><span class="num"><?php echo Registry::get('page_offset'); ?></span><span>—</span></span>
-			<span class="older"><?php echo posts_older($_GET['home'] ?? false); ?></span>
+			<?php if ($posts_older) { ?><span class="older"><?php echo $posts_older ?></span><?php } ?>
 		</div>
 		<?php	} ?>
 	</main>
