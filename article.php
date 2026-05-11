@@ -105,7 +105,7 @@ $article_content = Registry::prop('article', 'html');
 						foreach (article_categories() as $cat) {
 							$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
 						}
-						echo implode(' & ', $strings);
+						echo implode('·', $strings);
 					} ?>
 				</div>
 			</header>
@@ -202,6 +202,17 @@ $article_content = Registry::prop('article', 'html');
 			<?php echo article_markdown(); ?>
 			<?php if (admin()) { 
 				echo "<a href='/admin/posts/edit/" . article_id() . "' target='_blank'>Edit Article</a>"; 
+			} ?>
+
+			<?php if (admin() && has_categories()) {
+				echo '<span class="tags">';
+				echo '<span class="delimiter">𐫱</span>'; // <span class="bridge">filed under</span>
+				$strings = [];
+				foreach (article_categories() as $cat) {
+					$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
+				}
+				echo implode(', ', $strings);
+				echo '</span>';
 			} ?>
 		</article>
 
@@ -395,6 +406,18 @@ if ($needs_pdf): ?>
 		});
   }
 </script>
+<style>
+	/*
+	 * The PDF viewer has messed up z-indexes, so we need to overcome for
+	 * the floating menu on mobile
+	 */
+	.trigger {
+		z-index: 60;
+	}
+	.table-of-contents {
+		z-index: 60;
+	}
+</style>
 <?php endif; ?>
 <style>
 	/** Fallback inline styles for prism.js */

@@ -1231,10 +1231,11 @@ main article header .meta time {
   font-style: italic;
 }
 /* Tags */
+main article .tags .meta .delimiter,
 main article header .meta .delimiter {
   margin: -2px 4px 0 6px;
 }
-main article header .tag {
+main article .tag {
   color: var(--meta-text);
   font-variant: small-caps;
   letter-spacing: 1px;
@@ -1247,7 +1248,7 @@ main article header .tag {
   text-underline-offset: 0.1em;
   transition: none;
 }
-main article header .tag:hover {
+main article .tag:hover {
   color: var(--link);
   text-decoration-color: var(--link);
   text-decoration-thickness: 0.14em;
@@ -1257,8 +1258,8 @@ article[id] a.inline:visited {
   color: var(--visited-link);
   text-decoration-color: var(--visited-link);
 }
-main a[data-fancybox="gallery"]:has(> img) {
-  /* Used while loading in */
+/* Used while loading in */
+main a[data-fancybox="gallery"] > img:not([data-loaded]) {
   background-color: var(--image-load);
 }
 main img {
