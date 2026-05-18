@@ -419,6 +419,133 @@ if ($needs_pdf): ?>
 	}
 </style>
 <?php endif; ?>
+<?php
+// If we're doing inline tweets then load the relevant JS libraries
+$needs_tweet = str_contains($article_content, '![tweet');
+if ($needs_tweet): ?>
+<script src="<?php echo theme_url('js/tweet.js'); ?>"></script>
+<style>
+	/** Claude Slop **/
+	/* ---------- Base layout ---------- */
+
+.tweet-embed {
+  max-width: 520px;
+  margin: 2rem auto;
+}
+
+.tweet-embed__card {
+  position: relative;
+  padding: 1.5rem 1.75rem;
+  background: #f4f1e8;
+  border: 1px solid #2d4a1f;
+  border-radius: 2px;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1a1a1a;
+  line-height: 1.5;
+  filter: sepia(1) hue-rotate(50deg) saturate(0.7) brightness(0.95);
+}
+
+.tweet-embed__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tweet-embed__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #2d4a1f;
+  display: block;
+}
+
+.tweet-embed__author {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.tweet-embed__name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.tweet-embed__handle {
+  font-size: 0.875rem;
+  color: #5a5a5a;
+  font-style: italic;
+}
+
+.tweet-embed__body {
+  font-size: 1.0625rem;
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+}
+
+.tweet-embed__body a {
+  color: #2d4a1f;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tweet-embed__media {
+  margin: 1rem 0;
+  border: 1px solid #2d4a1f;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.tweet-embed__photo,
+.tweet-embed__video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tweet-embed__footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #c4b896;
+  font-size: 0.875rem;
+}
+
+.tweet-embed__date {
+  color: #5a5a5a;
+  text-decoration: none;
+  font-style: italic;
+}
+
+.tweet-embed__date:hover {
+  color: #2d4a1f;
+  text-decoration: underline;
+}
+
+/* ---------- Loading + error states ---------- */
+
+.tweet-embed--loading::before {
+  content: 'Loading…';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: #5a5a5a;
+  font-style: italic;
+  font-family: Georgia, serif;
+}
+
+.tweet-embed__error {
+  padding: 1rem;
+  font-style: italic;
+  color: #5a5a5a;
+}
+
+.tweet-embed__avatar,
+.tweet-embed__photo,
+.tweet-embed__video {
+  filter: sepia(1) hue-rotate(50deg) saturate(0.7) brightness(0.95);
+}
+</style>
+<?php endif; ?>
 <style>
 	/** Fallback inline styles for prism.js */
 	pre:not([class]) > code[class^="language-"] {

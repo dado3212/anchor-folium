@@ -1231,11 +1231,10 @@ main article header .meta time {
   font-style: italic;
 }
 /* Tags */
-main article .tags .meta .delimiter,
-main article header .meta .delimiter {
+.meta .delimiter {
   margin: -2px 4px 0 6px;
 }
-main article .tag {
+.tag {
   color: var(--meta-text);
   font-variant: small-caps;
   letter-spacing: 1px;
@@ -1248,7 +1247,7 @@ main article .tag {
   text-underline-offset: 0.1em;
   transition: none;
 }
-main article .tag:hover {
+.tag:hover {
   color: var(--link);
   text-decoration-color: var(--link);
   text-decoration-thickness: 0.14em;

@@ -12,7 +12,7 @@
 			if (!admin()) {
 				$items = $items->where('status', '=', 'published');
 			}
-			$items = $items->sort('created')->get();
+			$items = $items->sort('created')->get(array(Base::table('posts.*')));
 			$previousYear = "";
 			$page = Registry::get('posts_page');
 		?>
@@ -24,9 +24,20 @@
 				if ($item->status != 'published') {
 					$suffixClass = ' unpublished';
 				}
+				$categoriesHtml = '';
+				if (admin()) {
+					$cats = Post::categories($item->id);
+					if ($cats) {
+						$strings = [];
+						foreach ($cats as $cat) {
+							$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
+						}
+						$categoriesHtml = '<span class="delimiter">𐫱</span>' . implode('·', $strings);
+					}
+				}
 				echo "<div class='post'>
           <div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
-          <div class='date'>" . $itemDate . "</div>
+          <div class='meta'><span class='date'>" . $itemDate . '</span>' . $categoriesHtml . "</div>
         </div>";
 			}
 
@@ -65,11 +76,13 @@
 			flex-direction: column;
 			margin-bottom: 4px;
 		}
-		#previousPosts .post .date {
+		#previousPosts .post .meta {
 			font-size: 0.75em;
-			font-style: italic;
 			color: var(--secondary-text);
 			margin-top: -7px;
+		}
+		#previousPosts .post .meta .date {
+			font-style: italic;
 		}
 		.articleLink {
 			font-size: 1em;
