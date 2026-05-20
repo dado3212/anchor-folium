@@ -27,6 +27,8 @@
 				$categoriesHtml = '';
 				if (admin()) {
 					$cats = Post::categories($item->id);
+					// Remove uncategorized
+					$cats = array_filter($cats, function ($cat) { return $cat->id !== 1; });
 					if ($cats) {
 						$strings = [];
 						foreach ($cats as $cat) {

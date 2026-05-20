@@ -721,7 +721,7 @@ rt {
 @supports not (-webkit-backdrop-filter: blur(1px)) {
   rt {
     position: relative;
-    bottom: -0.6em;
+    bottom: -0.4em;
   }
 }
 /** And if you're on Firefox...sorry? */
@@ -1233,8 +1233,9 @@ main article header .meta time {
 /* Tags */
 .meta .delimiter {
   margin: -2px 4px 0 6px;
+  unicode-bidi: bidi-override;
 }
-.tag {
+.meta .tag {
   color: var(--meta-text);
   font-variant: small-caps;
   letter-spacing: 1px;
@@ -1247,7 +1248,7 @@ main article header .meta time {
   text-underline-offset: 0.1em;
   transition: none;
 }
-.tag:hover {
+.meta .tag:hover {
   color: var(--link);
   text-decoration-color: var(--link);
   text-decoration-thickness: 0.14em;
