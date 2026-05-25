@@ -34,13 +34,18 @@
 						foreach ($cats as $cat) {
 							$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
 						}
-						$categoriesHtml = '<span class="delimiter">𐫱</span>' . implode('·', $strings);
+						$categoriesHtml = '<span class="delimiter">𐫱</span>' . implode(' · ', $strings);
 					}
+					echo "<div class='post'>
+						<div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
+						<div class='meta'><span class='date'>" . $itemDate . '</span>' . $categoriesHtml . "</div>
+					</div>";
+				} else {
+					echo "<div class='post'>
+						<div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
+						<div class='meta'><span class='date'>" . $itemDate . '</span>' . $categoriesHtml . "</div>
+					</div>";
 				}
-				echo "<div class='post'>
-          <div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
-          <div class='meta'><span class='date'>" . $itemDate . '</span>' . $categoriesHtml . "</div>
-        </div>";
 			}
 
 			for ($i = count($items) - 1; $i >= 0; $i--) {
@@ -52,6 +57,33 @@
 				}
 				renderPostLink($page, $item);
 			}
+			if (admin()) { ?>
+				<style>
+					/* .post {
+						position: relative;
+					}
+					.post .date {
+						position: absolute;
+						top: 14px;
+						left: -110px;
+						width: 100px;
+						text-align: right;
+						font-size: 0.7em;
+						color: var(--secondary-text);
+						font-style: italic;
+					} */
+					.post .tag {
+						color: var(--secondary-text);
+						font-variant: small-caps;
+						letter-spacing: 1px;
+
+						font-size: 1em;
+						margin-top: -2px;
+
+						text-decoration: none;
+					}
+				</style>
+			<?php }
 		?>
 		</div>
 	</main>

@@ -1262,11 +1262,18 @@ article[id] a.inline:visited {
 main a[data-fancybox="gallery"] > img:not([data-loaded]) {
   background-color: var(--image-load);
 }
+/* Used while loading in */
+main a[data-fancybox="gallery"] > img[data-loaded] {
+  width: auto;
+  height: auto;
+}
+/* When it loads, ignore the width/height */
 main img {
   max-width: 100%;
   max-height: 500px;
   margin: 0 auto;
   display: block;
+  object-fit: contain;
 }
 main img.post-preview {
   width: 50px;
