@@ -421,6 +421,9 @@ li .even-sidenote {
   justify-content: space-evenly;
   gap: 0.7vw;
 }
+.img-row-text {
+  font-size: 0.9em;
+}
 .img-row-text span {
   flex: 1;
 }
