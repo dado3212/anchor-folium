@@ -1218,16 +1218,20 @@ main article header h1 a {
 main article header h1 a:hover {
   color: var(--header);
 }
-main article header .meta {
+main article header .meta,
+main .search-results li .meta {
   font-size: 18px;
   color: var(--meta-text);
+}
+main article header .meta {
+  margin: 4px 0 8px;
   margin-top: 15px;
   display: flex;
   align-items: center;
   gap: 0.3em;
   flex-wrap: wrap;
 }
-main article header .meta time {
+.meta time {
   font-style: italic;
 }
 /* Tags */
@@ -1452,25 +1456,35 @@ main .pager a:hover {
   color: var(--text);
 }
 /* Search results */
-main .list-unstyled {
+main .search-results {
   padding-left: 0;
   list-style: none;
 }
-main .list-unstyled li {
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
+main .search-results li {
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 15px;
+  padding: 10px 0 20px 0;
 }
-main .list-unstyled li:last-of-type {
+main .search-results li:last-of-type {
   border-bottom: none;
 }
-main .list-unstyled li h2 {
+main .search-results li h2 {
   padding: 0;
   margin: 0;
 }
-main .list-unstyled li h2 a {
-  font-size: 20px;
-  color: #777777;
+main .search-results li h2 a {
+  font-size: 0.85em;
+  color: var(--text);
+}
+main .search-results li .snippet {
+  margin: 0;
+  color: var(--text);
+}
+main .search-results li mark {
+  background: var(--code-background);
+  color: var(--code-text);
+  padding: 0 2px;
+  border-radius: 2px;
 }
 main a[href*='/admin/posts'] {
   display: inline-block;

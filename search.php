@@ -11,16 +11,20 @@
 				<h1>Results for <b>&ldquo;<?php echo search_term(); ?>&rdquo;</b></h1>
 			</header>
 
-			<ul class="list-unstyled">
-				<?php for ($i = count($searchResults) - 1; $i >= 0; $i--) { 
-					$item = $searchResults[$i];
-				?>
+			<ul class="search-results">
+				<?php foreach ($searchResults as $item) { ?>
 				<li>
 					<h2>
-						<a href="<?php echo $item['url']; ?>" title="<?php echo $item['title']; ?>">
-							<?php echo $item['title'] . ($item['status'] != 'published' ? " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>" : ""); ?>
+						<a href="<?php echo $item['url']; ?>" title="<?php echo htmlspecialchars($item['title'], ENT_QUOTES); ?>">
+							<?php echo $item['title_html'] . ($item['status'] != 'published' ? " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>" : ""); ?>
 						</a>
 					</h2>
+					<div class="meta">
+						<time datetime="<?php echo date(DATE_W3C, strtotime($item['date'])); ?>"><?php echo date('F j, Y', strtotime($item['date'])); ?></time>
+					</div>
+					<?php if ($item['snippet'] !== ''): ?>
+					<p class="snippet"><?php echo $item['snippet']; ?></p>
+					<?php endif; ?>
 				</li>
 				<?php } ?>
 			</ul>
