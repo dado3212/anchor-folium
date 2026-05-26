@@ -17,6 +17,8 @@
   --sidenote-max-width: 320px;
   --content-padding: 25px;
   --outside-padding: 25px; /* this is added to by padding-left for the even-sidenotes to give more buffer from ToC */
+
+  --blockquote-horizontal-padding: 32px;
 }
 ::selection {
   background: var(--highlight);
@@ -385,10 +387,10 @@ blockquote .sidenote-wrapper {
   font-style: normal;
 }
 blockquote .sidenote {
-  margin-right: calc(var(--margin) - 20px);
+  margin-right: calc(var(--margin) - var(--blockquote-horizontal-padding));
 }
 blockquote .even-sidenote {
-  margin-left: calc(var(--margin) - 20px - 5px); /* has to account for 5px green line on blockquote */
+  margin-left: calc(var(--margin) - var(--blockquote-horizontal-padding));
 }
 li .even-sidenote {
   margin-left: calc(var(--margin) - 20px - 20px); /* has to account for indent on list */
@@ -562,16 +564,6 @@ ol ul,
 ul ol,
 ol ol {
   margin-bottom: 0;
-}
-blockquote {
-  padding: 10px 20px;
-  margin: 0 0 20px;
-  font-size: 17.5px;
-  border-left: 5px solid #eee;
-}
-blockquote:before,
-blockquote:after {
-  content: "";
 }
 label {
   display: inline-block;
@@ -1339,8 +1331,52 @@ main img.pixelated {
 }
 
 blockquote {
-  border-left: 5px solid var(--link);
+  margin: 10px 0;
   font-size: 0.96em;
+  background: #eaf3de;
+  padding: 24px var(--blockquote-horizontal-padding);
+  position: relative;
+  /* background: rgb(217 235 217); */
+}
+blockquote .corner {
+  position: absolute;
+  height: min(30px, 20%);
+  aspect-ratio: 1;
+
+  --offset: 10px;
+  --thickness: 2px;
+
+  &.top-left {
+    top: var(--offset);
+    left: var(--offset);
+    border-top: var(--thickness) solid var(--link);
+    border-left: var(--thickness) solid var(--link);
+  }
+
+  &.top-right {
+    top: var(--offset);
+    right: var(--offset);
+    border-top: var(--thickness) solid var(--link);
+    border-right: var(--thickness) solid var(--link);
+  }
+
+  &.bottom-left {
+    bottom: var(--offset);
+    left: var(--offset);
+    border-bottom: var(--thickness) solid var(--link);
+    border-left: var(--thickness) solid var(--link);
+  }
+
+  &.bottom-right {
+    bottom: var(--offset);
+    right: var(--offset);
+    border-bottom: var(--thickness) solid var(--link);
+    border-right: var(--thickness) solid var(--link);
+  }
+}
+
+blockquote p:last-of-type {
+  margin-bottom: 0px;
 }
 
 main video {
@@ -1688,14 +1724,14 @@ footer .wrapper a:hover {
     margin-right: -37%;
   }
   blockquote .sidenote {
-    margin-right: calc(-37% - 20px);
+    margin-right: calc(-37% - var(--blockquote-horizontal-padding));
   }
   .even-sidenote {
     margin-left: -37%;
     margin-right: 0;
   }
   blockquote .even-sidenote {
-    margin-left: calc(-37% - 28px);
+    margin-left: calc(-37% - var(--blockquote-horizontal-padding) - 3px); /* not sure why 3px, but levels out */
   }
 }
 @media only screen and (max-width: 950px) {
