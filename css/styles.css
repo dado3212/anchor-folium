@@ -86,6 +86,15 @@ a {
       text-decoration: line-through underline;
     }
   }
+  &:focus {
+    outline: 5px auto var(--link);
+  }
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 5px auto var(--link);
+  }
 }
 a.inline {
   text-decoration: underline;
@@ -108,11 +117,6 @@ article[id] a.inline:hover {
 }
 a:hover, a:focus {
   color: var(--link);
-}
-a:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
 }
 a.unpublished {
   text-decoration: line-through;
@@ -664,6 +668,7 @@ pre[class*="language-"] {
   padding: 38.5px 18px 13.5px 18px;
   margin: 20px -10px;
   border-radius: 7px;
+  overscroll-behavior-x: none;
 }
 pre[data-title] {
   container-type: inline-size;
@@ -1149,6 +1154,21 @@ f {
   border-radius: 5px;
   background: transparent;
 }
+f.get, f.put, f.post {
+  background-color: #61affe;
+  color: white;
+  border: 0px;
+  font-family: sans-serif;
+  font-weight: 500;
+  font-size: 0.7em;
+  padding: 3px 7px;
+}
+f.put {
+  background-color: #fca130;
+}
+f.post {
+  background-color: #49cc90;
+}
 /*
  *  Article
  */
@@ -1232,6 +1252,9 @@ main article header .meta {
 /* Tags */
 .meta .delimiter {
   margin: -2px 4px 0 6px;
+  unicode-bidi: bidi-override;
+}
+.tags .delimiter {
   unicode-bidi: bidi-override;
 }
 .meta .tag {
@@ -1788,8 +1811,9 @@ footer .wrapper a:hover {
     float: right !important;
   }
   .sidenote[data-footnote-name^="clip"] {
+    --maxClipHeight: 300px;
     display: block;
-    max-height: 300px;
+    max-height: var(--maxClipHeight);
     overflow-y: clip;
     position: relative;
     transition: 0.2s ease;
@@ -1901,6 +1925,7 @@ footer .wrapper a:hover {
   }
   blockquote .sidenote, blockquote .even-sidenote {
     margin: 0;
+    width: calc(100vw - 2 * var(--container-padding) - 2 * var(--blockquote-horizontal-padding) - 2em);
   }
   li .sidenote, li .even-sidenote {
     /* offset the 40px ul indent + 1em margin */
