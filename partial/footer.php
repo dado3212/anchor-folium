@@ -201,6 +201,14 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	// Handle swap elements
+	document.addEventListener('dblclick', e => {
+		const el = e.target.closest('.swap');
+		console.log(el);
+		if (!el) return;
+		[el.innerHTML, el.dataset.alt] = [el.dataset.alt, el.innerHTML];
+	});
 });
 </script>
 <script>

@@ -100,7 +100,7 @@ $article_content = Registry::prop('article', 'html');
 				<div class="meta">
 					<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
 					<?php if (admin() && has_categories()) {
-						echo '<span class="delimiter">𐫱</span><span class="bridge">filed under</span>';
+						echo '<span class="delimiter">𐫱&lrm;</span><span class="bridge">filed under</span>';
 						$strings = [];
 						foreach (article_categories() as $cat) {
 							$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
@@ -206,7 +206,7 @@ $article_content = Registry::prop('article', 'html');
 
 			<?php if (admin() && has_categories()) {
 				echo '<span class="tags">';
-				echo '<span class="delimiter">𐫱</span>'; // <span class="bridge">filed under</span>
+				echo '<span class="delimiter">𐫱&lrm;</span>'; // <span class="bridge">filed under</span>
 				$strings = [];
 				foreach (article_categories() as $cat) {
 					$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
@@ -572,6 +572,18 @@ if ($needs_tweet): ?>
 <script>
 	// Used for https://blog.alexbeals.com/posts/debugging-fitness-sf-qr for Cherri code 
 	Prism.languages.cherri = Prism.languages.javascript;
+	Prism.languages.sqlite = Prism.languages.sql;
+	var orig = Prism.languages.sqlite['keyword'];
+	var newKeywords = {
+		pattern: /\b(STRFTIME|LTRIM|LOWER)\b/
+		// /\bDECIDE\b|\bSUCH\s+THAT\b|\bMAXIMIZE\b|\bMINIMIZE\b/i
+	};
+	Prism.languages.sqlite['keyword'] = Array.isArray(orig)
+		? [newKeywords].concat(orig)
+		: [newKeywords, orig];
+	// Prism.languages.insertBefore('sqlite', 'keyword', {
+	// 	'keyword': /\b(STRFTIME|LTRIM)\b/i
+	// });
 </script>
 
 <?php theme_include('partial/footer'); ?>

@@ -34,7 +34,7 @@
 						foreach ($cats as $cat) {
 							$strings[] = '<a class="tag" href="' . base_url('category/' . $cat->slug) . '">' . $cat->title . '</a>';
 						}
-						$categoriesHtml = '<span class="delimiter">𐫱</span>' . implode(' · ', $strings);
+						$categoriesHtml = '<span class="delimiter">𐫱&lrm;</span>' . implode(' · ', $strings);
 					}
 					echo "<div class='post'>
 						<div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
