@@ -679,14 +679,16 @@ pre[data-title] + .toolbar .toolbar-item:first-of-type {
 pre[data-title] + .toolbar .toolbar-item:last-of-type {
   background: linear-gradient(90deg, transparent, #272822 10%);
 }
-pre[data-title]:after {
+.code-toolbar[data-title]:after {
   content: attr(data-title);
   position: absolute;
-  top: 9px;
+  top: 6px;
   width: 100%;
   left: 0px;
   text-align: center;
-  font-size: min(3cqw, 1em);
+  font-size: min(3cqw, 0.75em);
+  font-family: Menlo,Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;
+  color: white;
 }
 :not(pre) > code {
   padding:2px 4px;

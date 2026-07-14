@@ -130,6 +130,20 @@ $(document).ready(function(){
 		}
 	});
 
+	// Smooth scroll if you're navigating within chapters of the book
+	$("a[href^='#']").click(function (e) {
+		var href = $(this).attr('href');
+		if (!href || href === '#') return;
+
+		var id = href.slice(1);
+		var target = document.getElementById(id);
+		if (!target) return;
+
+		e.preventDefault();
+		target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		history.pushState(null, '', href);
+	});
+
 	function debounce(func, wait) {
 		let timeout;
 		return function (...args) {
