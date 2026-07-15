@@ -72,7 +72,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo theme_url('img/icons/apple-touch-icon.png'); ?>" />
 	<meta name="apple-mobile-web-app-title" content="Vox Silva" />
 	<link rel="manifest" href="<?php echo theme_url('img/icons/site.webmanifest'); ?>" />
-	<meta name="theme-color" content="#447944">
+	<meta name="theme-color" content="#f8fbf3">
 
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
 </head>
