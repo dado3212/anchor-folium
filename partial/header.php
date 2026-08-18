@@ -66,12 +66,12 @@
 	<meta property="og:description" content="<?php echo $og_snippet; ?>">
 	<meta name="description" content="<?php echo $og_snippet; ?>">
 
-	<link rel="icon" type="image/png" href="<?php echo theme_url('img/icons/favicon-96x96.png" sizes="96x96'); ?>" />
-	<link rel="icon" type="image/svg+xml" href="<?php echo theme_url('img/icons/favicon.svg'); ?>" />
-	<link rel="shortcut icon" href="<?php echo theme_url('img/icons/favicon.ico'); ?>" />
-	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo theme_url('img/icons/apple-touch-icon.png'); ?>" />
-	<meta name="apple-mobile-web-app-title" content="Vox Silva" />
-	<link rel="manifest" href="<?php echo theme_url('img/icons/site.webmanifest'); ?>" />
+	<link rel="icon" type="image/png" href="<?php echo theme_url('img/icons/favicon-96x96.png" sizes="96x96'); ?>">
+	<link rel="icon" type="image/svg+xml" href="<?php echo theme_url('img/icons/favicon.svg'); ?>">
+	<link rel="shortcut icon" href="<?php echo theme_url('img/icons/favicon.ico'); ?>">
+	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo theme_url('img/icons/apple-touch-icon.png'); ?>">
+	<meta name="apple-mobile-web-app-title" content="Vox Silva">
+	<link rel="manifest" href="<?php echo theme_url('img/icons/site.webmanifest'); ?>">
 	<meta name="theme-color" content="#f8fbf3">
 
 	<script src="<?php echo theme_url('js/jquery.min.js'); ?>"></script>
@@ -178,7 +178,7 @@
 		<nav class="navbar navbar-default padding-container">
 			<div class="navbar-header">
 				<a href="<?php echo base_url(); ?>" class="navbar-brand">
-					<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" <?php if (admin()) { echo ' class="admin" '; } ?> />
+					<img src="/themes/folium/tree_small.png" data-high-res="/themes/folium/tree.png" alt="Lone Redwood" <?php if (admin()) { echo ' class="admin" '; } ?> >
 					<span><?php echo site_name(); ?></span>
 				</a>
 			</div>

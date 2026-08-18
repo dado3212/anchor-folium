@@ -1209,7 +1209,7 @@ main article[id] > p:nth-of-type(1)::first-letter {
   font-size: 4em;
   float: left;
   line-height: 1em;
-  margin-right: 0.05em;
+  margin-right: 0.01em;
   margin-top: 0.05em;
   color: var(--link);
 }

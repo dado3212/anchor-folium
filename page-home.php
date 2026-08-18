@@ -61,7 +61,7 @@ theme_include('partial/header');
 			echo "<div class='snippet-item'><div class='snippet-wrapper'>
       <span class='snippet-bullet'>❧</span>
       <div>
-        <div class='title'><a class='articleLink{$suffixClass}' href='" . base_url($page->slug . '/' . $item->slug) . "' title='" . $item->title . "'>" . $item->title . "</a></div>
+        <div class='title'><a class=\"articleLink{$suffixClass}\" href=\"" . base_url($page->slug . '/' . $item->slug) . "\" title=\"" . $item->title . "\">" . $item->title . "</a></div>
         <div class='date'>" . $itemDate . "</div>
       </div>
 			</div>
@@ -88,7 +88,7 @@ theme_include('partial/header');
 		$page = Registry::get('posts_page');
 		
 		?>
-		<hr class="fleuron alt" style="margin: 40px 0;" />
+		<hr class="fleuron alt" style="margin: 40px 0;">
 		<div class="listHeading">
       <h2>Snippets</h2>
     </div>
