@@ -1,17 +1,21 @@
-<?php theme_include('partial/header'); ?>
+<?php
+	$isAdmin = admin();
+	$showUnpublished = $isAdmin && isset($_GET['status']) && $_GET['status'] === 'unpublished';
+	theme_include('partial/header');
+?>
 
 	<main class="container padding-container">
 		<div class="listHeading">
-      <h2>Posts</h2>
-    </div>
+			<h2>Posts</h2>
+		</div>
 
 		<?php
 			$items = Query::table(Base::table('posts'))
 				->left_join(Base::table('post_meta'), 'anchor_post_meta.extend` = "4" and `anchor_post_meta.post', '=', Base::table('posts.id'))
 				->where('anchor_post_meta.data` IS NULL OR `anchor_post_meta.data', '=', '{"boolean":false}');
-			if (!admin()) {
-				$items = $items->where('status', '=', 'published');
-			}
+			$items = $showUnpublished
+				? $items->where('status', '<>', 'published')
+				: $items->where('status', '=', 'published');
 			$items = $items->sort('created')->get(array(Base::table('posts.*')));
 			$previousYear = "";
 			$page = Registry::get('posts_page');
@@ -89,6 +93,9 @@
 	</main>
 	<!-- TODO: Move this into the main.css file -->
 	<style>
+		.listHeading h2.unpublished {
+			text-decoration: line-through;
+		}
 		#previousPosts .year {
 			display: flex;
     	align-items: center;
@@ -134,5 +141,25 @@
 			}
 		}
 		</style>
+	<?php if ($isAdmin) { ?>
+		<script>
+			(function () {
+				var toggle = document.querySelector('.listHeading h2');
+				if (window.location.href.includes('status=unpublished')) {
+					toggle.classList.add('unpublished');
+				}
+
+				toggle.addEventListener('click', function(evt) {
+					var url = new URL(window.location.href);
+					if (toggle.classList.contains('unpublished')) {
+						url.searchParams.set('status', 'published');
+					} else {
+						url.searchParams.set('status', 'unpublished');
+					}
+					window.location.assign(url.toString());
+				});
+			})();
+		</script>
+	<?php } ?>
 
 <?php theme_include('partial/footer'); ?>
