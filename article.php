@@ -218,12 +218,38 @@ $article_content = Registry::prop('article', 'html');
 
 		<?php if(has_comments()): ?>
 		<section id="comments">
-			<h2><?php echo total_comments(article_id()); ?> comments</h2>
+			<h2><?php 
+			$num_comments = total_comments(article_id());
+			if ($num_comments == 1) {
+				echo $num_comments . ' comment';
+			} else {
+				echo $num_comments . ' comments';
+			} ?></h2>
 			<ul class="commentlist">
 				<?php $i = 0; while(comments()): $i++; ?>
 				<li>
 					<header>
-						<h2 data-id="<?php echo $i; ?>"><?php echo comment_name(); ?></h2>
+						<?php
+							$name = trim(comment_name());
+							$letters = preg_replace('/[^\p{L}]+/u', '', $name);
+							if ($letters === '') {
+								$first_letter = 'X';
+							} else {
+								$first_letter = mb_strtoupper(mb_substr($letters, 0, 1), 'UTF-8');
+							}
+							if ($name === '') {
+								$name = 'Anonymous';
+							}
+							if (comment_known()) {
+								$class = 'class="known"';
+							} else {
+								$class = '';
+							}
+							$hash = crc32(strtolower(trim(comment_email())));
+							$hue = $hash % 360;
+							$color = sprintf('hsl(%d %d%% %d%%)', $hue, 35, 45);
+							echo "<h2 data-initial=\"$first_letter\" data-id=\"$i\" style=\"color: $color;\" $class>$name</h2>";
+						?>
 						<time datetime="<?php echo date(DATE_W3C, comment_time()); ?>"><?php echo date('M j, Y - g:i a', comment_time()); ?></time>
 					</header>
 
@@ -262,6 +288,18 @@ $article_content = Registry::prop('article', 'html');
 
 		document.querySelectorAll('#comment input').forEach(input => {
 			input.addEventListener('focus', loadRecaptcha, { once: true });
+		});
+
+		document.querySelectorAll('#comments time').forEach((element) => {
+			const date = new Date(element.getAttribute('datetime'));
+      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+			element.textContent = new Intl.DateTimeFormat(undefined, {
+				...(isCurrentYear ? {} : { year: 'numeric' }),
+				month: 'long',
+				day: 'numeric',
+				hour: 'numeric',
+				minute: '2-digit',
+			}).format(new Date(element.getAttribute('datetime')));
 		});
 		</script>
 		<?php endif;

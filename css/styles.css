@@ -1568,7 +1568,7 @@ main a[href*='/admin/posts']:focus {
 }
 section#comments h2 {
   font-weight: 300;
-  color: #777777;
+  color: var(--secondary-text);
   margin-bottom: 20px;
 }
 section#comments .commentlist {
@@ -1579,33 +1579,48 @@ section#comments .commentlist li {
   list-style: none;
   padding: 10px;
   margin-bottom: 10px;
-}
-section#comments .commentlist li:hover {
-  background: rgba(0, 0, 0, 0.03);
+  position: relative;
+  border-bottom: 1px solid var(--border);
 }
 section#comments .commentlist li header {
   margin-bottom: 10px;
   padding-left: 50px;
   padding-top: 5px;
-  background: url('../img/person.png') 5px center no-repeat transparent;
+}
+section#comments .commentlist li header h2:before {
+  content: attr(data-initial);
+  display: block;
+  font-family: "Drop Cap", serif;
+  font-size: 2em;
+  line-height: 1em;
+  position: absolute;
+  left: 0px;
+  font-weight: normal;
+  background-color: white;
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0.65;
+}
+section#comments .commentlist li header h2.known:before {
+  opacity: 1.0;
 }
 section#comments .commentlist li header h2 {
   font-weight: 600;
   margin: 0;
   padding: 0;
 }
-section#comments .commentlist li header h2,
+section#comments .commentlist li header h2 {
+  font-size: 1em;
+  color: var(--link);
+}
 section#comments .commentlist li header time {
   font-size: 15px;
-  color: #919191;
-}
-section#comments .commentlist li header time {
-  color: #c3c3c3;
+  color: var(--meta-text);
 }
 section#comments .commentlist li p {
-  color: #919191;
-  font-size: 17px;
-  line-height: 26px;
+  color: var(--text);
+  font-size: 0.87em;
+  line-height: 1.32em;
   padding-left: 50px;
   word-break: break-word;
 }
