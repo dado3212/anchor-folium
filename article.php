@@ -292,9 +292,17 @@ $article_content = Registry::prop('article', 'html');
 
 		document.querySelectorAll('#comments time').forEach((element) => {
 			const date = new Date(element.getAttribute('datetime'));
-      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+			<?php
+				// If the current post is the current year, then we can hide comments
+				// year.
+				if (date('Y', article_time()) === date('Y')) {
+					echo 'const showYear = !(date.getFullYear() === new Date().getFullYear());';
+				} else {
+					echo 'const showYear = true;';
+				}
+			?>
 			element.textContent = new Intl.DateTimeFormat(undefined, {
-				...(isCurrentYear ? {} : { year: 'numeric' }),
+				...(showYear ? { year: 'numeric' } : {}),
 				month: 'long',
 				day: 'numeric',
 				hour: 'numeric',

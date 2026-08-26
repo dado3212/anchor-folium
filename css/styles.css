@@ -1186,6 +1186,9 @@ f.post {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
+.mainWrapper:has(.search-results) {
+  width: 100%;
+}
 main {
   margin-top: 20px;
 }
@@ -1761,6 +1764,10 @@ footer .wrapper a:hover {
 @media only screen and (max-width: 1200px) {
   .container {
     width: 58.3%;
+  }
+  .container:has(.search-results) {
+    width: 100%;
+    max-width: var(--container-width);
   }
   .sidenote {
     width: 33%;
