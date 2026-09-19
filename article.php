@@ -227,31 +227,29 @@ $article_content = Registry::prop('article', 'html');
 			} ?></h2>
 			<ul class="commentlist">
 				<?php $i = 0; while(comments()): $i++; ?>
-				<li>
-					<header>
-						<?php
-							$name = trim(comment_name());
-							$letters = preg_replace('/[^\p{L}]+/u', '', $name);
-							if ($letters === '') {
-								$first_letter = 'X';
-							} else {
-								$first_letter = mb_strtoupper(mb_substr($letters, 0, 1), 'UTF-8');
-							}
-							if ($name === '') {
-								$name = 'Anonymous';
-							}
-							if (comment_known()) {
-								$class = 'class="known"';
-							} else {
-								$class = '';
-							}
-							$hash = crc32(strtolower(trim(comment_email())));
-							$hue = $hash % 360;
-							$color = sprintf('hsl(%d %d%% %d%%)', $hue, 35, 45);
-							echo "<h2 data-initial=\"$first_letter\" data-id=\"$i\" style=\"color: $color;\" $class>$name</h2>";
-						?>
-						<time datetime="<?php echo date(DATE_W3C, comment_time()); ?>"><?php echo date('M j, Y - g:i a', comment_time()); ?></time>
-					</header>
+				<li id="bcomment-<?php echo $i; ?>">
+					<?php
+						$name = trim(comment_name());
+						$letters = preg_replace('/[^\p{L}]+/u', '', $name);
+						if ($letters === '') {
+							$first_letter = 'X';
+						} else {
+							$first_letter = mb_strtoupper(mb_substr($letters, 0, 1), 'UTF-8');
+						}
+						if ($name === '') {
+							$name = 'Anonymous';
+						}
+						$hash = crc32(strtolower(trim(comment_email())));
+						$hue = $hash % 360;
+						$color = sprintf('hsl(%d %d%% %d%%)', $hue, 35, 45);
+						echo "<header style=\"--c: $color;\">";
+						echo "<span class=\"icon".(comment_known() ? ' known' : '')."\">$first_letter</span>";
+						echo "<div>";
+						echo "<h2 data-id=\"$i\">$name</h2>";
+						echo "<time datetime=\"". date(DATE_W3C, comment_time()) . "\">" . date('M j, Y - g:i a', comment_time()) . "</time>";
+						echo "</div>";
+						echo "</header>";
+					?>
 
 					<p><?php echo comment_text(); ?></p>
 				</li>
@@ -393,8 +391,8 @@ $article_content = Registry::prop('article', 'html');
 $needs_katex = str_contains($article_content, '$$') || str_contains($article_content, '\(');
 if ($needs_katex): ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+<script defer fetchpriority="high" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer fetchpriority="high" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
     onload="renderKatex()"></script>
 <script>
 function renderKatex() {
@@ -403,7 +401,7 @@ function renderKatex() {
             { left: "$$", right: "$$", display: true },
             { left: "\\(", right: "\\)", display: false }
         ],
-        throwOnError: false
+        throwOnError: false,
     });
 }
 </script>
@@ -411,7 +409,17 @@ function renderKatex() {
 	.katex {
 		font: normal 1em "Crimson Pro", KaTeX_Main, Times New Roman, serif;
 		font-weight: 340;
-		color: var(--text);
+	}
+	.katex .mathbf, .katex .boldsymbol {
+		font-family: "Crimson Pro", KaTeX_Main, Times New Roman, serif;
+	}
+	.katex .underline .underline-line {
+		border-bottom-width: 2px !important;
+	}
+	.katex .mrel,
+	.katex .rlap,
+	.katex .llap {
+		font-family: KaTeX_Main, serif;
 	}
 </style>
 <?php endif; ?>

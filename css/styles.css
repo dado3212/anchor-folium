@@ -19,6 +19,8 @@
   --outside-padding: 25px; /* this is added to by padding-left for the even-sidenotes to give more buffer from ToC */
 
   --blockquote-horizontal-padding: 32px;
+
+  --list-left-padding: 30px;
 }
 ::selection {
   background: var(--highlight);
@@ -160,12 +162,28 @@ table {
   background-color: transparent;
   border-spacing: 0;
   border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+table, th, td {
+  border: 1px solid var(--text);
+  border-collapse: collapse;
 }
 th {
   text-align: left;
 }
 td, th {
   padding: 2px;
+  text-align: center;
+  word-break: keep-all;
+}
+thead tr {
+  border-bottom: 1.5px solid var(--text);
+}
+table span.breakable {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
 }
 /* Header linking */
 article > h2,
@@ -397,7 +415,7 @@ blockquote .even-sidenote {
   margin-left: calc(var(--margin) - var(--blockquote-horizontal-padding));
 }
 li .even-sidenote {
-  margin-left: calc(var(--margin) - 20px - 20px); /* has to account for indent on list */
+  margin-left: calc(var(--margin) - var(--list-left-padding));
 }
 /* Footnotes corresponding with sidenotes */
 .footnotes img {
@@ -565,6 +583,7 @@ ul,
 ol {
   margin-top: 0;
   margin-bottom: 10px;
+  padding-left: var(--list-left-padding);
 }
 ul ul,
 ol ul,
@@ -1580,51 +1599,53 @@ section#comments .commentlist {
 }
 section#comments .commentlist li {
   list-style: none;
-  padding: 10px;
+  padding: 10px 0;
   margin-bottom: 10px;
-  position: relative;
   border-bottom: 1px solid var(--border);
 }
 section#comments .commentlist li header {
-  margin-bottom: 10px;
-  padding-left: 50px;
+  display: flex;
+  gap: 5px;
+
   padding-top: 5px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
 }
-section#comments .commentlist li header h2:before {
+section#comments .commentlist li header .icon {
   content: attr(data-initial);
   display: block;
+  color: var(--c);
   font-family: "Drop Cap", serif;
   font-size: 2em;
   line-height: 1em;
-  position: absolute;
-  left: 0px;
   font-weight: normal;
   background-color: white;
   padding: 4px;
   border-radius: 4px;
   opacity: 0.65;
 }
-section#comments .commentlist li header h2.known:before {
+section#comments .commentlist li .icon.known {
   opacity: 1.0;
 }
 section#comments .commentlist li header h2 {
   font-weight: 600;
   margin: 0;
   padding: 0;
-}
-section#comments .commentlist li header h2 {
+  color: var(--c);
   font-size: 1em;
-  color: var(--link);
 }
 section#comments .commentlist li header time {
-  font-size: 15px;
+  font-size: 0.82em;
   color: var(--meta-text);
 }
 section#comments .commentlist li p {
   color: var(--text);
   font-size: 0.87em;
   line-height: 1.32em;
-  padding-left: 50px;
+  padding-left: 3.1em;
   word-break: break-word;
 }
 section#comments .notification .success {
@@ -1783,6 +1804,9 @@ footer .wrapper a:hover {
   blockquote .even-sidenote {
     margin-left: calc(-37% - var(--blockquote-horizontal-padding) - 3px); /* not sure why 3px, but levels out */
   }
+  li .even-sidenote {
+    margin-left: calc(-37% - var(--list-left-padding) - 3px); /* not sure why 3px, but levels out */
+  }
 }
 @media only screen and (max-width: 950px) {
   footer .wrapper {
@@ -1863,6 +1887,9 @@ footer .wrapper a:hover {
   }
 }
 @media only screen and (max-width: 790px) {
+  :root {
+    --list-left-padding: 25px;
+  }
   .navbar-nav>li {
     float: none;
   }
@@ -1952,8 +1979,8 @@ footer .wrapper a:hover {
     width: calc(100vw - 2 * var(--container-padding) - 2 * var(--blockquote-horizontal-padding) - 2em);
   }
   li .sidenote, li .even-sidenote {
-    /* offset the 40px ul indent + 1em margin */
-    margin-left: calc(-40px + 1em);
+    margin: 0;
+    width: calc(100vw - 2 * var(--container-padding) - var(--list-left-padding) - 2em);
   }
   .sidenote.visible {
     display: block;
