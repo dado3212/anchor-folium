@@ -421,6 +421,20 @@ blockquote .even-sidenote {
 li .even-sidenote {
   margin-left: calc(var(--margin) - var(--list-left-padding));
 }
+/* Table cells always contain their floats (they're block formatting contexts), so a
+   floated sidenote would stretch the row. Position them against the table instead. */
+table:has(.sidenote-wrapper) {
+  position: relative;
+}
+table .sidenote-wrapper .sidenote {
+  position: absolute;
+  margin: 0;
+  right: var(--margin);
+}
+table .sidenote-wrapper .even-sidenote {
+  right: auto;
+  left: var(--margin);
+}
 /* Footnotes corresponding with sidenotes */
 .footnotes img {
   max-height: 200px;
@@ -1811,6 +1825,13 @@ footer .wrapper a:hover {
   li .even-sidenote {
     margin-left: calc(-37% - var(--list-left-padding) - 3px); /* not sure why 3px, but levels out */
   }
+  table .sidenote-wrapper .sidenote {
+    right: -37%;
+  }
+  table .sidenote-wrapper .even-sidenote {
+    right: auto;
+    left: -37%;
+  }
 }
 @media only screen and (max-width: 950px) {
   footer .wrapper {
@@ -1985,6 +2006,11 @@ footer .wrapper a:hover {
   li .sidenote, li .even-sidenote {
     margin: 0;
     width: calc(100vw - 2 * var(--container-padding) - var(--list-left-padding) - 2em);
+  }
+  /* Expand inline within the cell, like sidenotes elsewhere on mobile */
+  table .sidenote-wrapper .sidenote {
+    position: static;
+    width: auto;
   }
   .sidenote.visible {
     display: block;
