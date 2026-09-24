@@ -409,6 +409,7 @@ function renderKatex() {
 	.katex {
 		font: normal 1em "Crimson Pro", KaTeX_Main, Times New Roman, serif;
 		font-weight: 340;
+		font-style: inherit;
 	}
 	.katex .mathbf, .katex .boldsymbol {
 		font-family: "Crimson Pro", KaTeX_Main, Times New Roman, serif;

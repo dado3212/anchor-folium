@@ -4,8 +4,12 @@
   --highlight: rgb(68, 121, 68);
   --link: rgb(68, 121, 68);
   --visited-link: rgb(37, 65, 37);
+
   --code-text: rgb(46, 82, 46);
   --code-background: rgb(224, 245, 230);
+  --code-neg-background: #f9d9db;
+  --pre-neg: #5a0c21;
+
   --border: color-mix(in srgb, var(--bg) 85%, black);
   --bg: rgb(248, 251, 243);
   --image-load: rgb(239, 242, 232);
@@ -808,12 +812,12 @@ p.del, p.break {
 }
 
 p.del + pre, pre.del {
-  background-color: #5a0c21;
+  background-color: var(--pre-neg);
 }
 
 p.del + pre:has(> code):before, pre:has(> code).del:before {
-  background-color: #f9d9db;
-  border-bottom: 13px solid #f9d9db;
+  background-color: var(--code-neg-background);
+  border-bottom: 13px solid var(--code-neg-background);
 }
 
 /*
