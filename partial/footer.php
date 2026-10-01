@@ -191,7 +191,28 @@ $(document).ready(function(){
 			}
 			// Toggle visibility
 			let sidenote = sidenoteIndicator.parent().find('.sidenote');
-			if (sidenote.length) {
+			const row = sidenoteIndicator.closest('tr');
+			if (sidenote.length && row.length) {
+				// In a table, show it in a full-width row below the current one
+				const name = sidenote.attr('data-footnote-name');
+				const existing = row.nextAll('tr.sidenote-row').filter((_, r) => r.dataset.footnoteName === name);
+				if (existing.length) {
+					existing.remove();
+					return;
+				}
+				let columns = 0;
+				row.children('td, th').each(function () {
+					columns += this.colSpan;
+				});
+				const cell = $('<td>').attr('colspan', columns).append(sidenote.clone().addClass('visible'));
+				const newRow = $('<tr class="sidenote-row">').attr('data-footnote-name', name).append(cell);
+				// Keep multiple open sidenotes from the same row in click order
+				let after = row;
+				while (after.next().hasClass('sidenote-row')) {
+					after = after.next();
+				}
+				after.after(newRow);
+			} else if (sidenote.length) {
 				sidenote.toggleClass('visible');
 			} else {
 				// Fallback to data-footnote-index
@@ -200,6 +221,34 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	// Sidenotes in tables are absolutely positioned (so they don't stretch the cells), which
+	// means floats no longer clear them. Push down any sidenote that overlaps the previous one.
+	if (document.querySelector('table .sidenote-wrapper')) {
+		const sidenotes = document.querySelectorAll('.sidenote');
+		function stackSidenotes() {
+			sidenotes.forEach(el => el.style.marginTop = '');
+			// Inline on mobile
+			if (window.innerWidth <= 790) {
+				return;
+			}
+			// The mobile-only rows for table sidenotes would duplicate the sidenote in the margin
+			$('tr.sidenote-row').remove();
+			const lastBottom = { left: -Infinity, right: -Infinity };
+			sidenotes.forEach(el => {
+				const side = el.classList.contains('even-sidenote') ? 'left' : 'right';
+				const overlap = lastBottom[side] + 15 - el.getBoundingClientRect().top;
+				if (overlap > 0) {
+					el.style.marginTop = overlap + 'px';
+				}
+				lastBottom[side] = el.getBoundingClientRect().bottom;
+			});
+		}
+		stackSidenotes();
+		window.addEventListener('load', stackSidenotes);
+		document.fonts.ready.then(stackSidenotes);
+		window.addEventListener('resize', debounce(stackSidenotes, 200));
+	}
 
 	// Double click on <code> will select the whole thing
 	document.querySelectorAll('code').forEach(code => {
