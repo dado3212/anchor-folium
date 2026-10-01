@@ -4,7 +4,8 @@
 $article_content = Registry::prop('article', 'html');
 ?>
 <?php if (site_meta('sidebar',1)) { echo "<div class='mainWrapper'>"; } ?>
-<?php if (article_status() == "published" || admin() || isArticlePublicWithCode()):
+<?php // id -1 is the synthetic "Article not found" post from the route, which admins shouldn't bypass
+if (article_id() > 0 && (article_status() == "published" || admin() || isArticlePublicWithCode())):
 	$suffix = "";
 	if (article_status() != 'published') {
 		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";
