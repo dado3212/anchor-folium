@@ -133,6 +133,13 @@
 			<canvas id="sidebar" aria-label="Branch rendering B"></canvas>
 		</div>
 		<?php } ?>
+		<?php if ($post_category = Registry::get('post_category')) { ?>
+		<div class="listHeading">
+			<h2><?php echo $post_category->title; ?></h2>
+			<?php if ($post_category->description) { echo parse($post_category->description); } ?>
+			<hr class="fleuron" />
+		</div>
+		<?php } ?>
 		<?php if(has_posts()): ?>
 			<?php while(posts()): ?>
 			<article>
@@ -168,6 +175,7 @@
 			<?php if ($posts_older) { ?><span class="older"><?php echo $posts_older ?></span><?php } ?>
 		</div>
 		<?php	} ?>
+		<?php if (Registry::get('post_category') && Registry::get('page_offset') == 1) { theme_include('partial/snippets'); } ?>
 	</main>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 
