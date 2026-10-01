@@ -2007,9 +2007,12 @@ footer .wrapper a:hover {
     margin: 0;
     width: calc(100vw - 2 * var(--container-padding) - var(--list-left-padding) - 2em);
   }
-  /* Expand inline within the cell, like sidenotes elsewhere on mobile */
-  table .sidenote-wrapper .sidenote {
-    position: static;
+  /* Table sidenotes are shown in a full-width row inserted below (see footer.php) */
+  table .sidenote-row td {
+    padding: 0;
+    text-align: left;
+  }
+  table .sidenote-row .sidenote {
     width: auto;
   }
   .sidenote.visible {
