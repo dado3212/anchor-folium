@@ -388,6 +388,33 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 <?php endif; ?>
 <?php if (site_meta('sidebar',1)) { echo "</div>"; } ?>
 <?php
+// If we're doing spoiler tags, then handle clickable
+$has_spoiler = str_contains($article_content, '<span class="spoiler"') || str_contains($article_content, '<span class=\'spoiler\'') ;
+if ($has_spoiler): ?>
+<script>
+$(document).ready(function () {
+  $('.spoiler').each(function () {
+		let $spoiler = $(this);
+		let timer;
+		$spoiler.hover(
+			function () {
+				console.log('revealed');
+				timer = setTimeout(() => $spoiler.addClass('revealed'), 500);
+			},
+			function () {
+				clearTimeout(timer);
+				$spoiler.removeClass('revealed');
+			}
+		);
+		$spoiler.on('click', 'a', function (e) {
+			console.log('clicked', $spoiler);
+			if (!$spoiler.hasClass('revealed')) e.preventDefault();
+		});
+	});
+});
+</script>
+<?php endif; ?>
+<?php
 // If we're doing inline latex, then load the relevant JS
 $needs_katex = str_contains($article_content, '$$') || str_contains($article_content, '\(');
 if ($needs_katex): ?>

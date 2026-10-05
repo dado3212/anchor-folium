@@ -1085,6 +1085,20 @@ header#top .navbar-default .navbar-toggle {
   margin-top: 18px;
   margin-bottom: 18px;
 }
+/** Spoiler Tags */
+.spoiler {
+  background-color: var(--link);
+  color: transparent;
+  transition: 0.3s ease all;
+}
+.spoiler:hover {
+  background-color: transparent;
+  color: var(--text);
+}
+.spoiler a.inline:visited {
+  color: var(--link) !important;
+  text-decoration-color: var(--link) !important;
+}
 /** Used for rendering the inputs for commenting **/
 .form-control {
   display: block;
