@@ -8,7 +8,7 @@
 			?>
 			<?php if(count($searchResults) > 0): ?>
 			<header>
-				<h1>Results for <b>&ldquo;<?php echo search_term(); ?>&rdquo;</b></h1>
+				<h1>Results for <b>&ldquo;<?php echo htmlspecialchars(search_term(), ENT_QUOTES, 'UTF-8'); ?>&rdquo;</b></h1>
 			</header>
 
 			<ul class="search-results">
@@ -36,7 +36,7 @@
 					<h1>Sorry...</h1>
 				</header>
 
-				<p>Unfortunately, there's no results for &ldquo;<?php echo search_term(); ?>&rdquo;. Did you spell everything correctly?</p>
+				<p>Unfortunately, there's no results for &ldquo;<?php echo htmlspecialchars(search_term(), ENT_QUOTES, 'UTF-8'); ?>&rdquo;. Did you spell everything correctly?</p>
 			</article>
 		<?php endif; ?>
 	</main>

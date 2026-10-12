@@ -28,12 +28,12 @@
 			?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover"><?php
 		}
 	?>
-	<link rel="preload" href="/themes/folium/fonts/Crimson_Pro/CrimsonPro-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" href="/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" href="/themes/folium/fonts/dropcap.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" href="/themes/folium/fonts/fa-solid-900-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css'); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css?v=2'); ?>">
 	<?php
 		$current_url = current_url();
 		if (preg_match('#^posts/\d+$#', $current_url)) {
@@ -43,9 +43,9 @@
 		}
 	?>
 
-	<link rel="canonical" href="<?php echo URI::full($current_url, true); ?>">
+	<link rel="canonical" href="<?php echo htmlspecialchars(URI::full($current_url, true), ENT_QUOTES, 'UTF-8'); ?>">
 	<meta property="og:type" content="website">
-	<meta property="og:url" content="<?php echo URI::full(current_url(), true); ?>">
+	<meta property="og:url" content="<?php echo htmlspecialchars(URI::full(current_url(), true), ENT_QUOTES, 'UTF-8'); ?>">
 	<meta property="og:site_name" content="<?php echo site_name(); ?>">
 	<?php
 		$og_image = article_custom_field('og_image') ?? "";

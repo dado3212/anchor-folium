@@ -5,7 +5,7 @@
 		<article>
 			<h1>Page not found</h1>
 			<p>
-				Unfortunately, the page <code>/<?php echo current_url(); ?></code> could not be found. 
+				Unfortunately, the page <code>/<?php echo htmlspecialchars(current_url(), ENT_QUOTES, 'UTF-8'); ?></code> could not be found. 
 			</p>
 		</article>
 	</main>

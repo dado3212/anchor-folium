@@ -47,11 +47,11 @@
   -moz-box-sizing: border-box;
 }
 @font-face {
-  font-family: 'Crimson Pro';
+  font-family: 'Viridian Pro';
   font-stretch: normal; /* Note that font-stretch is a % of normal width */
   font-style: normal; /* See note below */
   font-weight: 340 700;
-  src: url('/themes/folium/fonts/Crimson_Pro/CrimsonPro-VariableFont_wght.woff2') format('woff2');
+  src: url('/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Drop Cap';
@@ -59,7 +59,7 @@
 }
 body {
   margin: 0;
-  font: 20px "Crimson Pro", serif;
+  font: 20px "Viridian Pro", serif;
   font-weight: 340;
   background: var(--bg);
   color: var(--text);
@@ -1020,22 +1020,6 @@ header#top nav .navbar-brand {
   text-transform: initial;
   color: var(--text);
 }
-#topBranch {
-  overflow: hidden;
-  height: 81px;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  margin-top: -41px;
-  z-index: 1;
-}
-#topBranch.fixed {
-  position: fixed;
-  margin-top: -137px;
-}
-#topBranch canvas {
-  margin-left: -10px;
-}
 header#top nav .navbar-brand img {
   width: 37px;
   margin-right: 5px;
@@ -1248,7 +1232,7 @@ main article {
   margin-bottom: 5px;
   border-bottom: 2px solid var(--border);
   word-break: break-word;
-  font-family: "Crimson Pro", serif;
+  font-family: "Viridian Pro", serif;
 
   font-size: 20px;
   line-height: 28px;
