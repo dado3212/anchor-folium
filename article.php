@@ -415,6 +415,48 @@ $(document).ready(function () {
 </script>
 <?php endif; ?>
 <?php
+$needs_tweets = str_contains($article_content, '![tweet') || str_contains($article_content, 'tweet-embed');
+if ($needs_tweets): ?>
+<script>
+(function () {
+  var TWEET_MIN = 250; // X won't lay out narrower than this
+
+  function fitTweet(el) {
+    var iframe = el.querySelector("iframe");
+    if (!iframe) return;
+    // Floor to whole pixels: sidenote widths are vw-based and fractional, and
+    // a fractional iframe width clips the tweet's 1px right border.
+    var avail = Math.floor(el.getBoundingClientRect().width);
+    if (avail <= 0) return;
+    if (avail < TWEET_MIN) {
+      iframe.style.setProperty("width", TWEET_MIN + "px", "important");
+      iframe.style.zoom = avail / TWEET_MIN;
+    } else {
+      iframe.style.setProperty("width", avail + "px", "important");
+      iframe.style.zoom = "";
+    }
+  }
+
+  var ro = "ResizeObserver" in window
+    ? new ResizeObserver(function (entries) { entries.forEach(function (e) { fitTweet(e.target); }); })
+    : null;
+
+  window.renderTweets = function () {
+    document.querySelectorAll(".tweet-embed[data-tweet-id]").forEach(function (el) {
+      var fallback = el.querySelector(".tweet-fallback");
+      twttr.widgets.createTweet(el.dataset.tweetId, el, { dnt: true }).then(function (tweet) {
+        if (!tweet) return; // deleted/protected/blocked: keep the fallback
+        if (fallback) fallback.remove();
+        fitTweet(el);
+        if (ro) ro.observe(el);
+      });
+    });
+  };
+})();
+</script>
+<script defer src="https://platform.twitter.com/widgets.js" onload="renderTweets()"></script>
+<?php endif; ?>
+<?php
 // If we're doing inline latex, then load the relevant JS
 $needs_katex = str_contains($article_content, '$$') || str_contains($article_content, '\(');
 if ($needs_katex): ?>

@@ -23,6 +23,7 @@
   --outside-padding: 25px; /* this is added to by padding-left for the even-sidenotes to give more buffer from ToC */
 
   --blockquote-horizontal-padding: 32px;
+  --blockquote-background: #eaf3de;
 
   --list-left-padding: 30px;
 }
@@ -51,7 +52,7 @@
   font-stretch: normal; /* Note that font-stretch is a % of normal width */
   font-style: normal; /* See note below */
   font-weight: 340 700;
-  src: url('/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2') format('woff2');
+  src: url('/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2?v=6') format('woff2');
 }
 @font-face {
   font-family: 'Drop Cap';
@@ -363,6 +364,40 @@ section#comments > h2:hover:before {
 .table-of-contents .link.active, .table-of-contents .link:hover {
   color: #363737;
 }
+/** Tweets **/
+.tweet-embed {
+  display: block;
+  max-width: 550px;
+  margin: 1.5em auto;
+}
+.tweet-embed .twitter-tweet {
+  margin: 0 auto !important;
+}
+.tweet-embed iframe {
+  display: block !important;
+  max-width: none;
+  width: 100% !important;
+  margin: 0 auto !important;
+  border-radius: 12px;
+  border-right: 1px solid rgb(207, 217, 222);
+}
+
+/* Fallback card (also shown permanently if the tweet is deleted) */
+.tweet-fallback {
+  display: block;
+  margin: 0;
+  padding: 0.75em 1em;
+  border: 1px solid var(--link);
+  border-radius: 12px;
+  font-size: 0.9em;
+  background: var(--blockquote-background);
+}
+.tweet-fallback .tweet-text { display: block; margin: 0 0 0.5em; }
+.tweet-fallback .tweet-byline { display: block; margin: 0; font-size: 0.9em; color: var(--meta-text); }
+
+/* In sidenotes: right-align instead of centering.
+   Swap .sidenote for whatever class your sidenotes use. */
+.sidenote .tweet-embed { margin: 0 0 0 auto; }
 /** Sidenotes */
 .sidenote-indicator {
   margin-left: -3px;
@@ -1399,10 +1434,9 @@ main img.pixelated {
 blockquote {
   margin: 10px 0;
   font-size: 0.96em;
-  background: #eaf3de;
+  background: var(--blockquote-background);
   padding: 24px var(--blockquote-horizontal-padding);
   position: relative;
-  /* background: rgb(217 235 217); */
 }
 blockquote .corner {
   position: absolute;
@@ -1652,6 +1686,8 @@ section#comments .commentlist li header h2 {
   padding: 0;
   color: var(--c);
   font-size: 1em;
+  hyphens: auto;
+  overflow-wrap: anywhere;
 }
 section#comments .commentlist li header time {
   font-size: 0.82em;
@@ -1887,7 +1923,7 @@ footer .wrapper a:hover {
     max-height: var(--maxClipHeight);
     overflow-y: clip;
     position: relative;
-    transition: 0.2s ease;
+    transition: max-height 0.2s ease;
   }
   .sidenote[data-footnote-name^="clip"]:hover {
     max-height: 50em;
@@ -1901,7 +1937,7 @@ footer .wrapper a:hover {
     height: 48px;
     pointer-events: none;
     background: linear-gradient(to bottom, transparent, var(--bg));
-    transition: 0.2s ease;
+    transition: height 0.2s ease 0.1s;
     transition-delay: 0.1s;
   }
   .sidenote[data-footnote-name^="clip"]:hover:after {
@@ -1996,6 +2032,11 @@ footer .wrapper a:hover {
     padding: 1em;
     box-sizing: content-box;
     text-align: left;
+  }
+  .sidenote .tweet-embed { margin: 0 auto; }
+  .sidenote .tweet-embed iframe {
+    border-radius: 0;
+    border: none;
   }
   blockquote .sidenote, blockquote .even-sidenote {
     margin: 0;
