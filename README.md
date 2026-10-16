@@ -75,7 +75,7 @@ and in the UI, to be able to adjust publication date.
 * https://blog.kayleesk.com/ - colophon and print-based, good fonts
 * https://www.henrystanley.com/weighing-animal-minds/ - subtle background texture, appearing scroll view, dark mode
 * Just fun zhuzh - https://jessewaites.com/blog/post/i-pointed-ai-at-400-years-of-archives
-* 
+* https://alexwang.ai/ - cool bird, paper texture, subtle red
 Content
 * https://bjoernkarmann.dk/
 * 
