@@ -49,6 +49,12 @@
 	<meta property="og:site_name" content="<?php echo site_name(); ?>">
 	<?php
 		$og_image = article_custom_field('og_image') ?? "";
+		if (strpos($og_image, ',') !== false) {
+			$og_images = array_map('trim', explode(',', $og_image));
+			$v = $_GET['v'] ?? '';
+			$index = ctype_digit($v) ? intval($v) : 0;
+			$og_image = $og_images[$index < count($og_images) ? $index : 0];
+		}
 		if ($og_image === "") {
 			$og_image = theme_url('tree.png');
 		}
