@@ -76,6 +76,7 @@ and in the UI, to be able to adjust publication date.
 * https://www.henrystanley.com/weighing-animal-minds/ - subtle background texture, appearing scroll view, dark mode
 * Just fun zhuzh - https://jessewaites.com/blog/post/i-pointed-ai-at-400-years-of-archives
 * https://alexwang.ai/ - cool bird, paper texture, subtle red
+* https://arslan.io/2026/10/05/the-lamps-in-my-house/ - images width/highlighting
 Content
 * https://bjoernkarmann.dk/
 * 
