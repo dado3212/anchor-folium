@@ -1428,12 +1428,7 @@ main img.pixelated {
   color: white;
   transform: translateY(-4px);
 }
-.form-horizontal .post-comment {
-  top: 0;
-}
-.form-horizontal .post-comment .front {
-  padding: 4px 12px;
-}
+
 .form-horizontal .cancel {
   display: inline-block;
   padding: 6px 12px;
@@ -1808,12 +1803,25 @@ section#comments .notification .success {
   background: #2ecc71;
 }
 form#comment {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 20px;
 }
 form#comment input,
-form#comment button,
-.g-recaptcha {
-  margin: 10px 0;
+form#comment button {
+  margin: 0;
+}
+.g-recaptcha:not(:has(> iframe)) {
+  display: none;
+}
+form#comment .g-recaptcha iframe {
+  display: block;
+}
+form#comment .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 /*
  *  Footer

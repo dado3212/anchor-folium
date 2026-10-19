@@ -278,8 +278,10 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 			<?php echo comment_form_input_text('placeholder="Your comment" class="form-control"'); ?>
 			<!-- Captcha (site key must be modified for your uses) -->
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
-			<button type="button" class="cancel">Cancel</button>
-			<button class="pushable post-comment"><span class="front">Post Comment</span></button>
+			<div class="actions">
+				<button type="button" class="cancel">Cancel</button>
+				<button class="pushable post-comment"><span class="front">Post Comment</span></button>
+			</div>
 		</form>
 		<!-- Captcha -->
 		<script>
