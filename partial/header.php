@@ -33,7 +33,7 @@
 	<link rel="preload" href="/themes/folium/fonts/fa-solid-900-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css?v=5'); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css?v=6'); ?>">
 	<?php
 		$current_url = current_url();
 		if (preg_match('#^posts/\d+$#', $current_url)) {
