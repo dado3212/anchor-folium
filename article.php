@@ -279,7 +279,7 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 			<!-- Captcha (site key must be modified for your uses) -->
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
 			<button type="button" class="cancel">Cancel</button>
-			<button class="post-comment">Post Comment</button>
+			<button class="pushable post-comment"><span class="front">Post Comment</span></button>
 		</form>
 		<!-- Captcha -->
 		<script>

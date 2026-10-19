@@ -1402,8 +1402,11 @@ main img.pixelated {
   background: color-mix(in hsl, var(--button-color), black 20%);
   border: none;
   border-radius: 7px;
-  margin: 3px 0;
+  line-height: 1em;
+  margin: 0;
   padding: 0;
+  position: relative;
+  top: 3px;
   cursor: pointer;
   outline-offset: 4px;
   transition: 0.2s ease background;
@@ -1418,14 +1421,19 @@ main img.pixelated {
 }
 .pushable .front {
   display: block;
-  padding: 0px 11px;
+  padding: 3px 11px;
   border-radius: 7px;
   font-size: 0.8em;
   background: var(--button-color);
   color: white;
   transform: translateY(-4px);
 }
-.form-horizontal .post-comment,
+.form-horizontal .post-comment {
+  top: 0;
+}
+.form-horizontal .post-comment .front {
+  padding: 4px 12px;
+}
 .form-horizontal .cancel {
   display: inline-block;
   padding: 6px 12px;
@@ -1803,7 +1811,8 @@ form#comment {
   margin-bottom: 20px;
 }
 form#comment input,
-form#comment button {
+form#comment button,
+.g-recaptcha {
   margin: 10px 0;
 }
 /*
