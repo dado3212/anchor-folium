@@ -652,6 +652,7 @@ label {
 }
 textarea.form-control {
   height: auto;
+  min-height: 6em;
 }
 @-ms-viewport {
   width: device-width;
@@ -1388,7 +1389,8 @@ main img.pixelated {
 .pdf-embed {
   margin-bottom: 10px;
 }
-.post-comment {
+.form-horizontal .post-comment,
+.form-horizontal .cancel {
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -1651,7 +1653,11 @@ section#comments .commentlist li {
   list-style: none;
   padding: 10px 0;
   margin-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+section#comments .commentlist li:nth-of-type(1),
+section#comments .commentlist li.reply {
+  border-top: none;
 }
 section#comments .commentlist li header {
   display: flex;
@@ -1662,6 +1668,7 @@ section#comments .commentlist li header {
   div {
     display: flex;
     flex-direction: column;
+    margin-bottom: 4px;
   }
 }
 section#comments .commentlist li header .icon {
@@ -1676,8 +1683,10 @@ section#comments .commentlist li header .icon {
   padding: 4px;
   border-radius: 4px;
   opacity: 0.65;
+  align-self: flex-start;
+  aspect-ratio: 1;
 }
-section#comments .commentlist li .icon.known {
+section#comments .commentlist li.known .icon {
   opacity: 1.0;
 }
 section#comments .commentlist li header h2 {
@@ -1698,13 +1707,57 @@ section#comments .commentlist li .comment-markdown {
   color: var(--text);
   font-size: 0.87em;
   line-height: 1.32em;
-  padding-left: 3.1em;
   word-break: break-word;
+}
+section#comments .commentlist li p:last-of-type {
+  margin-bottom: 0px;
 }
 section#comments .commentlist li .comment-markdown p {
   font-size: inherit;
   padding-left: 0;
 }
+.commentlist li:not(.reply):has(+ li.reply-form) > .comment-reply {
+  display: none;
+}
+section#comments .commentlist li.reply.reply-form {
+  border-left: 4px solid var(--border);
+}
+section#comments .commentlist li.reply {
+  border-left: 4px solid color-mix(in srgb, var(--c), transparent 40%);
+  padding: 5px 0 10px 1em;
+  margin: 0;
+}
+section#comments .commentlist li:not(.reply):has(+ li.reply) {
+  margin-bottom: 0px;
+}
+section#comments .commentlist li.reply:not(:has(+ li.reply)) {
+  margin-bottom: 10px;
+}
+section#comments .commentlist li.known.reply {
+  border-left: 4px solid var(--c);
+}
+section#comments .comment-reply {
+  font-size: 0.87em;
+}
+section#comments .comment-reply,
+form#comment .replying-to button {
+  background: none;
+  border: none;
+  margin: 5px 0 0 0;
+  padding: 0;
+  color: var(--meta-text);
+  cursor: pointer;
+}
+section#comments .comment-reply:hover,
+form#comment .replying-to button:hover {
+  text-decoration: underline;
+}
+form#comment .replying-to {
+  font-size: 0.87em;
+  color: var(--meta-text);
+}
+form#comment .cancel { display: none; }
+li.reply-form form#comment .cancel { display: inline-block; margin-right: 8px; }
 section#comments .notification .success {
   padding: 5px;
   color: var(--text);

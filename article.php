@@ -227,10 +227,8 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 				echo $num_comments . ' comments';
 			} ?></h2>
 			<ul class="commentlist">
-				<?php $i = 0; while(comments()): $i++; ?>
-				<li id="bcomment-<?php echo $i; ?>">
-					<?php
-						$name = trim(comment_name());
+				<?php $i = 0; while(comments()): $i++; 
+					$name = trim(comment_name());
 						$letters = preg_replace('/[^\p{L}]+/u', '', $name);
 						if ($letters === '') {
 							$first_letter = 'X';
@@ -243,8 +241,11 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 						$hash = crc32(strtolower(trim(comment_email())));
 						$hue = $hash % 360;
 						$color = sprintf('hsl(%d %d%% %d%%)', $hue, 35, 45);
-						echo "<header style=\"--c: $color;\">";
-						echo "<span class=\"icon".(comment_known() ? ' known' : '')."\">$first_letter</span>";
+				?>
+				<li id="bcomment-<?php echo $i; ?>"<?php echo ' style="--c: '.$color.'" data-thread="' . comment_thread() . '"' . (comment_is_reply() ? (comment_known() ? ' class="known reply"' : ' class="reply"') : (comment_known() ? 'class="known"' : '')); ?>>
+					<?php
+						echo "<header>";
+						echo "<span class=\"icon\">$first_letter</span>";
 						echo "<div>";
 						echo "<h2 data-id=\"$i\">$name</h2>";
 						echo "<time datetime=\"". date(DATE_W3C, comment_time()) . "\">" . date('M j, Y - g:i a', comment_time()) . "</time>";
@@ -257,6 +258,9 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 					<?php else: ?>
 					<p><?php echo comment_text(); ?></p>
 					<?php endif; ?>
+					<?php if (comments_open()): ?>
+					<button type="button" class="comment-reply" data-thread="<?php echo comment_thread(); ?>" data-name="<?php echo htmlspecialchars($name, ENT_QUOTES); ?>">Reply</button>
+					<?php endif; ?>
 				</li>
 				<?php endwhile; ?>
 			</ul>
@@ -266,12 +270,15 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 		<?php if(comments_open()): ?>
 		<form id="comment" class="form-horizontal" role="form" method="post" action="<?php echo comment_form_url(); ?>#comment">
 			<?php echo comment_form_notifications(); ?>
+			<input type="hidden" name="parent" value="">
+			<div class="replying-to" hidden>Replying to <span></span></div>
 
 			<?php echo comment_form_input_name('placeholder="Your name" class="form-control"'); ?>
 			<?php echo comment_form_input_email('placeholder="Your email (won’t be published)" class="form-control"'); ?>
-			<?php echo comment_form_input_text('placeholder="Your comment" class="form-control"'); ?><br>
+			<?php echo comment_form_input_text('placeholder="Your comment" class="form-control"'); ?>
 			<!-- Captcha (site key must be modified for your uses) -->
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
+			<button type="button" class="cancel">Cancel</button>
 			<button class="post-comment">Post Comment</button>
 		</form>
 		<!-- Captcha -->
@@ -292,6 +299,42 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 		document.querySelectorAll('#comment input').forEach(input => {
 			input.addEventListener('focus', loadRecaptcha, { once: true });
 		});
+
+		// Threaded replies: move the form under the thread and point it at the thread's root
+		(function () {
+			const form = document.getElementById('comment');
+			const home = document.createComment('comment-form');
+			form.before(home);
+			const parentInput = form.querySelector('input[name=parent]');
+			const banner = form.querySelector('.replying-to');
+
+			document.querySelectorAll('#comments .comment-reply').forEach((button) => {
+				button.addEventListener('click', () => {
+					const thread = button.dataset.thread;
+					const items = document.querySelectorAll('#comments .commentlist > li[data-thread="' + thread + '"]');
+					const holder = document.createElement('li');
+					holder.className = 'reply reply-form';
+					holder.appendChild(form);
+					document.querySelector('#comments .reply-form')?.remove();
+					items[items.length - 1].after(holder);
+					parentInput.value = thread;
+					banner.hidden = false;
+					// Moving a rendered captcha reloads its iframe, so reset it
+					if (window.grecaptcha?.reset) grecaptcha.reset();
+					loadRecaptcha();
+					form.querySelector('textarea').focus();
+				});
+			});
+
+			form.querySelector('.cancel').addEventListener('click', () => {
+				const holder = form.parentElement;
+				home.after(form);
+				if (holder.classList.contains('reply-form')) holder.remove();
+				parentInput.value = '';
+				banner.hidden = true;
+				if (window.grecaptcha?.reset) grecaptcha.reset();
+			});
+		})();
 
 		document.querySelectorAll('#comments time').forEach((element) => {
 			const date = new Date(element.getAttribute('datetime'));
