@@ -29,7 +29,7 @@
     </div>
 		<div class="snippets-grid<?php if (count($items) < 3) { echo ' single'; } ?>">
 		<?php foreach ($items as $item) {
-			$itemDate = date('F j, Y', strtotime($item->created));
+			$itemDate = local_time(db_time($item->created));
 			$suffixClass = '';
 			if ($item->status != 'published') {
 				$suffixClass = ' unpublished';

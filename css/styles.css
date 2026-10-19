@@ -52,7 +52,7 @@
   font-stretch: normal; /* Note that font-stretch is a % of normal width */
   font-style: normal; /* See note below */
   font-weight: 340 700;
-  src: url('/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2?v=6') format('woff2');
+  src: url('/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2?v=7') format('woff2');
 }
 @font-face {
   font-family: 'Drop Cap';
@@ -1693,12 +1693,17 @@ section#comments .commentlist li header time {
   font-size: 0.82em;
   color: var(--meta-text);
 }
-section#comments .commentlist li p {
+section#comments .commentlist li p,
+section#comments .commentlist li .comment-markdown {
   color: var(--text);
   font-size: 0.87em;
   line-height: 1.32em;
   padding-left: 3.1em;
   word-break: break-word;
+}
+section#comments .commentlist li .comment-markdown p {
+  font-size: inherit;
+  padding-left: 0;
 }
 section#comments .notification .success {
   padding: 5px;

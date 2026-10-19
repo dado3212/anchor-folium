@@ -28,12 +28,12 @@
 			?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover"><?php
 		}
 	?>
-	<link rel="preload" href="/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2?v=6" as="font" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" href="/themes/folium/fonts/Crimson_Pro/ViridianPro.woff2?v=7" as="font" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" href="/themes/folium/fonts/dropcap.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" href="/themes/folium/fonts/fa-solid-900-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
 	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/prism.css'); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css?v=4'); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo theme_url('css/styles.css?v=5'); ?>">
 	<?php
 		$current_url = current_url();
 		if (preg_match('#^posts/\d+$#', $current_url)) {
@@ -229,7 +229,7 @@
 		<?php
 			for ($i = count($items) - 1; $i >= 0; $i--) {
 				$item = $items[$i];
-				$currYear = date('Y', strtotime($item->created));
+				$currYear = date('Y', db_time($item->created));
 				if ($currYear !== $previousYear) {
 					if ($previousYear != "") {
 						echo "</ul>";

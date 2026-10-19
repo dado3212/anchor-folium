@@ -99,7 +99,7 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 			<header>
 				<h1><?php echo article_title() . $suffix; ?></h1>
 				<div class="meta">
-					<time datetime="<?php echo date(DATE_W3C, article_time()); ?>"><?php echo date('F j, Y', article_time()); ?></time>
+					<?php echo local_time(article_time()); ?>
 					<?php if (admin() && has_categories()) {
 						echo '<span class="delimiter">𐫱&lrm;</span><span class="bridge">filed under</span>';
 						$strings = [];
@@ -252,7 +252,11 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 						echo "</header>";
 					?>
 
+					<?php if (comment_markdown()): ?>
+					<div class="comment-markdown"><?php echo comment_html(); ?></div>
+					<?php else: ?>
 					<p><?php echo comment_text(); ?></p>
+					<?php endif; ?>
 				</li>
 				<?php endwhile; ?>
 			</ul>

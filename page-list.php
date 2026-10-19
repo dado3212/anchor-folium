@@ -23,7 +23,7 @@
 		<div id="previousPosts">
 		<?php
 			function renderPostLink($page, $item) {
-				$itemDate = date('F j', Date::format($item->created, 'U'));
+				$itemDate = local_time(db_time($item->created), 'month-day');
 				$suffixClass = '';
 				if ($item->status != 'published') {
 					$suffixClass = ' unpublished';
@@ -54,7 +54,7 @@
 
 			for ($i = count($items) - 1; $i >= 0; $i--) {
 				$item = $items[$i];
-				$currYear = date('Y', strtotime($item->created));
+				$currYear = date('Y', db_time($item->created));
 				if ($currYear !== $previousYear) {
 					echo "<h3 id='{$currYear}' class='year'><span class='line'></span><span class='yearText'>{$currYear}</span><span class='line'></span></h3>";
 					$previousYear = $currYear;

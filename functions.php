@@ -90,8 +90,20 @@ function relative_time($date) {
 	}
 }
 
+// Database dates are stored in GMT; parse them as such into a Unix timestamp.
+function db_time($date) {
+	return (int) Date::format($date, 'U');
+}
+
+// Render a <time> in the site timezone (Pacific). The footer script rewrites
+// it into the viewer's timezone using the matching Intl format.
+function local_time($timestamp, $style = 'date') {
+	$formats = array('date' => 'F j, Y', 'month-day' => 'F j');
+	return '<time datetime="' . date(DATE_W3C, $timestamp) . '" data-local="' . $style . '">' . date($formats[$style], $timestamp) . '</time>';
+}
+
 function renderArticleLink($page, $item) {
-	$itemDate = date('F j, Y', strtotime($item->created));
+	$itemDate = local_time(db_time($item->created));
 	$suffix = "";
 	if ($item->status != 'published') {
 		$suffix = " <span class='glyphicon' style='font-size:0.7em;'>&#xe033;</span>";

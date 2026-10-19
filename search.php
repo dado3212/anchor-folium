@@ -20,7 +20,7 @@
 						</a>
 					</h2>
 					<div class="meta">
-						<time datetime="<?php echo date(DATE_W3C, strtotime($item['date'])); ?>"><?php echo date('F j, Y', strtotime($item['date'])); ?></time>
+						<?php echo local_time(db_time($item['date'])); ?>
 					</div>
 					<?php if ($item['snippet'] !== ''): ?>
 					<p class="snippet"><?php echo $item['snippet']; ?></p>
