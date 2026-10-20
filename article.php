@@ -141,6 +141,11 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 					$contents .= '<div class="link header' . $level . '" data-id="' . $id . '">' . $innerHTML . '</div>';
 				}
 
+				if (has_comments()) {
+					$contents .= '<div class="divider"></div>';
+					$contents .= '<div class="link header2" data-id="comments">Comments</div>';
+				}
+
 				echo $button . '</button>' . $contents . '</div>';
 				?>
 				<script>
@@ -279,8 +284,8 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 			<!-- Captcha (site key must be modified for your uses) -->
 			<div class="g-recaptcha" data-sitekey="6Lcg7iIUAAAAAPLDHLmj5YgjkJfH_RJz4h4ZyAAB"></div>
 			<div class="actions">
-				<button type="button" class="cancel">Cancel</button>
 				<button class="pushable post-comment"><span class="front">Post Comment</span></button>
+				<button type="button" class="cancel">Cancel</button>
 			</div>
 		</form>
 		<!-- Captcha -->
@@ -320,6 +325,7 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 					document.querySelector('#comments .reply-form')?.remove();
 					items[items.length - 1].after(holder);
 					parentInput.value = thread;
+					banner.querySelector('span').textContent = button.dataset.name;
 					banner.hidden = false;
 					// Moving a rendered captcha reloads its iframe, so reset it
 					if (window.grecaptcha?.reset) grecaptcha.reset();

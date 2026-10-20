@@ -315,6 +315,10 @@ section#comments > h2:hover:before {
 
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+.table-of-contents .divider {
+  border-bottom: 1px solid var(--border);
+  margin: 8px 5px;
+}
 .table-of-contents span.contents {
   text-transform: uppercase;
   font-size: 11px;
@@ -1686,7 +1690,7 @@ section#comments h2 {
 }
 section#comments .commentlist {
   padding: 0;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
 }
 section#comments .commentlist li {
   list-style: none;
@@ -1802,11 +1806,13 @@ section#comments .notification .success {
   color: var(--text);
   background: #2ecc71;
 }
+section#comments + form#comment {
+  margin-bottom: 40px;
+}
 form#comment {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 20px;
 }
 form#comment input,
 form#comment button {
@@ -1820,8 +1826,21 @@ form#comment .g-recaptcha iframe {
 }
 form#comment .actions {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   align-items: center;
+}
+li.reply-form form#comment .cancel {
+  display: inline-block;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--meta-text);
+  font-size: 0.87em;
+  cursor: pointer;
+}
+li.reply-form form#comment .cancel:hover,
+li.reply-form form#comment .cancel:focus-visible {
+  text-decoration: underline;
 }
 /*
  *  Footer
