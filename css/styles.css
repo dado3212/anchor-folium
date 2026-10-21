@@ -1806,7 +1806,8 @@ section#comments .notification .success {
   color: var(--text);
   background: #2ecc71;
 }
-section#comments + form#comment {
+section#comments + form#comment,
+article + form#comment {
   margin-bottom: 40px;
 }
 form#comment {

@@ -125,7 +125,7 @@ $(document).ready(function(){
 		var header = $(this);
 		var headerId = header.attr('id');
 		if (headerId) {
-			header.get(0).scrollIntoView({ behavior: 'smooth' });
+			scrollToEl(header.get(0));
 			history.replaceState(null, '', `#${headerId}`);
 		}
 	});

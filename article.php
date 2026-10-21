@@ -110,6 +110,11 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 					} ?>
 				</div>
 			</header>
+			<script>
+				window.scrollToEl = function (el) {
+					if (el) el.scrollIntoView({ behavior: 'smooth' });
+				};
+			</script>
 			<?php
 			libxml_use_internal_errors(true); 
 			$dom = new DOMDocument();
@@ -153,12 +158,12 @@ if (article_id() > 0 && (article_status() == "published" || admin() || isArticle
 						// Click to link
 						$('.table-of-contents .link').click(function() {
 							const id = '#' + $(this).data('id');
-							$(id).get(0).scrollIntoView({ behavior: 'smooth' });
+							scrollToEl($(id).get(0));
 							history.replaceState(null, '', id);
 						});
 						// Click to go to top of article
 						$('.table-of-contents #top-jump').click(function() {
-							$('header').get(0).scrollIntoView({ behavior: 'smooth' });
+							scrollToEl($('header').get(0));
 							history.replaceState(null, '', '');
 						});
 						// Automatically close it if the window is open
@@ -506,6 +511,34 @@ if ($needs_tweets): ?>
         if (ro) ro.observe(el);
       });
     });
+  };
+
+  // Tweet embeds resize asynchronously (often mid-scroll, as their media loads),
+  // which leaves smooth scrolls short. Re-aim whenever one changes size until
+  // scrolling settles.
+  window.scrollToEl = function (el) {
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth' });
+    if (!("ResizeObserver" in window)) return;
+
+    var scrollRo = new ResizeObserver(function () { el.scrollIntoView({ behavior: 'smooth' }); });
+    document.querySelectorAll(".tweet-embed").forEach(function (t) { scrollRo.observe(t); });
+
+    // Stop once scrolling has settled, or as soon as the user scrolls themselves
+    var timer;
+    function done() {
+      clearTimeout(timer);
+      scrollRo.disconnect();
+      removeEventListener('scrollend', settle);
+      removeEventListener('wheel', done);
+      removeEventListener('touchstart', done);
+    }
+    function settle() { clearTimeout(timer); timer = setTimeout(done, 600); }
+    addEventListener('scrollend', settle);
+    addEventListener('wheel', done, { passive: true, once: true });
+    addEventListener('touchstart', done, { passive: true, once: true });
+    // Hard stop for browsers without scrollend
+    setTimeout(done, 4000);
   };
 })();
 </script>
