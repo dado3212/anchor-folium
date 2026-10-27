@@ -511,6 +511,7 @@ table .sidenote-wrapper .even-sidenote {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .img-row img {
@@ -2240,11 +2241,25 @@ footer .wrapper a:hover {
     width: 100%;
   }
 
-  form {
+  form#comment {
     display: none;
   }
 
   a[data-fancybox="gallery"]:after {
     display: none !important;
+  }
+
+  .sidenote {
+    display: none;
+  }
+
+  main img {
+    max-width: 100%;
+    max-height: 4in;     /* key fix: small enough to fit in partial pages */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0.5em auto;
   }
 }
