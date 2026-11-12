@@ -80,6 +80,8 @@ and in the UI, to be able to adjust publication date.
 Content
 * https://bjoernkarmann.dk/
 * https://www.bendangelo.me/
+* https://maggieappleton.com/
+* https://garden.bradwoods.io/
 
 TODO
 - Display category of post (or tags?)
