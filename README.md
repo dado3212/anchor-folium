@@ -79,7 +79,7 @@ and in the UI, to be able to adjust publication date.
 * https://arslan.io/2026/10/05/the-lamps-in-my-house/ - images width/highlighting
 Content
 * https://bjoernkarmann.dk/
-* 
+* https://www.bendangelo.me/
 
 TODO
 - Display category of post (or tags?)
