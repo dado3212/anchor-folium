@@ -1378,6 +1378,13 @@ main img {
   display: block;
   object-fit: contain;
 }
+main .img-row a[data-fancybox="gallery"] {
+  margin: 0 auto;
+
+  img {
+    margin: 0;
+  }
+}
 main img.post-preview {
   width: 50px;
 }
