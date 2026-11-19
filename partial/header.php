@@ -56,7 +56,9 @@
 			$og_image = $og_images[$index < count($og_images) ? $index : 0];
 		}
 		if ($og_image === "") {
-			$og_image = theme_url('tree.png');
+			// Posts and snippets get their own title; every other page is the site name.
+			$og_title = is_article() ? article_title() : site_name();
+			$og_image = og_preview_url(html_entity_decode($og_title, ENT_QUOTES, 'UTF-8'));
 		}
 		$og_snippet = article_custom_field('og_snippet') ?? "";
 		if ($og_snippet === "") {
@@ -68,7 +70,7 @@
 			}
 		}
 	?>
-	<meta property="og:image" content="<?php echo URI::full($og_image, true); ?>">
+	<meta property="og:image" content="<?php echo htmlspecialchars(URI::full($og_image, true), ENT_QUOTES, 'UTF-8'); ?>">
 	<meta property="og:description" content="<?php echo $og_snippet; ?>">
 	<meta name="description" content="<?php echo $og_snippet; ?>">
 

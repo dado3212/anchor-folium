@@ -114,3 +114,9 @@ function renderArticleLink($page, $item) {
 function total_articles() {
 	return Post::where(Base::table('posts.status'), '=', 'published')->count();
 }
+// Signed URL for the generated OpenGraph image (see preview.php).
+function og_preview_url($title) {
+	// Random key suffix to break cache.
+	$sig = substr(hash_hmac('sha256', $title, Config::app('key') . 'x'), 0, 16);
+	return theme_url('preview.php') . '?t=' . rawurlencode($title) . '&s=' . $sig;
+}
