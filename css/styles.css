@@ -1335,8 +1335,13 @@ main article header .meta {
   margin: -2px 4px 0 6px;
   unicode-bidi: bidi-override;
 }
+article .tags {
+  display: block;
+  margin-top: 10px;
+}
 .tags .delimiter {
   unicode-bidi: bidi-override;
+  margin-right: 5px;
 }
 .meta .tag {
   color: var(--meta-text);
@@ -1908,6 +1913,18 @@ footer .wrapper a:hover {
 #search .cell .cell-inner {
   width: 60%;
   margin: 0 auto;
+  position: relative;
+}
+/* Invisible label around the input: clicking near the box focuses it */
+#search .search-hitarea {
+  position: absolute;
+  inset: -60px;
+  z-index: 0;
+  cursor: text;
+}
+#search .cell .cell-inner form {
+  position: relative;
+  z-index: 1;
 }
 #search .cell .cell-inner input[type="text"] {
   border: 1px solid #cccccc;
@@ -1942,12 +1959,12 @@ footer .wrapper a:hover {
   text-align: center;
   user-select: none;
   text-shadow: 0 1px 0 #fff;
-  opacity: 0.2;
+  opacity: 0.4;
 
   &:focus, &:hover {
     color: #000;
     text-decoration: none;
-    opacity: .5;
+    opacity: .7;
   }
 }
 /** Retina screens */
@@ -2087,6 +2104,10 @@ footer .wrapper a:hover {
 @media only screen and (max-width: 790px) {
   :root {
     --list-left-padding: 25px;
+  }
+  #search .cell .cell-inner {
+    width: auto;
+    padding: 0 20px;
   }
   .navbar-nav>li {
     float: none;

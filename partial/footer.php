@@ -10,8 +10,9 @@
 <section id="search">
 	<div class="cell">
 		<div class="cell-inner">
+			<label for="search-term" class="search-hitarea" aria-hidden="true"></label>
 			<form action="<?php echo search_url(); ?>" method="post">
-				<input type="text" name="term" placeholder="Type here to search...">
+				<input type="text" id="search-term" name="term" aria-label="Search" placeholder="Type here to search...">
 			</form>
 		</div>
 	</div>
@@ -117,6 +118,13 @@ $(document).ready(function(){
 
 	$('button.close').click(function() {
 		$('#search').css('display', 'none');
+	});
+
+	// Clicks on the background (outside the label hit area) close the overlay
+	searchWindow.on('click', function(event) {
+		if (event.target === this || $(event.target).hasClass('cell')) {
+			searchWindow.css('display', 'none');
+		}
 	});
 
 	// Handle clickable headers
